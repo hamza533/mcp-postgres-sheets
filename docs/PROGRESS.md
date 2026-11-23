@@ -1,7 +1,7 @@
 # PROGRESS – handoff log
 
 ## Status
-**Current milestone:** M4 – Remote mode + OAuth (next)
+**Current milestone:** M5 – Evaluation (next)
 
 | # | Milestone | Status |
 |---|---|---|
@@ -9,8 +9,8 @@
 | M1 | Postgres tools + safety | done |
 | M2 | Audit log + stdio transport | done — verified with the SDK stdio client; Claude Desktop/Cursor check is a user step |
 | M3 | Google Sheets tools | done — tested with the memory backend and mocked Google HTTP; live Google check waits for a service account (user step) |
-| M4 | Remote mode + OAuth | next |
-| M5 | Evaluation | not started |
+| M4 | Remote mode + OAuth | done — `make remote-smoke` 13/13 against real Keycloak; Inspector CLI verified (stdio + HTTP) |
+| M5 | Evaluation | next |
 | M6 | Packaging + release pipeline | not started |
 | M7 | Project website | not started |
 | M8 | Production profile + docs | not started |
@@ -26,6 +26,7 @@
   including `tests/test_safety_suite.py` (70 cases) against the real sample Postgres.
 - `make db` then `psql postgresql://mcp_readonly:mcp_readonly@localhost:5544/shop` → 500 customers,
   1,500 orders; `INSERT` fails with "read-only transaction"; `internal.employees` is "permission denied".
+- `docker compose --profile remote up -d --wait && make remote-smoke` → ALL PASSED (see docs/inspector.md).
 - `AUDIT_LOG_PATH=audit.jsonl uv run mcp-postgres-sheets` then call a tool from `make inspector` → one JSON line per call.
 
 ## Session log
@@ -34,3 +35,4 @@
 - 2026-11-23 – Claude Code – M1: sql_guard, db (READ ONLY txn, timeout, cursor row cap), 3 Postgres tools, 56-case safety suite.
 - 2026-11-23 – Claude Code – M2: audit log (GuardedFastMCP choke point, redaction), stdio CLI, stdio e2e test.
 - 2026-11-23 – Claude Code – M3: Sheets backends (Google + memory), 5 Sheets tools, durable idempotency, 14 more safety cases.
+- 2026-11-23 – Claude Code – M4: remote mode (JWT/JWKS verifier, scopes, RFC 9728 metadata, rate limit, health/ready), Dockerfile, Keycloak profile, smoke test, Inspector guide.

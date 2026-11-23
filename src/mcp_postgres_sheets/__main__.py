@@ -61,7 +61,11 @@ def main(argv: list[str] | None = None) -> None:
         print(f"mcp-postgres-sheets: invalid configuration — {exc}", file=sys.stderr)
         sys.exit(2)
     if settings.transport is Transport.STDIO:
-        mcp.run("stdio")
+        import anyio
+
+        from mcp_postgres_sheets.server import run_stdio
+
+        anyio.run(run_stdio, mcp)
     else:  # pragma: no cover - exercised by the remote-mode tests
         from mcp_postgres_sheets.http_app import run_http
 

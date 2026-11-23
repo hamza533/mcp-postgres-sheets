@@ -146,6 +146,10 @@ class Database:
                     self._pool = pool
         return self._pool
 
+    async def open(self) -> None:
+        """Create the pool eagerly (HTTP start-up), so its workers live for the whole process."""
+        await self._get_pool()
+
     async def close(self) -> None:
         if self._pool is not None:
             await self._pool.close()
