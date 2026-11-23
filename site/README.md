@@ -7,12 +7,12 @@ configuration, security model, tools reference, remote mode & OAuth, changelog.
 
 `src/data/` is written by `make tools-json` (`scripts/export_tools.py`):
 
-| File | Source |
-|---|---|
-| `tools.json` | a real MCP `tools/list` call against the server (all 8 tools) |
-| `config.json` | `.env.example` (names, defaults, descriptions) |
-| `results.json` | `eval/results.json` + `eval/safety_cases.json` |
-| `changelog.md` | `CHANGELOG.md` |
+| File           | Source                                                        |
+| -------------- | ------------------------------------------------------------- |
+| `tools.json`   | a real MCP `tools/list` call against the server (all 8 tools) |
+| `config.json`  | `.env.example` (names, defaults, descriptions)                |
+| `results.json` | `eval/results.json` + `eval/safety_cases.json`                |
+| `changelog.md` | `CHANGELOG.md`                                                |
 
 `make lint` and the CI `site` job run `export_tools --check` and fail if any file is out of date.
 
