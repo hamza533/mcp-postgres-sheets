@@ -65,3 +65,12 @@ Short entries: chose X over Y because Z. Newest last.
 - **Response cache keyed by the full request (`eval/.cache/`, git-ignored) + throttle (GEMINI_RPM, default 8)** — re-runs are free and reproducible on the free tier; only synthetic data is ever sent.
 - **python-dotenv (already a pydantic-settings dependency) loads `.env` for `make eval`** — the eval's GEMINI_* variables are not server settings.
 - **Latency measured through an in-process MCP client session** — includes JSON-RPC, validation, all safety layers and the Postgres round trip; excludes the network, which depends on the deployment.
+
+## M6
+- **PyPI trusted publishing (OIDC) over an API token** — nothing to leak or rotate; PyPI attestations are generated in the same step.
+- **Release on signed `vX.Y.Z` tags, with a verify job that checks tag = pyproject = server.json = CHANGELOG** — one source of truth, enforced; `tests/test_packaging.py` catches drift before a tag is ever pushed.
+- **Image on GHCR (multi-arch amd64/arm64) with SBOM + provenance, scanned by Trivy before push and in every CI run (fixable HIGH/CRITICAL fail the build)** — free for public repos, next to the code; arm64 covers Apple-silicon laptops and Graviton/Ampere hosts.
+- **MCP Registry entry (`server.json`, schema 2025-12-11) with both a PyPI (`uvx`) and an OCI (`docker`) package** — ownership is proven by the `mcp-name:` marker in the README (PyPI) and the `io.modelcontextprotocol.server.name` image label (OCI). Publishing is gated behind the `PUBLISH_MCP_REGISTRY` repo variable because listing is the owner's decision.
+- **`mcp-publisher` pinned to v1.8.8, Actions pinned to major versions (checkout v7, setup-uv v10, CodeQL v4, Trivy v0.36.0, docker/* current majors)** — Dependabot (uv, Actions, Docker, Compose, npm) keeps them moving; the publisher is pinned to a release older than two weeks.
+- **CodeQL `security-extended` for Python, JS/TS (the site) and the workflows themselves** — free on public repos; workflow injection is a real supply-chain risk.
+- **`apt-get upgrade` in the runtime stage** — the pinned `python:3.12.12-slim-bookworm` base shipped fixable HIGH/CRITICAL CVEs in `perl-base` (an Essential package that can't be removed); applying Debian security updates at build time brought Trivy to 0. Dependabot bumps the base tag.
