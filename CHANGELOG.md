@@ -11,9 +11,13 @@ public API: breaking changes to them only happen in a major version.
 - Postgres tools: `postgres_list_tables`, `postgres_describe_table`, `postgres_query` with layered
   safety (read-only role, READ ONLY transaction, statement timeout, row cap via server-side
   cursor, sqlglot single-SELECT check, function deny-list, schema/table allow-lists).
+- Google Sheets tools: `sheets_list_tabs`, `sheets_read_range`, `sheets_find_rows`, and (only when
+  `READ_ONLY=false`) `sheets_append_rows` and `sheets_update_range` with a required `idempotency_key`.
+  Service-account auth, `ALLOWED_SHEET_IDS`, timeouts and retries with backoff on 429/5xx.
+- In-memory Sheets backend with a synthetic demo spreadsheet (`SHEETS_BACKEND=memory`).
 - Audit log: one JSON line per tool call (including rejected, invalid and unknown-tool calls) with
   request ID, caller, tool, redacted arguments, duration, row count and outcome.
 - stdio transport: `mcp-postgres-sheets` / `python -m mcp_postgres_sheets` CLI.
-- Safety suite: 56 attack and misuse cases (`eval/safety_cases.json`), run in CI.
+- Safety suite: 70 attack and misuse cases (`eval/safety_cases.json`), run in CI.
 - Repository foundation: uv project, Makefile, CI, Docker Compose with a seeded synthetic
   e-commerce Postgres database and a read-only role (`deploy/sql/001_readonly_role.sql`).
