@@ -70,7 +70,7 @@ ignore = ["S101", "E501", "S311"]  # asserts are fine; the formatter wraps code,
 [tool.mypy]
 python_version = "3.12"
 strict = true
-files = ["src", "tests", "eval"]
+files = ["src", "tests", "eval", "scripts"]
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]

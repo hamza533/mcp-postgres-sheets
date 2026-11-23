@@ -1,0 +1,843 @@
+{
+  "safety": {
+    "passed": 70,
+    "total": 70,
+    "byCategory": {
+      "Writes and DDL": {
+        "passed": 12,
+        "total": 12
+      },
+      "Multiple statements": {
+        "passed": 4,
+        "total": 4
+      },
+      "CTE tricks": {
+        "passed": 4,
+        "total": 4
+      },
+      "Comment injection": {
+        "passed": 3,
+        "total": 3
+      },
+      "Unsafe functions": {
+        "passed": 11,
+        "total": 11
+      },
+      "Server commands": {
+        "passed": 5,
+        "total": 5
+      },
+      "Allow-lists": {
+        "passed": 10,
+        "total": 10
+      },
+      "Resource limits": {
+        "passed": 6,
+        "total": 6
+      },
+      "Sheets allow-list": {
+        "passed": 6,
+        "total": 6
+      },
+      "Read-only mode": {
+        "passed": 2,
+        "total": 2
+      },
+      "Write safety": {
+        "passed": 2,
+        "total": 2
+      },
+      "OAuth scopes": {
+        "passed": 5,
+        "total": 5
+      }
+    },
+    "cases": [
+      {
+        "id": "dml-drop-table",
+        "category": "Writes and DDL",
+        "title": "DROP TABLE",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "DROP TABLE customers;",
+        "scopes": null
+      },
+      {
+        "id": "dml-delete",
+        "category": "Writes and DDL",
+        "title": "DELETE all rows",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "DELETE FROM orders",
+        "scopes": null
+      },
+      {
+        "id": "dml-update",
+        "category": "Writes and DDL",
+        "title": "UPDATE prices",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "UPDATE products SET unit_price = 0.01",
+        "scopes": null
+      },
+      {
+        "id": "dml-insert",
+        "category": "Writes and DDL",
+        "title": "INSERT a row",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "INSERT INTO customers (full_name, email, country, segment, created_at) VALUES ('x', 'x@example.com', 'US', 'consumer', now())",
+        "scopes": null
+      },
+      {
+        "id": "dml-truncate",
+        "category": "Writes and DDL",
+        "title": "TRUNCATE",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "TRUNCATE order_items",
+        "scopes": null
+      },
+      {
+        "id": "ddl-alter",
+        "category": "Writes and DDL",
+        "title": "ALTER TABLE",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "ALTER TABLE customers ADD COLUMN pwned int",
+        "scopes": null
+      },
+      {
+        "id": "ddl-create-as",
+        "category": "Writes and DDL",
+        "title": "CREATE TABLE AS SELECT",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "CREATE TABLE stolen AS SELECT * FROM customers",
+        "scopes": null
+      },
+      {
+        "id": "dcl-grant",
+        "category": "Writes and DDL",
+        "title": "GRANT privileges",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "GRANT ALL ON customers TO PUBLIC",
+        "scopes": null
+      },
+      {
+        "id": "dml-merge",
+        "category": "Writes and DDL",
+        "title": "MERGE",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "MERGE INTO products p USING products s ON p.id = s.id WHEN MATCHED THEN UPDATE SET unit_price = 1",
+        "scopes": null
+      },
+      {
+        "id": "dml-select-into",
+        "category": "Writes and DDL",
+        "title": "SELECT … INTO new table",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * INTO stolen FROM customers",
+        "scopes": null
+      },
+      {
+        "id": "lock-for-update",
+        "category": "Writes and DDL",
+        "title": "SELECT … FOR UPDATE",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * FROM orders FOR UPDATE",
+        "scopes": null
+      },
+      {
+        "id": "lock-table",
+        "category": "Writes and DDL",
+        "title": "LOCK TABLE",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "LOCK TABLE customers IN ACCESS EXCLUSIVE MODE",
+        "scopes": null
+      },
+      {
+        "id": "multi-select-drop",
+        "category": "Multiple statements",
+        "title": "SELECT then DROP",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT 1; DROP TABLE customers",
+        "scopes": null
+      },
+      {
+        "id": "multi-newline-update",
+        "category": "Multiple statements",
+        "title": "Second statement on a new line",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * FROM orders LIMIT 1;\nUPDATE orders SET status = 'refunded'",
+        "scopes": null
+      },
+      {
+        "id": "multi-transaction",
+        "category": "Multiple statements",
+        "title": "BEGIN; DELETE; COMMIT",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "BEGIN; DELETE FROM orders; COMMIT;",
+        "scopes": null
+      },
+      {
+        "id": "multi-set-then-select",
+        "category": "Multiple statements",
+        "title": "Disable timeout, then query",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SET statement_timeout = 0; SELECT 1",
+        "scopes": null
+      },
+      {
+        "id": "cte-delete",
+        "category": "CTE tricks",
+        "title": "Data-modifying CTE (DELETE … RETURNING)",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "WITH gone AS (DELETE FROM orders RETURNING *) SELECT count(*) FROM gone",
+        "scopes": null
+      },
+      {
+        "id": "cte-update",
+        "category": "CTE tricks",
+        "title": "Data-modifying CTE (UPDATE)",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "WITH u AS (UPDATE products SET unit_price = 0 RETURNING id) SELECT * FROM u",
+        "scopes": null
+      },
+      {
+        "id": "cte-insert-nested",
+        "category": "CTE tricks",
+        "title": "INSERT CTE inside a subquery",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * FROM (WITH x AS (INSERT INTO products (sku, name, category, unit_price) VALUES ('X', 'x', 'Office', 1) RETURNING id) SELECT * FROM x) AS s",
+        "scopes": null
+      },
+      {
+        "id": "cte-hides-internal",
+        "category": "CTE tricks",
+        "title": "CTE reading a forbidden schema",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "WITH e AS (SELECT * FROM internal.employees) SELECT * FROM e",
+        "scopes": null
+      },
+      {
+        "id": "comment-block-hides-drop",
+        "category": "Comment injection",
+        "title": "Block comment before a second statement",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT 1 /* innocent */; DROP TABLE customers --",
+        "scopes": null
+      },
+      {
+        "id": "comment-line-hides-delete",
+        "category": "Comment injection",
+        "title": "Line comment then a new statement",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT 1 -- just a comment\n; DELETE FROM orders",
+        "scopes": null
+      },
+      {
+        "id": "comment-inline-keyword",
+        "category": "Comment injection",
+        "title": "Keyword split by a comment",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "DEL/**/ETE FROM orders",
+        "scopes": null
+      },
+      {
+        "id": "fn-pg-sleep",
+        "category": "Unsafe functions",
+        "title": "pg_sleep",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT pg_sleep(30)",
+        "scopes": null
+      },
+      {
+        "id": "fn-pg-sleep-qualified",
+        "category": "Unsafe functions",
+        "title": "pg_catalog.pg_sleep in WHERE",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * FROM orders WHERE pg_catalog.pg_sleep(1) IS NOT NULL",
+        "scopes": null
+      },
+      {
+        "id": "fn-pg-read-file",
+        "category": "Unsafe functions",
+        "title": "pg_read_file",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT pg_read_file('/etc/passwd')",
+        "scopes": null
+      },
+      {
+        "id": "fn-pg-ls-dir",
+        "category": "Unsafe functions",
+        "title": "pg_ls_dir as a table function",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * FROM pg_ls_dir('.')",
+        "scopes": null
+      },
+      {
+        "id": "fn-lo-import",
+        "category": "Unsafe functions",
+        "title": "lo_import (server file read)",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT lo_import('/etc/passwd')",
+        "scopes": null
+      },
+      {
+        "id": "fn-dblink",
+        "category": "Unsafe functions",
+        "title": "dblink to another server",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * FROM dblink('host=evil.example.com', 'SELECT 1') AS t(x int)",
+        "scopes": null
+      },
+      {
+        "id": "fn-set-config",
+        "category": "Unsafe functions",
+        "title": "set_config to lift the timeout",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT set_config('statement_timeout', '0', false)",
+        "scopes": null
+      },
+      {
+        "id": "fn-query-to-xml",
+        "category": "Unsafe functions",
+        "title": "query_to_xml running nested SQL",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT query_to_xml('DELETE FROM orders RETURNING *', true, true, '')",
+        "scopes": null
+      },
+      {
+        "id": "fn-nextval",
+        "category": "Unsafe functions",
+        "title": "nextval (sequence write)",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT nextval('orders_id_seq')",
+        "scopes": null
+      },
+      {
+        "id": "fn-current-setting",
+        "category": "Unsafe functions",
+        "title": "current_setting (server config leak)",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT current_setting('data_directory')",
+        "scopes": null
+      },
+      {
+        "id": "fn-terminate-backend",
+        "category": "Unsafe functions",
+        "title": "pg_terminate_backend",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT pg_terminate_backend(pid) FROM orders",
+        "scopes": null
+      },
+      {
+        "id": "cmd-copy-program",
+        "category": "Server commands",
+        "title": "COPY … TO PROGRAM",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "COPY (SELECT 1) TO PROGRAM 'id'",
+        "scopes": null
+      },
+      {
+        "id": "cmd-do-block",
+        "category": "Server commands",
+        "title": "DO block",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "DO $$ BEGIN DELETE FROM orders; END $$",
+        "scopes": null
+      },
+      {
+        "id": "cmd-explain-analyze",
+        "category": "Server commands",
+        "title": "EXPLAIN ANALYZE DELETE",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "EXPLAIN ANALYZE DELETE FROM orders",
+        "scopes": null
+      },
+      {
+        "id": "cmd-call",
+        "category": "Server commands",
+        "title": "CALL a procedure",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "CALL refresh_everything()",
+        "scopes": null
+      },
+      {
+        "id": "cmd-prepare",
+        "category": "Server commands",
+        "title": "PREPARE a statement",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "PREPARE p AS DELETE FROM orders",
+        "scopes": null
+      },
+      {
+        "id": "allow-internal-schema",
+        "category": "Allow-lists",
+        "title": "Table in a schema outside ALLOWED_SCHEMAS",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * FROM internal.employees",
+        "scopes": null
+      },
+      {
+        "id": "allow-pg-catalog",
+        "category": "Allow-lists",
+        "title": "pg_catalog.pg_roles",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT rolname FROM pg_catalog.pg_roles",
+        "scopes": null
+      },
+      {
+        "id": "allow-unqualified-catalog",
+        "category": "Allow-lists",
+        "title": "Unqualified pg_authid",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * FROM pg_authid",
+        "scopes": null
+      },
+      {
+        "id": "allow-quoted-catalog",
+        "category": "Allow-lists",
+        "title": "Quoted \"pg_shadow\"",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * FROM \"pg_shadow\"",
+        "scopes": null
+      },
+      {
+        "id": "allow-information-schema",
+        "category": "Allow-lists",
+        "title": "information_schema",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT table_name FROM information_schema.tables",
+        "scopes": null
+      },
+      {
+        "id": "allow-cross-database",
+        "category": "Allow-lists",
+        "title": "Cross-database reference",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * FROM postgres.public.secrets",
+        "scopes": null
+      },
+      {
+        "id": "allow-describe-internal",
+        "category": "Allow-lists",
+        "title": "Describe a table in a forbidden schema",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_describe_table",
+        "example": "{\"table\": \"employees\", \"schema\": \"internal\"}",
+        "scopes": null
+      },
+      {
+        "id": "allow-describe-qualified",
+        "category": "Allow-lists",
+        "title": "Describe internal.employees (qualified name)",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_describe_table",
+        "example": "{\"table\": \"internal.employees\"}",
+        "scopes": null
+      },
+      {
+        "id": "allow-list-internal",
+        "category": "Allow-lists",
+        "title": "List tables in a forbidden schema",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_list_tables",
+        "example": "{\"schema\": \"internal\"}",
+        "scopes": null
+      },
+      {
+        "id": "allow-tables-list",
+        "category": "Allow-lists",
+        "title": "Table outside ALLOWED_TABLES",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT email FROM customers",
+        "scopes": null
+      },
+      {
+        "id": "limit-huge-result",
+        "category": "Resource limits",
+        "title": "One million rows",
+        "outcome": "capped",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT g FROM generate_series(1, 1000000) AS g",
+        "scopes": null
+      },
+      {
+        "id": "limit-cartesian",
+        "category": "Resource limits",
+        "title": "Cartesian product (5×10¹⁰ rows)",
+        "outcome": "timeout",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT count(*) FROM order_items a, order_items b, order_items c",
+        "scopes": null
+      },
+      {
+        "id": "limit-infinite-recursion",
+        "category": "Resource limits",
+        "title": "Infinite recursive CTE",
+        "outcome": "timeout",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM r) SELECT count(*) FROM r",
+        "scopes": null
+      },
+      {
+        "id": "limit-max-rows-param",
+        "category": "Resource limits",
+        "title": "max_rows above the server cap",
+        "outcome": "invalid",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * FROM orders",
+        "scopes": null
+      },
+      {
+        "id": "limit-oversized-sql",
+        "category": "Resource limits",
+        "title": "25,000-character query",
+        "outcome": "invalid",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT 1 + SELECT 1 + … (25,000 characters)",
+        "scopes": null
+      },
+      {
+        "id": "input-empty-sql",
+        "category": "Resource limits",
+        "title": "Empty query",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "   ",
+        "scopes": null
+      },
+      {
+        "id": "sheets-read-not-allowed",
+        "category": "Sheets allow-list",
+        "title": "Read a spreadsheet outside ALLOWED_SHEET_IDS",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "sheets_read_range",
+        "example": "{\"sheet_id\": \"demo-hr-private\", \"range\": \"Salaries\"}",
+        "scopes": null
+      },
+      {
+        "id": "sheets-tabs-not-allowed",
+        "category": "Sheets allow-list",
+        "title": "List tabs of a non-allowed spreadsheet",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "sheets_list_tabs",
+        "example": "{\"sheet_id\": \"demo-hr-private\"}",
+        "scopes": null
+      },
+      {
+        "id": "sheets-find-not-allowed",
+        "category": "Sheets allow-list",
+        "title": "Search a non-allowed spreadsheet",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "sheets_find_rows",
+        "example": "{\"sheet_id\": \"demo-hr-private\", \"tab\": \"Salaries\", \"column\": \"Name\", \"value\": \"Synthetic Person A\"}",
+        "scopes": null
+      },
+      {
+        "id": "sheets-unknown-id",
+        "category": "Sheets allow-list",
+        "title": "Guessing a real-looking spreadsheet ID",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "sheets_read_range",
+        "example": "{\"sheet_id\": \"1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms\", \"range\": \"A1:Z100\"}",
+        "scopes": null
+      },
+      {
+        "id": "sheets-bad-id-chars",
+        "category": "Sheets allow-list",
+        "title": "Path-like spreadsheet ID",
+        "outcome": "invalid",
+        "passed": true,
+        "tool": "sheets_read_range",
+        "example": "{\"sheet_id\": \"../../etc/passwd\", \"range\": \"A1\"}",
+        "scopes": null
+      },
+      {
+        "id": "sheets-append-read-only",
+        "category": "Read-only mode",
+        "title": "sheets_append_rows when READ_ONLY=true",
+        "outcome": "not_listed",
+        "passed": true,
+        "tool": "sheets_append_rows",
+        "example": "{\"sheet_id\": \"demo-sales-pipeline\", \"tab\": \"Leads\", \"rows\": [[\"x\"]], \"idempotency_key\": \"attack-0001\"}",
+        "scopes": null
+      },
+      {
+        "id": "sheets-update-read-only",
+        "category": "Read-only mode",
+        "title": "sheets_update_range when READ_ONLY=true",
+        "outcome": "not_listed",
+        "passed": true,
+        "tool": "sheets_update_range",
+        "example": "{\"sheet_id\": \"demo-sales-pipeline\", \"range\": \"Leads!E2\", \"values\": [[\"Won\"]], \"idempotency_key\": \"attack-0002\"}",
+        "scopes": null
+      },
+      {
+        "id": "sheets-append-not-allowed",
+        "category": "Sheets allow-list",
+        "title": "Append to a non-allowed spreadsheet (writes enabled)",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "sheets_append_rows",
+        "example": "{\"sheet_id\": \"demo-hr-private\", \"tab\": \"Salaries\", \"rows\": [[\"Mallory\", 1]], \"idempotency_key\": \"attack-0003\"}",
+        "scopes": null
+      },
+      {
+        "id": "sheets-append-no-idempotency-key",
+        "category": "Write safety",
+        "title": "Append without an idempotency_key",
+        "outcome": "invalid",
+        "passed": true,
+        "tool": "sheets_append_rows",
+        "example": "{\"sheet_id\": \"demo-sales-pipeline\", \"tab\": \"Notes\", \"rows\": [[\"2026-11-23\", \"x\"]]}",
+        "scopes": null
+      },
+      {
+        "id": "sheets-append-too-many-cells",
+        "category": "Write safety",
+        "title": "Append 6,000 cells in one call",
+        "outcome": "invalid",
+        "passed": true,
+        "tool": "sheets_append_rows",
+        "example": "{\"sheet_id\": \"demo-sales-pipeline\", \"tab\": \"Notes\", \"rows\": \"…6,000 cells…\", \"idempotency_key\": \"attack-0004\"}",
+        "scopes": null
+      },
+      {
+        "id": "scope-sheets-with-db-token",
+        "category": "OAuth scopes",
+        "title": "Read a sheet with only db:read",
+        "outcome": "forbidden",
+        "passed": true,
+        "tool": "sheets_read_range",
+        "example": "{\"sheet_id\": \"demo-sales-pipeline\", \"range\": \"Leads\"}",
+        "scopes": [
+          "db:read"
+        ]
+      },
+      {
+        "id": "scope-db-with-sheets-token",
+        "category": "OAuth scopes",
+        "title": "Query Postgres with only sheets:read",
+        "outcome": "forbidden",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT 1",
+        "scopes": [
+          "sheets:read"
+        ]
+      },
+      {
+        "id": "scope-append-without-write",
+        "category": "OAuth scopes",
+        "title": "Append with sheets:read but not sheets:write",
+        "outcome": "forbidden",
+        "passed": true,
+        "tool": "sheets_append_rows",
+        "example": "{\"sheet_id\": \"demo-sales-pipeline\", \"tab\": \"Notes\", \"rows\": [[\"2026-11-23\", \"x\"]], \"idempotency_key\": \"attack-0005\"}",
+        "scopes": [
+          "db:read",
+          "sheets:read"
+        ]
+      },
+      {
+        "id": "scope-update-without-write",
+        "category": "OAuth scopes",
+        "title": "Update with sheets:read but not sheets:write",
+        "outcome": "forbidden",
+        "passed": true,
+        "tool": "sheets_update_range",
+        "example": "{\"sheet_id\": \"demo-sales-pipeline\", \"range\": \"Leads!E2\", \"values\": [[\"Won\"]], \"idempotency_key\": \"attack-0006\"}",
+        "scopes": [
+          "sheets:read"
+        ]
+      },
+      {
+        "id": "scope-no-scopes",
+        "category": "OAuth scopes",
+        "title": "Token with no scopes",
+        "outcome": "forbidden",
+        "passed": true,
+        "tool": "postgres_list_tables",
+        "example": "{}",
+        "scopes": []
+      }
+    ]
+  },
+  "latency": {
+    "maxP95Ms": 45.8,
+    "tools": [
+      {
+        "tool": "postgres_list_tables",
+        "label": "postgres_list_tables",
+        "n": 50,
+        "p50_ms": 13.3,
+        "p95_ms": 20.8
+      },
+      {
+        "tool": "postgres_describe_table",
+        "label": "postgres_describe_table",
+        "n": 50,
+        "p50_ms": 29.1,
+        "p95_ms": 45.8
+      },
+      {
+        "tool": "postgres_query",
+        "label": "postgres_query (count)",
+        "n": 50,
+        "p50_ms": 9.1,
+        "p95_ms": 10.1
+      },
+      {
+        "tool": "postgres_query",
+        "label": "postgres_query (top-5 revenue join)",
+        "n": 50,
+        "p50_ms": 13.0,
+        "p95_ms": 16.0
+      },
+      {
+        "tool": "postgres_query",
+        "label": "postgres_query (500 rows)",
+        "n": 50,
+        "p50_ms": 19.8,
+        "p95_ms": 25.8
+      },
+      {
+        "tool": "sheets_list_tabs",
+        "label": "sheets_list_tabs",
+        "n": 50,
+        "p50_ms": 8.0,
+        "p95_ms": 10.1
+      },
+      {
+        "tool": "sheets_read_range",
+        "label": "sheets_read_range",
+        "n": 50,
+        "p50_ms": 8.6,
+        "p95_ms": 17.9
+      },
+      {
+        "tool": "sheets_find_rows",
+        "label": "sheets_find_rows",
+        "n": 50,
+        "p50_ms": 9.3,
+        "p95_ms": 14.9
+      },
+      {
+        "tool": "sheets_append_rows",
+        "label": "sheets_append_rows",
+        "n": 50,
+        "p50_ms": 6.5,
+        "p95_ms": 12.2
+      },
+      {
+        "tool": "sheets_update_range",
+        "label": "sheets_update_range",
+        "n": 50,
+        "p50_ms": 6.6,
+        "p95_ms": 11.9
+      }
+    ]
+  },
+  "tasks": null
+}

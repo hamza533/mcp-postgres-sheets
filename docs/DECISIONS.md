@@ -74,3 +74,14 @@ Short entries: chose X over Y because Z. Newest last.
 - **`mcp-publisher` pinned to v1.8.8, Actions pinned to major versions (checkout v7, setup-uv v10, CodeQL v4, Trivy v0.36.0, docker/* current majors)** — Dependabot (uv, Actions, Docker, Compose, npm) keeps them moving; the publisher is pinned to a release older than two weeks.
 - **CodeQL `security-extended` for Python, JS/TS (the site) and the workflows themselves** — free on public repos; workflow injection is a real supply-chain risk.
 - **`apt-get upgrade` in the runtime stage** — the pinned `python:3.12.12-slim-bookworm` base shipped fixable HIGH/CRITICAL CVEs in `perl-base` (an Essential package that can't be removed); applying Debian security updates at build time brought Trivy to 0. Dependabot bumps the base tag.
+
+## M7
+- **Website reference data generated from the code (`scripts/export_tools.py`) and checked byte-for-byte in `make lint` and CI** — the tools page comes from a real `tools/list` call, configuration from `.env.example`, numbers from `eval/results.json`, the changelog from `CHANGELOG.md`; the docs can't drift.
+- **Shiki at build time (server components) for syntax highlighting** — the static site ships no highlighter JavaScript; dual light/dark themes via CSS variables.
+- **Next.js 16.4 static export, React 19.3, Tailwind 4.3, TypeScript 6.0** — the newest releases at least two weeks old; TypeScript 7 (native compiler) is skipped until Next's type-check integration supports it.
+- **`clsx` + `tailwind-merge` for `cn()` instead of the newer `cn` package the shadcn 4.23 CLI installs** — the long-standing, widely used pair; same behaviour, and components import `cn` from `@/lib/utils` as before.
+- **ESLint 10 flat config from `eslint-config-next` directly (no FlatCompat)** — ESLint 9 is end-of-life.
+- **Playwright runs against the static export served by a 40-line Node server (`e2e/serve.mjs`)** — tests exactly what gets deployed, with no extra dependency.
+- **Security headers (CSP, HSTS, frame-ancestors none…) in `site/vercel.json`** — the static export has no server; `script-src 'unsafe-inline'` is required by Next's inline hydration data and is acceptable for a site with no user input or secrets.
+- **Built to `docs/ui/STITCH_PROMPT.md` with shadcn defaults** — the Stitch project is private and was not accessible during the build; aligning with its exports is a tracked follow-up (KICKOFF rule 6).
+- **`--env-file` CLI option** — lets the client config reference a 600-permission file instead of embedding `DATABASE_URL` and key paths, matching the site's "never put secrets in the client config" guidance.

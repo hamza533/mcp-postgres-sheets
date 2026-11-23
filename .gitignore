@@ -29,6 +29,7 @@ site/.next/
 site/out/
 site/test-results/
 site/playwright-report/
+site/next-env.d.ts
 
 # AI tool folders (see CONVENTIONS 3a) — .mcp.json is committed
 .claude/
@@ -42,3 +43,4 @@ site/playwright-report/
 # OS
 .DS_Store
 Thumbs.db
+*.tsbuildinfo

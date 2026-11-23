@@ -27,6 +27,14 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
         choices=["stdio", "http"],
         help="Override TRANSPORT (default: stdio).",
     )
+    parser.add_argument(
+        "--env-file",
+        metavar="PATH",
+        help=(
+            "Read settings from this file (KEY=value lines) instead of ./.env. Keeps secrets out "
+            "of the AI client's config file. Real environment variables still win."
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -41,8 +49,16 @@ def main(argv: list[str] | None = None) -> None:
     from mcp_postgres_sheets.config import Settings, Transport
 
     try:
-        overrides = {"transport": args.transport} if args.transport else {}
-        settings = Settings(**overrides)
+        overrides: dict[str, object] = {"transport": args.transport} if args.transport else {}
+        if args.env_file:
+            from pathlib import Path
+
+            env_file = Path(args.env_file).expanduser()
+            if not env_file.is_file():
+                print(f"mcp-postgres-sheets: --env-file {env_file} does not exist", file=sys.stderr)
+                sys.exit(2)
+            overrides["_env_file"] = env_file
+        settings = Settings(**overrides)  # type: ignore[arg-type]
     except ValidationError as exc:
         problems = "; ".join(
             f"{'.'.join(str(p) for p in err['loc']).upper() or 'config'}: {err['msg']}"
