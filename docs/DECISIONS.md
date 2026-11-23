@@ -101,3 +101,7 @@ Short entries: chose X over Y because Z. Newest last.
 - **Usage tracking (CONVENTIONS §10) lives in the audit log, not a database table** — the server owns no tables (SPEC §4a); `duration_ms`, `row_count`, `outcome` and caller per call are queryable in Log Analytics. There are no tokens or LLM cost per call: the server never calls an LLM.
 - **Retention:** the server stores no uploads or conversations; audit lines live in Log Analytics with `logRetentionDays` (default 90) in the Bicep profile, or wherever `AUDIT_LOG_PATH` points (rotate with logrotate).
 - **Backups / PITR: not applicable** — the server owns no data; the client's Postgres keeps its own backup policy.
+
+## Post-launch
+- **`astral-sh/setup-uv` pinned to an exact version (v10.4.0)** — unlike the other actions it publishes no floating major tag, so `@v10` failed on the first GitHub run. Dependabot bumps it.
+- **Dependabot ignores major versions (and Python ≥ 3.13 base images)** — SPEC pins the stack; the first push produced majors (MCP SDK 2.x, Python 3.15, Postgres 18, TypeScript 7, sqlglot 30, @types/node 26) that would each need code and doc changes. Majors are upgraded deliberately with a DECISIONS entry; minor/patch updates still arrive grouped.

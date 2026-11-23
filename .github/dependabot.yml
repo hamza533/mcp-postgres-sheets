@@ -1,9 +1,15 @@
 version: 2
+# Major versions are ignored on purpose: SPEC pins the stack (Python 3.12, Postgres 16, MCP SDK 1.x,
+# Next 16 / TypeScript 6, Node 22). A major upgrade is a deliberate change with a DECISIONS.md entry,
+# not a weekly bot PR. Minor and patch updates (incl. security fixes) still come through, grouped.
 updates:
   - package-ecosystem: uv
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       python-minor:
         update-types: [minor, patch]
@@ -20,16 +26,28 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      # Docker tags are not semver: 3.12 -> 3.15 looks like a "minor" bump. Stay on 3.12.
+      - dependency-name: "python"
+        versions: [">= 3.13"]
 
   - package-ecosystem: docker-compose
     directory: /
     schedule:
       interval: monthly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: npm
     directory: /site
     schedule:
       interval: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       site-minor:
         update-types: [minor, patch]
