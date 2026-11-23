@@ -26,3 +26,22 @@ jobs:
       - run: uv python install
       - run: make setup
       - run: make check
+
+  remote-e2e:
+    name: remote mode end-to-end (Keycloak + OAuth)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.9.30"
+          enable-cache: true
+      - run: uv python install
+      - run: make setup
+      - run: docker compose --profile remote up -d --build --wait
+      - run: make remote-smoke
+      - if: failure()
+        run: docker compose --profile remote logs --no-color
+      - if: always()
+        run: docker compose --profile remote down -v

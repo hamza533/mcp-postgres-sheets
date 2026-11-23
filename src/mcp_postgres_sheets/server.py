@@ -3,15 +3,11 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager
 from typing import Any
-
-from mcp.server.fastmcp import FastMCP
 
 from mcp_postgres_sheets import __version__
 from mcp_postgres_sheets.audit import AuditLogger
-from mcp_postgres_sheets.config import Settings
+from mcp_postgres_sheets.config import Settings, Transport
 from mcp_postgres_sheets.db import Database
 from mcp_postgres_sheets.sheets import build_sheets_backend
 from mcp_postgres_sheets.tools._runtime import GuardedFastMCP, ServerState
@@ -47,30 +43,44 @@ def build_state(settings: Settings) -> ServerState:
     )
 
 
+async def close_state(state: ServerState) -> None:
+    """Release process-wide resources. Called once at shutdown by the transport runner.
+
+    Not a FastMCP `lifespan`: in stateless HTTP mode that runs once per request.
+    """
+    if state.db is not None:
+        await state.db.close()
+    if state.sheets is not None:
+        await state.sheets.aclose()
+    if isinstance(state.audit, AuditLogger):
+        state.audit.close()
+
+
+async def run_stdio(mcp: GuardedFastMCP) -> None:
+    try:
+        await mcp.run_stdio_async()
+    finally:
+        await close_state(mcp.state)
+
+
 def build_server(
     settings: Settings, state: ServerState | None = None
 ) -> tuple[GuardedFastMCP, ServerState]:
     state = state or build_state(settings)
 
-    @asynccontextmanager
-    async def lifespan(_: FastMCP[Any]) -> AsyncIterator[None]:
-        try:
-            yield
-        finally:
-            if state.db is not None:
-                await state.db.close()
-            if state.sheets is not None:
-                await state.sheets.aclose()
-            if isinstance(state.audit, AuditLogger):
-                state.audit.close()
+    extra: dict[str, Any] = {}
+    if settings.transport is Transport.HTTP:
+        from mcp_postgres_sheets.http_app import http_server_kwargs
+
+        extra = http_server_kwargs(settings)
 
     mcp = GuardedFastMCP(
         state,
         name=SERVER_NAME,
         instructions=_instructions(settings),
         website_url="https://github.com/hamza533/mcp-postgres-sheets",
-        lifespan=lifespan,
         log_level=settings.log_level.upper(),
+        **extra,
     )
     mcp._mcp_server.version = __version__
 

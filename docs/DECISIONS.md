@@ -44,3 +44,16 @@ Short entries: chose X over Y because Z. Newest last.
 - **Tools are only registered when their backend is configured** — `tools/list` shows exactly what works; an AI never picks a tool that can only fail.
 - **Google client calls run in worker threads with a fresh `AuthorizedHttp` per attempt** — `google-api-python-client` is synchronous and httplib2 is not thread-safe. Static discovery documents mean no network call at start-up.
 - **Retries: exponential backoff with jitter (0.5 s · 2ⁿ, ±50 %, max 30 s), honouring `Retry-After`, on 429/5xx/network errors only** — 4xx other than 429 are caller errors and never retried.
+
+## M4
+- **Use the SDK's resource-server plumbing (`TokenVerifier`, `AuthSettings`, RFC 9728 metadata route) with our own JWT verifier** — the SDK handles the 401 + `WWW-Authenticate: resource_metadata=…` handshake exactly as the MCP authorization spec requires; we only supply validation (PyJWT + JWKS).
+- **Scopes checked per tool in `GuardedFastMCP`, not as SDK `required_scopes`** — `required_scopes` applies to every request; we need `db:read` / `sheets:read` / `sheets:write` per tool. The metadata route is replaced so `scopes_supported` lists all three.
+- **Asymmetric algorithms only (RS/PS/ES), `exp`/`iss`/`aud` required, 30 s leeway** — blocks `alg=none` and HS256 key-confusion attacks; tolerates small clock skew.
+- **Scopes read from `scope`, `scp` and `roles`, with `db.read` accepted for `db:read`** — Entra ID puts delegated scopes in `scp`, app permissions in `roles`, and does not allow `:` in scope values.
+- **Stateless Streamable HTTP with JSON responses** — no session affinity needed behind a load balancer; every replica can serve every request (SPEC §4a).
+- **Process resources (DB pool, audit file) are tied to the Starlette app lifespan, not FastMCP's `lifespan`** — in stateless mode FastMCP runs its lifespan once per request, which closed the pool after every call (found by the rate-limit test).
+- **Per-caller rate limit in memory, per replica** — no Redis to run; with N replicas the effective cap is up to N × limit. For a strict global cap, put Azure API Management / Front Door rate limiting in front (documented in the production profile).
+- **DNS-rebinding protection on (Host/Origin allow-list from `PUBLIC_URL` + `HTTP_ALLOWED_HOSTS`)** — cheap defence for servers that end up reachable on a developer laptop.
+- **No CORS headers** — clients are MCP hosts calling server-to-server (ChatGPT connectors, Claude) or local tools; no browser front end calls the API. CONVENTIONS' CORS allow-list rule is therefore N/A here.
+- **Keycloak 26 in `start-dev` with a committed realm export** — reproducible local IdP with test clients for each scope combination; `--hostname-backchannel-dynamic` lets the server fetch JWKS at `keycloak:8080` while tokens carry `iss=http://localhost:8180/realms/mcp`. Test-only, never for production.
+- **Runtime image `python:3.12.12-slim-bookworm`, non-root UID 10001, read-only root filesystem in compose** — small attack surface; no shell access needed at runtime.
