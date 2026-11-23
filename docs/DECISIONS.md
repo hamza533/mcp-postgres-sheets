@@ -57,3 +57,11 @@ Short entries: chose X over Y because Z. Newest last.
 - **No CORS headers** — clients are MCP hosts calling server-to-server (ChatGPT connectors, Claude) or local tools; no browser front end calls the API. CONVENTIONS' CORS allow-list rule is therefore N/A here.
 - **Keycloak 26 in `start-dev` with a committed realm export** — reproducible local IdP with test clients for each scope combination; `--hostname-backchannel-dynamic` lets the server fetch JWKS at `keycloak:8080` while tokens carry `iss=http://localhost:8180/realms/mcp`. Test-only, never for production.
 - **Runtime image `python:3.12.12-slim-bookworm`, non-root UID 10001, read-only root filesystem in compose** — small attack surface; no shell access needed at runtime.
+
+## M5
+- **Gemini REST API via httpx in `eval/llm.py` over the `google-genai` SDK** — httpx is already installed (MCP SDK dependency); one ~150-line module owns the provider, so swapping to another LLM touches only that file. Tool schemas are passed as `parametersJsonSchema`, so MCP's JSON Schemas need no conversion.
+- **Expected answers computed at run time (reference SQL / the demo sheet), not hard-coded** — sample order dates are relative to the seed day, so "last quarter" answers change; computing them keeps every run honest.
+- **A fresh server (and fresh in-memory spreadsheet) per task** — write tasks can't leak into later tasks, and each check sees exactly what that task did.
+- **Response cache keyed by the full request (`eval/.cache/`, git-ignored) + throttle (GEMINI_RPM, default 8)** — re-runs are free and reproducible on the free tier; only synthetic data is ever sent.
+- **python-dotenv (already a pydantic-settings dependency) loads `.env` for `make eval`** — the eval's GEMINI_* variables are not server settings.
+- **Latency measured through an in-process MCP client session** — includes JSON-RPC, validation, all safety layers and the Postgres round trip; excludes the network, which depends on the deployment.
