@@ -15,6 +15,8 @@ public API: breaking changes to them only happen in a major version.
   `READ_ONLY=false`) `sheets_append_rows` and `sheets_update_range` with a required `idempotency_key`.
   Service-account auth, `ALLOWED_SHEET_IDS`, timeouts and retries with backoff on 429/5xx.
 - In-memory Sheets backend with a synthetic demo spreadsheet (`SHEETS_BACKEND=memory`).
+- Evaluation (`make eval`): safety suite (70/70 stopped), 20 natural-language tasks run by Gemini Flash
+  with tool calling (needs `GEMINI_API_KEY`), latency p50/p95 per tool → `eval/results.{md,json}`.
 - Remote mode (`TRANSPORT=http`): stateless Streamable HTTP, OAuth 2.1 bearer-token validation via
   JWKS (any OIDC provider), per-tool scopes `db:read` / `sheets:read` / `sheets:write`, RFC 9728
   protected-resource metadata, per-caller rate limit, `/health` and `/ready`, X-Request-ID.

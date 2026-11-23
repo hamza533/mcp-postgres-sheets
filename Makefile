@@ -59,6 +59,9 @@ format:
 
 check: lint test  ## must pass before every commit
 
+GIT_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null)
+export GIT_COMMIT
+
 eval: db          ## safety suite + 20 NL tasks (Gemini, needs GEMINI_API_KEY) + latency → eval/results.{md,json}
 	$(UV) run python -m eval.run
 

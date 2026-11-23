@@ -1,0 +1,642 @@
+{
+  "safety": {
+    "passed": 70,
+    "total": 70,
+    "outcomes": {
+      "blocked": 55,
+      "capped": 1,
+      "timeout": 2,
+      "invalid": 5,
+      "not_listed": 2,
+      "forbidden": 5
+    },
+    "by_category": {
+      "Writes and DDL": {
+        "passed": 12,
+        "total": 12
+      },
+      "Multiple statements": {
+        "passed": 4,
+        "total": 4
+      },
+      "CTE tricks": {
+        "passed": 4,
+        "total": 4
+      },
+      "Comment injection": {
+        "passed": 3,
+        "total": 3
+      },
+      "Unsafe functions": {
+        "passed": 11,
+        "total": 11
+      },
+      "Server commands": {
+        "passed": 5,
+        "total": 5
+      },
+      "Allow-lists": {
+        "passed": 10,
+        "total": 10
+      },
+      "Resource limits": {
+        "passed": 6,
+        "total": 6
+      },
+      "Sheets allow-list": {
+        "passed": 6,
+        "total": 6
+      },
+      "Read-only mode": {
+        "passed": 2,
+        "total": 2
+      },
+      "Write safety": {
+        "passed": 2,
+        "total": 2
+      },
+      "OAuth scopes": {
+        "passed": 5,
+        "total": 5
+      }
+    },
+    "failures": [],
+    "cases": [
+      {
+        "id": "dml-drop-table",
+        "category": "Writes and DDL",
+        "title": "DROP TABLE",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "dml-delete",
+        "category": "Writes and DDL",
+        "title": "DELETE all rows",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "dml-update",
+        "category": "Writes and DDL",
+        "title": "UPDATE prices",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "dml-insert",
+        "category": "Writes and DDL",
+        "title": "INSERT a row",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "dml-truncate",
+        "category": "Writes and DDL",
+        "title": "TRUNCATE",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "ddl-alter",
+        "category": "Writes and DDL",
+        "title": "ALTER TABLE",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "ddl-create-as",
+        "category": "Writes and DDL",
+        "title": "CREATE TABLE AS SELECT",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "dcl-grant",
+        "category": "Writes and DDL",
+        "title": "GRANT privileges",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "dml-merge",
+        "category": "Writes and DDL",
+        "title": "MERGE",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "dml-select-into",
+        "category": "Writes and DDL",
+        "title": "SELECT … INTO new table",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "lock-for-update",
+        "category": "Writes and DDL",
+        "title": "SELECT … FOR UPDATE",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "lock-table",
+        "category": "Writes and DDL",
+        "title": "LOCK TABLE",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "multi-select-drop",
+        "category": "Multiple statements",
+        "title": "SELECT then DROP",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "multi-newline-update",
+        "category": "Multiple statements",
+        "title": "Second statement on a new line",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "multi-transaction",
+        "category": "Multiple statements",
+        "title": "BEGIN; DELETE; COMMIT",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "multi-set-then-select",
+        "category": "Multiple statements",
+        "title": "Disable timeout, then query",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "cte-delete",
+        "category": "CTE tricks",
+        "title": "Data-modifying CTE (DELETE … RETURNING)",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "cte-update",
+        "category": "CTE tricks",
+        "title": "Data-modifying CTE (UPDATE)",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "cte-insert-nested",
+        "category": "CTE tricks",
+        "title": "INSERT CTE inside a subquery",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "cte-hides-internal",
+        "category": "CTE tricks",
+        "title": "CTE reading a forbidden schema",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "comment-block-hides-drop",
+        "category": "Comment injection",
+        "title": "Block comment before a second statement",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "comment-line-hides-delete",
+        "category": "Comment injection",
+        "title": "Line comment then a new statement",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "comment-inline-keyword",
+        "category": "Comment injection",
+        "title": "Keyword split by a comment",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "fn-pg-sleep",
+        "category": "Unsafe functions",
+        "title": "pg_sleep",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "fn-pg-sleep-qualified",
+        "category": "Unsafe functions",
+        "title": "pg_catalog.pg_sleep in WHERE",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "fn-pg-read-file",
+        "category": "Unsafe functions",
+        "title": "pg_read_file",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "fn-pg-ls-dir",
+        "category": "Unsafe functions",
+        "title": "pg_ls_dir as a table function",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "fn-lo-import",
+        "category": "Unsafe functions",
+        "title": "lo_import (server file read)",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "fn-dblink",
+        "category": "Unsafe functions",
+        "title": "dblink to another server",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "fn-set-config",
+        "category": "Unsafe functions",
+        "title": "set_config to lift the timeout",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "fn-query-to-xml",
+        "category": "Unsafe functions",
+        "title": "query_to_xml running nested SQL",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "fn-nextval",
+        "category": "Unsafe functions",
+        "title": "nextval (sequence write)",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "fn-current-setting",
+        "category": "Unsafe functions",
+        "title": "current_setting (server config leak)",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "fn-terminate-backend",
+        "category": "Unsafe functions",
+        "title": "pg_terminate_backend",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "cmd-copy-program",
+        "category": "Server commands",
+        "title": "COPY … TO PROGRAM",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "cmd-do-block",
+        "category": "Server commands",
+        "title": "DO block",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "cmd-explain-analyze",
+        "category": "Server commands",
+        "title": "EXPLAIN ANALYZE DELETE",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "cmd-call",
+        "category": "Server commands",
+        "title": "CALL a procedure",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "cmd-prepare",
+        "category": "Server commands",
+        "title": "PREPARE a statement",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "allow-internal-schema",
+        "category": "Allow-lists",
+        "title": "Table in a schema outside ALLOWED_SCHEMAS",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "allow-pg-catalog",
+        "category": "Allow-lists",
+        "title": "pg_catalog.pg_roles",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "allow-unqualified-catalog",
+        "category": "Allow-lists",
+        "title": "Unqualified pg_authid",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "allow-quoted-catalog",
+        "category": "Allow-lists",
+        "title": "Quoted \"pg_shadow\"",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "allow-information-schema",
+        "category": "Allow-lists",
+        "title": "information_schema",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "allow-cross-database",
+        "category": "Allow-lists",
+        "title": "Cross-database reference",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "allow-describe-internal",
+        "category": "Allow-lists",
+        "title": "Describe a table in a forbidden schema",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "allow-describe-qualified",
+        "category": "Allow-lists",
+        "title": "Describe internal.employees (qualified name)",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "allow-list-internal",
+        "category": "Allow-lists",
+        "title": "List tables in a forbidden schema",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "allow-tables-list",
+        "category": "Allow-lists",
+        "title": "Table outside ALLOWED_TABLES",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "limit-huge-result",
+        "category": "Resource limits",
+        "title": "One million rows",
+        "outcome": "capped",
+        "passed": true
+      },
+      {
+        "id": "limit-cartesian",
+        "category": "Resource limits",
+        "title": "Cartesian product (5×10¹⁰ rows)",
+        "outcome": "timeout",
+        "passed": true
+      },
+      {
+        "id": "limit-infinite-recursion",
+        "category": "Resource limits",
+        "title": "Infinite recursive CTE",
+        "outcome": "timeout",
+        "passed": true
+      },
+      {
+        "id": "limit-max-rows-param",
+        "category": "Resource limits",
+        "title": "max_rows above the server cap",
+        "outcome": "invalid",
+        "passed": true
+      },
+      {
+        "id": "limit-oversized-sql",
+        "category": "Resource limits",
+        "title": "25,000-character query",
+        "outcome": "invalid",
+        "passed": true
+      },
+      {
+        "id": "input-empty-sql",
+        "category": "Resource limits",
+        "title": "Empty query",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "sheets-read-not-allowed",
+        "category": "Sheets allow-list",
+        "title": "Read a spreadsheet outside ALLOWED_SHEET_IDS",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "sheets-tabs-not-allowed",
+        "category": "Sheets allow-list",
+        "title": "List tabs of a non-allowed spreadsheet",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "sheets-find-not-allowed",
+        "category": "Sheets allow-list",
+        "title": "Search a non-allowed spreadsheet",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "sheets-unknown-id",
+        "category": "Sheets allow-list",
+        "title": "Guessing a real-looking spreadsheet ID",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "sheets-bad-id-chars",
+        "category": "Sheets allow-list",
+        "title": "Path-like spreadsheet ID",
+        "outcome": "invalid",
+        "passed": true
+      },
+      {
+        "id": "sheets-append-read-only",
+        "category": "Read-only mode",
+        "title": "sheets_append_rows when READ_ONLY=true",
+        "outcome": "not_listed",
+        "passed": true
+      },
+      {
+        "id": "sheets-update-read-only",
+        "category": "Read-only mode",
+        "title": "sheets_update_range when READ_ONLY=true",
+        "outcome": "not_listed",
+        "passed": true
+      },
+      {
+        "id": "sheets-append-not-allowed",
+        "category": "Sheets allow-list",
+        "title": "Append to a non-allowed spreadsheet (writes enabled)",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "sheets-append-no-idempotency-key",
+        "category": "Write safety",
+        "title": "Append without an idempotency_key",
+        "outcome": "invalid",
+        "passed": true
+      },
+      {
+        "id": "sheets-append-too-many-cells",
+        "category": "Write safety",
+        "title": "Append 6,000 cells in one call",
+        "outcome": "invalid",
+        "passed": true
+      },
+      {
+        "id": "scope-sheets-with-db-token",
+        "category": "OAuth scopes",
+        "title": "Read a sheet with only db:read",
+        "outcome": "forbidden",
+        "passed": true
+      },
+      {
+        "id": "scope-db-with-sheets-token",
+        "category": "OAuth scopes",
+        "title": "Query Postgres with only sheets:read",
+        "outcome": "forbidden",
+        "passed": true
+      },
+      {
+        "id": "scope-append-without-write",
+        "category": "OAuth scopes",
+        "title": "Append with sheets:read but not sheets:write",
+        "outcome": "forbidden",
+        "passed": true
+      },
+      {
+        "id": "scope-update-without-write",
+        "category": "OAuth scopes",
+        "title": "Update with sheets:read but not sheets:write",
+        "outcome": "forbidden",
+        "passed": true
+      },
+      {
+        "id": "scope-no-scopes",
+        "category": "OAuth scopes",
+        "title": "Token with no scopes",
+        "outcome": "forbidden",
+        "passed": true
+      }
+    ]
+  },
+  "latency": {
+    "method": "50 calls per tool after 3 warm-up calls, through an in-process MCP client session (includes JSON-RPC, validation, safety checks and the Postgres round trip; excludes network). Sheets timings use the in-memory backend.",
+    "tools": [
+      {
+        "tool": "postgres_list_tables",
+        "label": "postgres_list_tables",
+        "n": 50,
+        "p50_ms": 13.3,
+        "p95_ms": 20.8
+      },
+      {
+        "tool": "postgres_describe_table",
+        "label": "postgres_describe_table",
+        "n": 50,
+        "p50_ms": 29.1,
+        "p95_ms": 45.8
+      },
+      {
+        "tool": "postgres_query",
+        "label": "postgres_query (count)",
+        "n": 50,
+        "p50_ms": 9.1,
+        "p95_ms": 10.1
+      },
+      {
+        "tool": "postgres_query",
+        "label": "postgres_query (top-5 revenue join)",
+        "n": 50,
+        "p50_ms": 13.0,
+        "p95_ms": 16.0
+      },
+      {
+        "tool": "postgres_query",
+        "label": "postgres_query (500 rows)",
+        "n": 50,
+        "p50_ms": 19.8,
+        "p95_ms": 25.8
+      },
+      {
+        "tool": "sheets_list_tabs",
+        "label": "sheets_list_tabs",
+        "n": 50,
+        "p50_ms": 8.0,
+        "p95_ms": 10.1
+      },
+      {
+        "tool": "sheets_read_range",
+        "label": "sheets_read_range",
+        "n": 50,
+        "p50_ms": 8.6,
+        "p95_ms": 17.9
+      },
+      {
+        "tool": "sheets_find_rows",
+        "label": "sheets_find_rows",
+        "n": 50,
+        "p50_ms": 9.3,
+        "p95_ms": 14.9
+      },
+      {
+        "tool": "sheets_append_rows",
+        "label": "sheets_append_rows",
+        "n": 50,
+        "p50_ms": 6.5,
+        "p95_ms": 12.2
+      },
+      {
+        "tool": "sheets_update_range",
+        "label": "sheets_update_range",
+        "n": 50,
+        "p50_ms": 6.6,
+        "p95_ms": 11.9
+      }
+    ],
+    "max_p95_ms": 45.8
+  },
+  "tasks": {
+    "skipped": "GEMINI_API_KEY is not set"
+  },
+  "meta": {
+    "generated": "2026-11-23 12:33 UTC",
+    "version": "0.1.0",
+    "commit": "6a40126",
+    "python": "3.12.12"
+  }
+}
