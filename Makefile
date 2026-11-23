@@ -100,6 +100,6 @@ site-test: site-build  ## Playwright smoke test of the exported website (npx pla
 site-dev:         ## website dev server on http://localhost:3000
 	cd site && npm run dev
 
-bicep:            ## validate the Azure production profile
+bicep:            ## validate the Azure production profile (needs the Azure CLI or the bicep CLI)
 	az bicep build --file deploy/azure/main.bicep --stdout > /dev/null
 	az bicep lint --file deploy/azure/main.bicep

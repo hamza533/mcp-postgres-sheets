@@ -49,3 +49,15 @@ def test_changelog_has_current_version_or_unreleased() -> None:
 def test_demo_sheet_ships_in_package() -> None:
     data = ROOT / "src" / "mcp_postgres_sheets" / "data" / "sheets_demo.json"
     assert "demo-sales-pipeline" in json.loads(data.read_text(encoding="utf-8"))["spreadsheets"]
+
+
+def test_every_setting_is_documented_in_env_example() -> None:
+    from mcp_postgres_sheets.config import Settings
+
+    documented = set(
+        re.findall(
+            r"^([A-Z][A-Z0-9_]+)=", (ROOT / ".env.example").read_text(encoding="utf-8"), re.M
+        )
+    )
+    missing = {name.upper() for name in Settings.model_fields} - documented
+    assert not missing, f"add to .env.example: {sorted(missing)}"
