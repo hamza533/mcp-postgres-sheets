@@ -21,6 +21,9 @@ public API: breaking changes to them only happen in a major version.
   JWKS (any OIDC provider), per-tool scopes `db:read` / `sheets:read` / `sheets:write`, RFC 9728
   protected-resource metadata, per-caller rate limit, `/health` and `/ready`, X-Request-ID.
 - `docker compose --profile remote`: server + Keycloak test realm; `make remote-smoke`.
+- Packaging: PyPI package (`uvx mcp-postgres-sheets`), multi-arch Docker image on GHCR, MCP Registry
+  `server.json`; release workflow with trusted publishing, Trivy scan, SBOM/provenance; CodeQL and
+  Dependabot; `RELEASING.md`.
 - Dockerfile (non-root, pinned base images).
 - Audit log: one JSON line per tool call (including rejected, invalid and unknown-tool calls) with
   request ID, caller, tool, redacted arguments, duration, row count and outcome.

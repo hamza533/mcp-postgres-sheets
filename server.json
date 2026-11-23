@@ -1,0 +1,100 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.hamza533/mcp-postgres-sheets",
+  "title": "PG Sheets MCP",
+  "description": "Query PostgreSQL and read/write Google Sheets safely: read-only by default, scoped, fully audited.",
+  "version": "0.1.0",
+  "websiteUrl": "https://github.com/hamza533/mcp-postgres-sheets",
+  "repository": {
+    "url": "https://github.com/hamza533/mcp-postgres-sheets",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "mcp-postgres-sheets",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "transport": { "type": "stdio" },
+      "environmentVariables": [
+        {
+          "name": "DATABASE_URL",
+          "description": "PostgreSQL connection string for a READ-ONLY role (see deploy/sql/001_readonly_role.sql).",
+          "isRequired": false,
+          "isSecret": true,
+          "format": "string",
+          "placeholder": "postgresql://mcp_readonly:<password>@localhost:5432/mydb"
+        },
+        {
+          "name": "ALLOWED_SCHEMAS",
+          "description": "Comma-separated schemas the AI may query.",
+          "isRequired": false,
+          "default": "public",
+          "format": "string"
+        },
+        {
+          "name": "ALLOWED_TABLES",
+          "description": "Optional comma-separated table allow-list (empty = all tables in ALLOWED_SCHEMAS).",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "GOOGLE_SERVICE_ACCOUNT_JSON",
+          "description": "Path to the Google service-account key file (share your sheets with its email).",
+          "isRequired": false,
+          "isSecret": true,
+          "format": "filepath"
+        },
+        {
+          "name": "ALLOWED_SHEET_IDS",
+          "description": "Comma-separated spreadsheet IDs the AI may use.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "READ_ONLY",
+          "description": "true hides the Sheets write tools entirely.",
+          "isRequired": false,
+          "default": "true",
+          "choices": ["true", "false"],
+          "format": "boolean"
+        },
+        {
+          "name": "AUDIT_LOG_PATH",
+          "description": "File for the JSON-lines audit log (default: stderr).",
+          "isRequired": false,
+          "format": "filepath"
+        }
+      ]
+    },
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/hamza533/mcp-postgres-sheets:0.1.0",
+      "transport": { "type": "stdio" },
+      "runtimeHint": "docker",
+      "environmentVariables": [
+        {
+          "name": "DATABASE_URL",
+          "description": "PostgreSQL connection string for a READ-ONLY role.",
+          "isRequired": false,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "ALLOWED_SHEET_IDS",
+          "description": "Comma-separated spreadsheet IDs the AI may use.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "READ_ONLY",
+          "description": "true hides the Sheets write tools entirely.",
+          "isRequired": false,
+          "default": "true",
+          "format": "boolean"
+        }
+      ]
+    }
+  ]
+}

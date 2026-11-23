@@ -19,7 +19,12 @@ FROM python:3.12.12-slim-bookworm AS runtime
 LABEL org.opencontainers.image.title="mcp-postgres-sheets" \
       org.opencontainers.image.description="MCP server for PostgreSQL and Google Sheets: read-only by default, audited." \
       org.opencontainers.image.source="https://github.com/hamza533/mcp-postgres-sheets" \
-      org.opencontainers.image.licenses="MIT"
+      org.opencontainers.image.licenses="MIT" \
+      io.modelcontextprotocol.server.name="io.github.hamza533/mcp-postgres-sheets"
+# Pick up Debian security fixes released after the base image was built (Trivy gates on these).
+RUN apt-get update \
+ && apt-get -y upgrade --no-install-recommends \
+ && rm -rf /var/lib/apt/lists/*
 RUN groupadd --system --gid 10001 mcp \
  && useradd --system --uid 10001 --gid mcp --home-dir /app --shell /usr/sbin/nologin mcp
 COPY --from=build --chown=mcp:mcp /app/.venv /app/.venv
