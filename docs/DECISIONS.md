@@ -95,3 +95,9 @@ Short entries: chose X over Y because Z. Newest last.
 - **Bicep lint in CI fails on any warning (SARIF output checked)** — `bicep lint` alone only fails on errors.
 - **Optional Sentry via the `[sentry]` extra, scrubbing exception messages and request data** — error tracking without ever sending SQL text or cell values.
 - **`render.yaml` as a self-host example (Render + Neon) rather than a hosted demo** — a public endpoint needs an always-on IdP, which doesn't fit $0 (SPEC §8); the "live demo" is the PyPI package.
+
+## M9
+- **Server logs are JSON lines with the request ID in HTTP mode (`LOG_FORMAT=auto`)** — CONVENTIONS §10 asks for structured logs with a request ID on every request; stdio keeps readable text on stderr for local debugging.
+- **Usage tracking (CONVENTIONS §10) lives in the audit log, not a database table** — the server owns no tables (SPEC §4a); `duration_ms`, `row_count`, `outcome` and caller per call are queryable in Log Analytics. There are no tokens or LLM cost per call: the server never calls an LLM.
+- **Retention:** the server stores no uploads or conversations; audit lines live in Log Analytics with `logRetentionDays` (default 90) in the Bicep profile, or wherever `AUDIT_LOG_PATH` points (rotate with logrotate).
+- **Backups / PITR: not applicable** — the server owns no data; the client's Postgres keeps its own backup policy.

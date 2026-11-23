@@ -67,11 +67,14 @@ def main(argv: list[str] | None = None) -> None:
         print(f"mcp-postgres-sheets: invalid configuration — {problems}", file=sys.stderr)
         sys.exit(2)
 
-    logging.getLogger().setLevel(settings.log_level.upper())
-
+    from mcp_postgres_sheets.logs import configure_logging
     from mcp_postgres_sheets.observability import init_sentry
     from mcp_postgres_sheets.server import build_server
 
+    json_logs = settings.log_format == "json" or (
+        settings.log_format == "auto" and settings.transport is Transport.HTTP
+    )
+    configure_logging(settings.log_level, json_logs)
     init_sentry(settings)
 
     try:
@@ -79,6 +82,7 @@ def main(argv: list[str] | None = None) -> None:
     except ValueError as exc:  # e.g. an unreadable service-account key; message has no secrets
         print(f"mcp-postgres-sheets: invalid configuration — {exc}", file=sys.stderr)
         sys.exit(2)
+    configure_logging(settings.log_level, json_logs)  # FastMCP may have added its own handler
     if settings.transport is Transport.STDIO:
         import anyio
 

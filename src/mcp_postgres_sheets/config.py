@@ -10,7 +10,7 @@ import json
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from pydantic import Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
@@ -91,6 +91,9 @@ class Settings(BaseSettings):
     )
     redact_args: bool = True
     log_level: str = "INFO"
+    log_format: Literal["auto", "json", "text"] = Field(
+        default="auto", description="auto = JSON lines in HTTP mode, text in stdio mode."
+    )
     sentry_dsn: SecretStr | None = None
 
     @field_validator(
