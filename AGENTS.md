@@ -14,7 +14,8 @@ make setup | make dev | make test | make lint | make check | make eval | make se
 - No `uv` on the machine? Append `DOCKER=1` (e.g. `make check DOCKER=1`) or call `scripts/uvd.sh <uv args>` directly.
 - `make db` starts only the sample Postgres (localhost:5544, db `shop`, role `mcp_readonly`).
 - `make eval-safety` runs the safety suite without an API key. `make inspector` opens the MCP Inspector.
-- Website: `make site-setup site-build site-test` (Node 22, see site/.nvmrc).
+- Website: `make site-setup site-check site-test` (Node 22, see site/.nvmrc). No Node? `scripts/noded.sh <cmd>` runs it in Docker (Playwright: `NODED_IMAGE=mcr.microsoft.com/playwright:v1.65.1-noble`).
+- `make tools-json` regenerates `site/src/data/` after changing tools, `.env.example`, eval results or CHANGELOG.md — `make lint` fails until you do.
 
 ## Structure
 ```
@@ -53,4 +54,6 @@ docs/                      SPEC, CONVENTIONS, PROGRESS, DECISIONS, architecture,
 - `TRANSPORT=http` refuses to start without `OAUTH_ISSUER` + `OAUTH_AUDIENCE`.
 - Keycloak tokens carry `iss=http://localhost:8180/realms/mcp`; inside compose the server fetches JWKS from `http://keycloak:8080` via `OAUTH_JWKS_URL`.
 - Gemini free tier (eval only) is rate-limited: the eval throttles and caches responses in `eval/.cache/`. Only synthetic data goes through it.
+- `site/src/data/` is generated: never edit it by hand (Prettier ignores it; CI compares it byte-for-byte).
+- shadcn 4.x `CommandDialog` does not wrap its children in `<Command>` — do it yourself or cmdk crashes on open.
 - Windows + Git Bash: `scripts/uvd.sh` sets `MSYS_NO_PATHCONV=1`; keep LF line endings (`.gitattributes`) or the Postgres init script breaks.

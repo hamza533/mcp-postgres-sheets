@@ -1,0 +1,1018 @@
+{
+  "version": "0.1.0",
+  "tools": [
+    {
+      "name": "postgres_list_tables",
+      "title": "List Postgres tables",
+      "description": "List the tables and views the AI may query in the allowed schemas (public), with approximate row counts and table comments. Call this first to discover what data exists, then postgres_describe_table for column details.",
+      "kind": "read",
+      "scope": "db:read",
+      "hiddenWhenReadOnly": false,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Only list this schema. One of: public. Omit to list all allowed schemas.",
+            "title": "Schema"
+          }
+        },
+        "title": "postgres_list_tablesArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "TableInfo": {
+            "properties": {
+              "schema_name": {
+                "title": "Schema Name",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "kind": {
+                "description": "table, view, materialized view or foreign table.",
+                "title": "Kind",
+                "type": "string"
+              },
+              "estimated_rows": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Planner estimate (not exact); null for views.",
+                "title": "Estimated Rows"
+              },
+              "comment": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Comment"
+              }
+            },
+            "required": [
+              "schema_name",
+              "name",
+              "kind",
+              "estimated_rows",
+              "comment"
+            ],
+            "title": "TableInfo",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "tables": {
+            "items": {
+              "$ref": "#/$defs/TableInfo"
+            },
+            "title": "Tables",
+            "type": "array"
+          },
+          "row_count": {
+            "description": "Number of tables returned.",
+            "title": "Row Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tables",
+          "row_count"
+        ],
+        "title": "ListTablesResult",
+        "type": "object"
+      },
+      "example": {}
+    },
+    {
+      "name": "postgres_describe_table",
+      "title": "Describe a Postgres table",
+      "description": "Describe one table or view: columns with types, nullability, defaults and comments, the primary key, foreign keys to other tables, and foreign keys from other tables (use these to write correct JOINs). Call before writing a query against a table you haven't seen.",
+      "kind": "read",
+      "scope": "db:read",
+      "hiddenWhenReadOnly": false,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "table": {
+            "description": "Table or view name, optionally schema-qualified (e.g. orders or public.orders).",
+            "maxLength": 130,
+            "minLength": 1,
+            "title": "Table",
+            "type": "string"
+          },
+          "schema": {
+            "anyOf": [
+              {
+                "maxLength": 63,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Schema of the table. Defaults to public.",
+            "title": "Schema"
+          }
+        },
+        "required": [
+          "table"
+        ],
+        "title": "postgres_describe_tableArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "ColumnInfo": {
+            "properties": {
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "type": {
+                "title": "Type",
+                "type": "string"
+              },
+              "nullable": {
+                "title": "Nullable",
+                "type": "boolean"
+              },
+              "default": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Default"
+              },
+              "comment": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Comment"
+              }
+            },
+            "required": [
+              "name",
+              "type",
+              "nullable",
+              "default",
+              "comment"
+            ],
+            "title": "ColumnInfo",
+            "type": "object"
+          },
+          "ForeignKey": {
+            "properties": {
+              "columns": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Columns",
+                "type": "array"
+              },
+              "references_table": {
+                "description": "schema.table the key points to.",
+                "title": "References Table",
+                "type": "string"
+              },
+              "references_columns": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "References Columns",
+                "type": "array"
+              }
+            },
+            "required": [
+              "columns",
+              "references_table",
+              "references_columns"
+            ],
+            "title": "ForeignKey",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "schema_name": {
+            "title": "Schema Name",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "columns": {
+            "items": {
+              "$ref": "#/$defs/ColumnInfo"
+            },
+            "title": "Columns",
+            "type": "array"
+          },
+          "primary_key": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Primary Key",
+            "type": "array"
+          },
+          "foreign_keys": {
+            "description": "Keys in this table referencing other tables.",
+            "items": {
+              "$ref": "#/$defs/ForeignKey"
+            },
+            "title": "Foreign Keys",
+            "type": "array"
+          },
+          "referenced_by": {
+            "description": "Keys in other tables referencing this one (columns are in the other table).",
+            "items": {
+              "$ref": "#/$defs/ForeignKey"
+            },
+            "title": "Referenced By",
+            "type": "array"
+          },
+          "row_count": {
+            "description": "Number of columns.",
+            "title": "Row Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "schema_name",
+          "name",
+          "kind",
+          "comment",
+          "columns",
+          "primary_key",
+          "foreign_keys",
+          "referenced_by",
+          "row_count"
+        ],
+        "title": "DescribeTableResult",
+        "type": "object"
+      },
+      "example": {
+        "table": "orders"
+      }
+    },
+    {
+      "name": "postgres_query",
+      "title": "Run a read-only SQL query",
+      "description": "Run ONE read-only PostgreSQL SELECT and return the rows as JSON objects. Only tables in the allowed schemas (public) can be read. Rejected: anything that is not a single SELECT (INSERT/UPDATE/DELETE/DDL, multiple statements, SELECT INTO, FOR UPDATE), system catalogs (pg_*), and unsafe functions (pg_sleep, pg_read_file, dblink, set_config…). Results are capped at 500 rows (truncated=true means more rows exist) and the query is cancelled after 5000 ms, so aggregate in SQL (GROUP BY, ORDER BY … LIMIT) rather than fetching raw rows. Use postgres_describe_table first to get exact column names.",
+      "kind": "read",
+      "scope": "db:read",
+      "hiddenWhenReadOnly": false,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "sql": {
+            "description": "Exactly one PostgreSQL SELECT statement (WITH … SELECT and UNION are fine).",
+            "maxLength": 20000,
+            "minLength": 1,
+            "title": "Sql",
+            "type": "string"
+          },
+          "max_rows": {
+            "anyOf": [
+              {
+                "maximum": 500,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Return at most this many rows (1 to 500). Defaults to 500.",
+            "title": "Max Rows"
+          }
+        },
+        "required": [
+          "sql"
+        ],
+        "title": "postgres_queryArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "columns": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Columns",
+            "type": "array"
+          },
+          "rows": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "row_count": {
+            "description": "Rows returned (after the row cap).",
+            "title": "Row Count",
+            "type": "integer"
+          },
+          "truncated": {
+            "description": "True if the query produced more rows than max_rows.",
+            "title": "Truncated",
+            "type": "boolean"
+          },
+          "max_rows": {
+            "title": "Max Rows",
+            "type": "integer"
+          },
+          "duration_ms": {
+            "title": "Duration Ms",
+            "type": "number"
+          }
+        },
+        "required": [
+          "columns",
+          "rows",
+          "row_count",
+          "truncated",
+          "max_rows",
+          "duration_ms"
+        ],
+        "title": "QueryResult",
+        "type": "object"
+      },
+      "example": {
+        "sql": "SELECT c.full_name, sum(oi.quantity * oi.unit_price) AS revenue\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nJOIN order_items oi ON oi.order_id = o.id\nGROUP BY c.full_name\nORDER BY revenue DESC\nLIMIT 5"
+      }
+    },
+    {
+      "name": "sheets_list_tabs",
+      "title": "List spreadsheet tabs",
+      "description": "List the tabs (sheets) of a Google Spreadsheet with their sizes. Call this first to learn tab names before reading. Only allow-listed spreadsheets can be used: none configured.",
+      "kind": "read",
+      "scope": "sheets:read",
+      "hiddenWhenReadOnly": false,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "properties": {
+          "sheet_id": {
+            "description": "Spreadsheet ID: the long ID in the sheet URL (docs.google.com/spreadsheets/d/<ID>/edit). Allowed IDs: none configured.",
+            "maxLength": 128,
+            "minLength": 3,
+            "pattern": "^\\s*[A-Za-z0-9_-]+\\s*$",
+            "title": "Sheet Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sheet_id"
+        ],
+        "title": "sheets_list_tabsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "TabInfo": {
+            "properties": {
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "index": {
+                "title": "Index",
+                "type": "integer"
+              },
+              "rows": {
+                "description": "Grid rows (including empty ones).",
+                "title": "Rows",
+                "type": "integer"
+              },
+              "columns": {
+                "title": "Columns",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "title",
+              "index",
+              "rows",
+              "columns"
+            ],
+            "title": "TabInfo",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "sheet_id": {
+            "title": "Sheet Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "tabs": {
+            "items": {
+              "$ref": "#/$defs/TabInfo"
+            },
+            "title": "Tabs",
+            "type": "array"
+          },
+          "row_count": {
+            "description": "Number of tabs.",
+            "title": "Row Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sheet_id",
+          "title",
+          "tabs",
+          "row_count"
+        ],
+        "title": "ListTabsResult",
+        "type": "object"
+      },
+      "example": {
+        "sheet_id": "1AbC…your-sheet-id"
+      }
+    },
+    {
+      "name": "sheets_read_range",
+      "title": "Read a spreadsheet range",
+      "description": "Read cell values from an A1 range of an allow-listed Google Spreadsheet (e.g. Leads!A1:F50, or a tab name for the whole tab). Returns rows of values, capped at 500 rows. Row 1 is usually the header.",
+      "kind": "read",
+      "scope": "sheets:read",
+      "hiddenWhenReadOnly": false,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "properties": {
+          "sheet_id": {
+            "description": "Spreadsheet ID: the long ID in the sheet URL (docs.google.com/spreadsheets/d/<ID>/edit). Allowed IDs: none configured.",
+            "maxLength": 128,
+            "minLength": 3,
+            "pattern": "^\\s*[A-Za-z0-9_-]+\\s*$",
+            "title": "Sheet Id",
+            "type": "string"
+          },
+          "range": {
+            "description": "A1 range, e.g. Leads!A1:F50, 'Q3 plan'!A:C, or just a tab name (Leads) for the whole tab.",
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Range",
+            "type": "string"
+          },
+          "max_rows": {
+            "anyOf": [
+              {
+                "maximum": 500,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Return at most this many rows (1 to 500). Defaults to 500.",
+            "title": "Max Rows"
+          }
+        },
+        "required": [
+          "sheet_id",
+          "range"
+        ],
+        "title": "sheets_read_rangeArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "sheet_id": {
+            "title": "Sheet Id",
+            "type": "string"
+          },
+          "range": {
+            "description": "The range actually read, in A1 notation.",
+            "title": "Range",
+            "type": "string"
+          },
+          "values": {
+            "description": "Rows of cell values; trailing empty cells are omitted.",
+            "items": {
+              "items": {},
+              "type": "array"
+            },
+            "title": "Values",
+            "type": "array"
+          },
+          "row_count": {
+            "title": "Row Count",
+            "type": "integer"
+          },
+          "truncated": {
+            "description": "True if the range had more rows than max_rows.",
+            "title": "Truncated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "sheet_id",
+          "range",
+          "values",
+          "row_count",
+          "truncated"
+        ],
+        "title": "ReadRangeResult",
+        "type": "object"
+      },
+      "example": {
+        "sheet_id": "1AbC…your-sheet-id",
+        "range": "Leads!A1:F20"
+      }
+    },
+    {
+      "name": "sheets_find_rows",
+      "title": "Find rows in a spreadsheet",
+      "description": "Find the rows of a tab where one column matches a value (exact or contains, case-insensitive by default). The column is named by its header in row 1 or its letter. Returns each matching row as an object keyed by header, with its row number.",
+      "kind": "read",
+      "scope": "sheets:read",
+      "hiddenWhenReadOnly": false,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "properties": {
+          "sheet_id": {
+            "description": "Spreadsheet ID: the long ID in the sheet URL (docs.google.com/spreadsheets/d/<ID>/edit). Allowed IDs: none configured.",
+            "maxLength": 128,
+            "minLength": 3,
+            "pattern": "^\\s*[A-Za-z0-9_-]+\\s*$",
+            "title": "Sheet Id",
+            "type": "string"
+          },
+          "tab": {
+            "description": "Tab (sheet) name, e.g. Leads.",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Tab",
+            "type": "string"
+          },
+          "column": {
+            "description": "Column to search: its header text in row 1 (e.g. Email) or its letter (e.g. D).",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Column",
+            "type": "string"
+          },
+          "value": {
+            "description": "Value to look for.",
+            "maxLength": 1000,
+            "title": "Value",
+            "type": "string"
+          },
+          "match": {
+            "default": "exact",
+            "description": "exact (default) or contains.",
+            "enum": [
+              "exact",
+              "contains"
+            ],
+            "title": "Match",
+            "type": "string"
+          },
+          "case_sensitive": {
+            "default": false,
+            "description": "Default false.",
+            "title": "Case Sensitive",
+            "type": "boolean"
+          },
+          "max_rows": {
+            "anyOf": [
+              {
+                "maximum": 500,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Return at most this many rows (1 to 500). Defaults to 500.",
+            "title": "Max Rows"
+          }
+        },
+        "required": [
+          "sheet_id",
+          "tab",
+          "column",
+          "value"
+        ],
+        "title": "sheets_find_rowsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "FoundRow": {
+            "properties": {
+              "row_number": {
+                "description": "1-based row number in the tab (use it to build an update range).",
+                "title": "Row Number",
+                "type": "integer"
+              },
+              "values": {
+                "additionalProperties": true,
+                "description": "Cell values keyed by the header in row 1.",
+                "title": "Values",
+                "type": "object"
+              }
+            },
+            "required": [
+              "row_number",
+              "values"
+            ],
+            "title": "FoundRow",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "sheet_id": {
+            "title": "Sheet Id",
+            "type": "string"
+          },
+          "tab": {
+            "title": "Tab",
+            "type": "string"
+          },
+          "column": {
+            "description": "Header of the column that was searched.",
+            "title": "Column",
+            "type": "string"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/$defs/FoundRow"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "row_count": {
+            "title": "Row Count",
+            "type": "integer"
+          },
+          "truncated": {
+            "title": "Truncated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "sheet_id",
+          "tab",
+          "column",
+          "rows",
+          "row_count",
+          "truncated"
+        ],
+        "title": "FindRowsResult",
+        "type": "object"
+      },
+      "example": {
+        "sheet_id": "1AbC…your-sheet-id",
+        "tab": "Leads",
+        "column": "Stage",
+        "value": "Won"
+      }
+    },
+    {
+      "name": "sheets_append_rows",
+      "title": "Append rows to a spreadsheet",
+      "description": "Append rows after the last row of a tab in an allow-listed Google Spreadsheet. Give the values in the tab's column order (check the header with sheets_read_range first). Requires a unique idempotency_key so a retried call never adds the rows twice. Values are stored as-is; formulas are not evaluated.",
+      "kind": "write",
+      "scope": "sheets:write",
+      "hiddenWhenReadOnly": true,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "properties": {
+          "sheet_id": {
+            "description": "Spreadsheet ID: the long ID in the sheet URL (docs.google.com/spreadsheets/d/<ID>/edit). Allowed IDs: none configured.",
+            "maxLength": 128,
+            "minLength": 3,
+            "pattern": "^\\s*[A-Za-z0-9_-]+\\s*$",
+            "title": "Sheet Id",
+            "type": "string"
+          },
+          "tab": {
+            "description": "Tab to append to, e.g. Leads.",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Tab",
+            "type": "string"
+          },
+          "rows": {
+            "description": "Rows of cell values (strings, numbers, booleans or null). Values are stored exactly as given (RAW): text starting with '=' is NOT evaluated as a formula.",
+            "items": {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "maxItems": 500,
+            "minItems": 1,
+            "title": "Rows",
+            "type": "array"
+          },
+          "idempotency_key": {
+            "description": "A unique ID for this write, e.g. a UUID you generate. If the call is retried with the same key, nothing is written twice. Use a new key for each distinct write.",
+            "maxLength": 128,
+            "minLength": 8,
+            "pattern": "^[A-Za-z0-9_.:-]+$",
+            "title": "Idempotency Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sheet_id",
+          "tab",
+          "rows",
+          "idempotency_key"
+        ],
+        "title": "sheets_append_rowsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "sheet_id": {
+            "title": "Sheet Id",
+            "type": "string"
+          },
+          "updated_range": {
+            "title": "Updated Range",
+            "type": "string"
+          },
+          "updated_rows": {
+            "title": "Updated Rows",
+            "type": "integer"
+          },
+          "updated_cells": {
+            "title": "Updated Cells",
+            "type": "integer"
+          },
+          "duplicate": {
+            "description": "True if this idempotency_key was already used: nothing was written again.",
+            "title": "Duplicate",
+            "type": "boolean"
+          },
+          "row_count": {
+            "title": "Row Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sheet_id",
+          "updated_range",
+          "updated_rows",
+          "updated_cells",
+          "duplicate",
+          "row_count"
+        ],
+        "title": "WriteRowsResult",
+        "type": "object"
+      },
+      "example": {
+        "sheet_id": "1AbC…your-sheet-id",
+        "tab": "Leads",
+        "rows": [
+          [
+            "L-1031",
+            "Ava Chen",
+            "Northwind Traders",
+            "ava.chen@example.com",
+            "New",
+            12000
+          ]
+        ],
+        "idempotency_key": "7f3c2a9e-append-lead-1031"
+      }
+    },
+    {
+      "name": "sheets_update_range",
+      "title": "Update a spreadsheet range",
+      "description": "Overwrite the cells of an A1 range in an allow-listed Google Spreadsheet, starting at the range's first cell (e.g. Leads!E5 with [[\"Won\"]]). Use sheets_find_rows to get the row number first. Requires a unique idempotency_key. Values are stored as-is; formulas are not evaluated.",
+      "kind": "write",
+      "scope": "sheets:write",
+      "hiddenWhenReadOnly": true,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "properties": {
+          "sheet_id": {
+            "description": "Spreadsheet ID: the long ID in the sheet URL (docs.google.com/spreadsheets/d/<ID>/edit). Allowed IDs: none configured.",
+            "maxLength": 128,
+            "minLength": 3,
+            "pattern": "^\\s*[A-Za-z0-9_-]+\\s*$",
+            "title": "Sheet Id",
+            "type": "string"
+          },
+          "range": {
+            "description": "A1 range to overwrite, starting at a cell, e.g. Leads!E5 or Leads!E5:F5.",
+            "maxLength": 300,
+            "minLength": 2,
+            "title": "Range",
+            "type": "string"
+          },
+          "values": {
+            "description": "Rows of cell values (strings, numbers, booleans or null). Values are stored exactly as given (RAW): text starting with '=' is NOT evaluated as a formula.",
+            "items": {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "maxItems": 500,
+            "minItems": 1,
+            "title": "Values",
+            "type": "array"
+          },
+          "idempotency_key": {
+            "description": "A unique ID for this write, e.g. a UUID you generate. If the call is retried with the same key, nothing is written twice. Use a new key for each distinct write.",
+            "maxLength": 128,
+            "minLength": 8,
+            "pattern": "^[A-Za-z0-9_.:-]+$",
+            "title": "Idempotency Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sheet_id",
+          "range",
+          "values",
+          "idempotency_key"
+        ],
+        "title": "sheets_update_rangeArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "sheet_id": {
+            "title": "Sheet Id",
+            "type": "string"
+          },
+          "updated_range": {
+            "title": "Updated Range",
+            "type": "string"
+          },
+          "updated_rows": {
+            "title": "Updated Rows",
+            "type": "integer"
+          },
+          "updated_cells": {
+            "title": "Updated Cells",
+            "type": "integer"
+          },
+          "duplicate": {
+            "description": "True if this idempotency_key was already used: nothing was written again.",
+            "title": "Duplicate",
+            "type": "boolean"
+          },
+          "row_count": {
+            "title": "Row Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sheet_id",
+          "updated_range",
+          "updated_rows",
+          "updated_cells",
+          "duplicate",
+          "row_count"
+        ],
+        "title": "WriteRowsResult",
+        "type": "object"
+      },
+      "example": {
+        "sheet_id": "1AbC…your-sheet-id",
+        "range": "Leads!E5",
+        "values": [
+          [
+            "Won"
+          ]
+        ],
+        "idempotency_key": "b41d0c77-mark-l1004-won"
+      }
+    }
+  ]
+}

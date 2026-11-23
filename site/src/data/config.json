@@ -1,0 +1,143 @@
+{
+  "version": "0.1.0",
+  "variables": [
+    {
+      "name": "DATABASE_URL",
+      "default": "postgresql://mcp_readonly:mcp_readonly@localhost:5544/shop",
+      "section": "PostgreSQL",
+      "description": "Connection string for the READ-ONLY role (create it with deploy/sql/001_readonly_role.sql). The sample database from `docker compose up -d db` listens on localhost:5544."
+    },
+    {
+      "name": "ALLOWED_SCHEMAS",
+      "default": "public",
+      "section": "PostgreSQL",
+      "description": "Comma-separated schemas the AI may see and query."
+    },
+    {
+      "name": "ALLOWED_TABLES",
+      "default": "",
+      "section": "PostgreSQL",
+      "description": "Optional comma-separated table allow-list (`orders` or `public.orders`). Empty = all tables in ALLOWED_SCHEMAS."
+    },
+    {
+      "name": "QUERY_TIMEOUT_MS",
+      "default": "5000",
+      "section": "PostgreSQL",
+      "description": "Per-query statement timeout in milliseconds."
+    },
+    {
+      "name": "MAX_ROWS",
+      "default": "500",
+      "section": "PostgreSQL",
+      "description": "Maximum rows returned by one postgres_query call (results are truncated, and say so)."
+    },
+    {
+      "name": "SHEETS_BACKEND",
+      "default": "google",
+      "section": "Google Sheets",
+      "description": "`google` (real API via a service account) or `memory` (built-in demo spreadsheet, no Google account needed)."
+    },
+    {
+      "name": "GOOGLE_SERVICE_ACCOUNT_JSON",
+      "default": "./secrets/service-account.json",
+      "section": "Google Sheets",
+      "description": "Path to the service-account key file, or the key JSON itself (e.g. injected from a secret store). Create one: https://console.cloud.google.com/iam-admin/serviceaccounts → Keys → Add key → JSON. Enable the Sheets API: https://console.cloud.google.com/apis/library/sheets.googleapis.com Then share your spreadsheet with the service account's email address."
+    },
+    {
+      "name": "ALLOWED_SHEET_IDS",
+      "default": "",
+      "section": "Google Sheets",
+      "description": "Comma-separated spreadsheet IDs the AI may touch (the long ID in the sheet's URL). Empty = no sheets."
+    },
+    {
+      "name": "SHEETS_MEMORY_FILE",
+      "default": "",
+      "section": "Google Sheets",
+      "description": "Only for SHEETS_BACKEND=memory: JSON file with demo spreadsheets (defaults to the bundled sample)."
+    },
+    {
+      "name": "READ_ONLY",
+      "default": "true",
+      "section": "Behaviour",
+      "description": "true = write tools (sheets_append_rows, sheets_update_range) are not registered at all."
+    },
+    {
+      "name": "TRANSPORT",
+      "default": "stdio",
+      "section": "Transport",
+      "description": "`stdio` (local AI clients) or `http` (remote, Streamable HTTP + OAuth bearer tokens)."
+    },
+    {
+      "name": "HTTP_HOST",
+      "default": "127.0.0.1",
+      "section": "Transport",
+      "description": "HTTP mode only. Use 0.0.0.0 inside a container."
+    },
+    {
+      "name": "HTTP_PORT",
+      "default": "8765",
+      "section": "Transport",
+      "description": "HTTP mode only: port to listen on."
+    },
+    {
+      "name": "PUBLIC_URL",
+      "default": "http://localhost:8765",
+      "section": "Transport",
+      "description": "HTTP mode only: the public base URL clients use (OAuth resource identifier), e.g. https://mcp.example.com"
+    },
+    {
+      "name": "HTTP_ALLOWED_HOSTS",
+      "default": "",
+      "section": "Transport",
+      "description": "HTTP mode only: extra Host header values to accept, comma-separated (DNS-rebinding protection)."
+    },
+    {
+      "name": "OAUTH_ISSUER",
+      "default": "",
+      "section": "OAuth 2.1 resource server (HTTP mode only — required there)",
+      "description": "Issuer of the access tokens (any OIDC provider: Entra ID, Auth0, Keycloak…). Local Keycloak test profile: http://localhost:8180/realms/mcp"
+    },
+    {
+      "name": "OAUTH_AUDIENCE",
+      "default": "",
+      "section": "OAuth 2.1 resource server (HTTP mode only — required there)",
+      "description": "Expected `aud` claim, e.g. the API's application ID URI (Entra ID) or `mcp-postgres-sheets` (Keycloak profile)."
+    },
+    {
+      "name": "OAUTH_JWKS_URL",
+      "default": "",
+      "section": "OAuth 2.1 resource server (HTTP mode only — required there)",
+      "description": "Optional JWKS URL override (defaults to the issuer's OIDC discovery document)."
+    },
+    {
+      "name": "RATE_LIMIT_PER_MIN",
+      "default": "60",
+      "section": "OAuth 2.1 resource server (HTTP mode only — required there)",
+      "description": "Tool calls allowed per caller (token subject) per minute."
+    },
+    {
+      "name": "AUDIT_LOG_PATH",
+      "default": "",
+      "section": "Audit log and observability",
+      "description": "File for the JSON-lines audit log. Empty = stderr (stdio mode) or stdout (http mode)."
+    },
+    {
+      "name": "REDACT_ARGS",
+      "default": "true",
+      "section": "Audit log and observability",
+      "description": "true = argument values are replaced by a hash + length in the audit log (identifiers like table names are kept)."
+    },
+    {
+      "name": "LOG_LEVEL",
+      "default": "INFO",
+      "section": "Audit log and observability",
+      "description": "Server log level (DEBUG, INFO, WARNING, ERROR). Logs never contain secrets or row data."
+    },
+    {
+      "name": "SENTRY_DSN",
+      "default": "",
+      "section": "Audit log and observability",
+      "description": "Optional Sentry DSN for error tracking (install with the `sentry` extra). Empty = off. https://sentry.io → Project settings → Client keys (DSN)"
+    }
+  ]
+}

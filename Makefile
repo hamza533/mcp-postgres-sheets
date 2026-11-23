@@ -17,7 +17,8 @@ TEST_DATABASE_URL ?= postgresql://mcp_readonly:mcp_readonly@$(DB_HOST)/shop
 export TEST_DATABASE_URL
 
 .PHONY: help setup dev down db seed test test-unit lint format typecheck check eval eval-safety \
-        eval-latency inspector tools-json build remote-smoke site-setup site-build site-test bicep
+        eval-latency inspector tools-json build remote-smoke site-setup site-build site-check site-test \
+        site-dev bicep
 
 help:             ## list targets
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
@@ -45,10 +46,11 @@ test: db          ## unit + integration + safety + MCP protocol tests against re
 test-unit:        ## tests that need no database
 	$(UV) run pytest -q -m "not integration"
 
-lint:             ## ruff (lint + format check) and mypy
+lint:             ## ruff (lint + format check), mypy, and the site's generated reference is up to date
 	$(UV) run ruff check .
 	$(UV) run ruff format --check .
 	$(UV) run mypy
+	$(UV) run python -m scripts.export_tools site/src/data --check
 
 typecheck:
 	$(UV) run mypy
@@ -74,8 +76,8 @@ eval-latency: db  ## latency benchmark only
 inspector:        ## open the MCP Inspector against the local stdio server (needs Node)
 	npx -y @modelcontextprotocol/inspector@2.14.0 uv run mcp-postgres-sheets
 
-tools-json:       ## regenerate site/src/data/tools.json from tools/list
-	$(UV) run python -m scripts.export_tools site/src/data/tools.json
+tools-json:       ## regenerate site/src/data/ (tools from tools/list, config, results, changelog)
+	$(UV) run python -m scripts.export_tools site/src/data
 
 build:            ## build the wheel + sdist into dist/
 	$(UV) build
@@ -89,8 +91,14 @@ site-setup:       ## install website dependencies
 site-build:       ## static export of the website into site/out
 	cd site && npm run build
 
-site-test:        ## Playwright smoke test of the website
+site-check:       ## site lint, formatting and types
+	cd site && npm run lint && npm run format:check && npm run typecheck
+
+site-test: site-build  ## Playwright smoke test of the exported website (npx playwright install chromium once)
 	cd site && npm run test:e2e
+
+site-dev:         ## website dev server on http://localhost:3000
+	cd site && npm run dev
 
 bicep:            ## validate the Azure production profile
 	az bicep build --file deploy/azure/main.bicep --stdout > /dev/null
