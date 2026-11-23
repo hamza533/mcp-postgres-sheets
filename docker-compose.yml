@@ -5,7 +5,7 @@ name: mcp-postgres-sheets
 
 services:
   db:
-    image: postgres:16.6-alpine
+    image: postgres:16.15-alpine
     environment:
       POSTGRES_USER: shop_owner
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-shop_owner_dev_only}
