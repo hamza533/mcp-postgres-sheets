@@ -1,0 +1,67 @@
+{
+  "description": "Attack and misuse cases. Every case must end in its expected outcome; anything else fails CI. Outcomes: blocked (a safety layer rejected it), invalid (input validation rejected it), timeout (statement timeout cancelled it), capped (it ran but the row cap applied), not_listed (the tool is not registered), forbidden (OAuth scope missing).",
+  "cases": [
+    {"id": "dml-drop-table", "category": "Writes and DDL", "title": "DROP TABLE", "tool": "postgres_query", "args": {"sql": "DROP TABLE customers;"}, "expect": "blocked"},
+    {"id": "dml-delete", "category": "Writes and DDL", "title": "DELETE all rows", "tool": "postgres_query", "args": {"sql": "DELETE FROM orders"}, "expect": "blocked"},
+    {"id": "dml-update", "category": "Writes and DDL", "title": "UPDATE prices", "tool": "postgres_query", "args": {"sql": "UPDATE products SET unit_price = 0.01"}, "expect": "blocked"},
+    {"id": "dml-insert", "category": "Writes and DDL", "title": "INSERT a row", "tool": "postgres_query", "args": {"sql": "INSERT INTO customers (full_name, email, country, segment, created_at) VALUES ('x', 'x@example.com', 'US', 'consumer', now())"}, "expect": "blocked"},
+    {"id": "dml-truncate", "category": "Writes and DDL", "title": "TRUNCATE", "tool": "postgres_query", "args": {"sql": "TRUNCATE order_items"}, "expect": "blocked"},
+    {"id": "ddl-alter", "category": "Writes and DDL", "title": "ALTER TABLE", "tool": "postgres_query", "args": {"sql": "ALTER TABLE customers ADD COLUMN pwned int"}, "expect": "blocked"},
+    {"id": "ddl-create-as", "category": "Writes and DDL", "title": "CREATE TABLE AS SELECT", "tool": "postgres_query", "args": {"sql": "CREATE TABLE stolen AS SELECT * FROM customers"}, "expect": "blocked"},
+    {"id": "dcl-grant", "category": "Writes and DDL", "title": "GRANT privileges", "tool": "postgres_query", "args": {"sql": "GRANT ALL ON customers TO PUBLIC"}, "expect": "blocked"},
+    {"id": "dml-merge", "category": "Writes and DDL", "title": "MERGE", "tool": "postgres_query", "args": {"sql": "MERGE INTO products p USING products s ON p.id = s.id WHEN MATCHED THEN UPDATE SET unit_price = 1"}, "expect": "blocked"},
+    {"id": "dml-select-into", "category": "Writes and DDL", "title": "SELECT … INTO new table", "tool": "postgres_query", "args": {"sql": "SELECT * INTO stolen FROM customers"}, "expect": "blocked"},
+    {"id": "lock-for-update", "category": "Writes and DDL", "title": "SELECT … FOR UPDATE", "tool": "postgres_query", "args": {"sql": "SELECT * FROM orders FOR UPDATE"}, "expect": "blocked"},
+    {"id": "lock-table", "category": "Writes and DDL", "title": "LOCK TABLE", "tool": "postgres_query", "args": {"sql": "LOCK TABLE customers IN ACCESS EXCLUSIVE MODE"}, "expect": "blocked"},
+
+    {"id": "multi-select-drop", "category": "Multiple statements", "title": "SELECT then DROP", "tool": "postgres_query", "args": {"sql": "SELECT 1; DROP TABLE customers"}, "expect": "blocked"},
+    {"id": "multi-newline-update", "category": "Multiple statements", "title": "Second statement on a new line", "tool": "postgres_query", "args": {"sql": "SELECT * FROM orders LIMIT 1;\nUPDATE orders SET status = 'refunded'"}, "expect": "blocked"},
+    {"id": "multi-transaction", "category": "Multiple statements", "title": "BEGIN; DELETE; COMMIT", "tool": "postgres_query", "args": {"sql": "BEGIN; DELETE FROM orders; COMMIT;"}, "expect": "blocked"},
+    {"id": "multi-set-then-select", "category": "Multiple statements", "title": "Disable timeout, then query", "tool": "postgres_query", "args": {"sql": "SET statement_timeout = 0; SELECT 1"}, "expect": "blocked"},
+
+    {"id": "cte-delete", "category": "CTE tricks", "title": "Data-modifying CTE (DELETE … RETURNING)", "tool": "postgres_query", "args": {"sql": "WITH gone AS (DELETE FROM orders RETURNING *) SELECT count(*) FROM gone"}, "expect": "blocked"},
+    {"id": "cte-update", "category": "CTE tricks", "title": "Data-modifying CTE (UPDATE)", "tool": "postgres_query", "args": {"sql": "WITH u AS (UPDATE products SET unit_price = 0 RETURNING id) SELECT * FROM u"}, "expect": "blocked"},
+    {"id": "cte-insert-nested", "category": "CTE tricks", "title": "INSERT CTE inside a subquery", "tool": "postgres_query", "args": {"sql": "SELECT * FROM (WITH x AS (INSERT INTO products (sku, name, category, unit_price) VALUES ('X', 'x', 'Office', 1) RETURNING id) SELECT * FROM x) AS s"}, "expect": "blocked"},
+    {"id": "cte-hides-internal", "category": "CTE tricks", "title": "CTE reading a forbidden schema", "tool": "postgres_query", "args": {"sql": "WITH e AS (SELECT * FROM internal.employees) SELECT * FROM e"}, "expect": "blocked"},
+
+    {"id": "comment-block-hides-drop", "category": "Comment injection", "title": "Block comment before a second statement", "tool": "postgres_query", "args": {"sql": "SELECT 1 /* innocent */; DROP TABLE customers --"}, "expect": "blocked"},
+    {"id": "comment-line-hides-delete", "category": "Comment injection", "title": "Line comment then a new statement", "tool": "postgres_query", "args": {"sql": "SELECT 1 -- just a comment\n; DELETE FROM orders"}, "expect": "blocked"},
+    {"id": "comment-inline-keyword", "category": "Comment injection", "title": "Keyword split by a comment", "tool": "postgres_query", "args": {"sql": "DEL/**/ETE FROM orders"}, "expect": "blocked"},
+
+    {"id": "fn-pg-sleep", "category": "Unsafe functions", "title": "pg_sleep", "tool": "postgres_query", "args": {"sql": "SELECT pg_sleep(30)"}, "expect": "blocked"},
+    {"id": "fn-pg-sleep-qualified", "category": "Unsafe functions", "title": "pg_catalog.pg_sleep in WHERE", "tool": "postgres_query", "args": {"sql": "SELECT * FROM orders WHERE pg_catalog.pg_sleep(1) IS NOT NULL"}, "expect": "blocked"},
+    {"id": "fn-pg-read-file", "category": "Unsafe functions", "title": "pg_read_file", "tool": "postgres_query", "args": {"sql": "SELECT pg_read_file('/etc/passwd')"}, "expect": "blocked"},
+    {"id": "fn-pg-ls-dir", "category": "Unsafe functions", "title": "pg_ls_dir as a table function", "tool": "postgres_query", "args": {"sql": "SELECT * FROM pg_ls_dir('.')"}, "expect": "blocked"},
+    {"id": "fn-lo-import", "category": "Unsafe functions", "title": "lo_import (server file read)", "tool": "postgres_query", "args": {"sql": "SELECT lo_import('/etc/passwd')"}, "expect": "blocked"},
+    {"id": "fn-dblink", "category": "Unsafe functions", "title": "dblink to another server", "tool": "postgres_query", "args": {"sql": "SELECT * FROM dblink('host=evil.example.com', 'SELECT 1') AS t(x int)"}, "expect": "blocked"},
+    {"id": "fn-set-config", "category": "Unsafe functions", "title": "set_config to lift the timeout", "tool": "postgres_query", "args": {"sql": "SELECT set_config('statement_timeout', '0', false)"}, "expect": "blocked"},
+    {"id": "fn-query-to-xml", "category": "Unsafe functions", "title": "query_to_xml running nested SQL", "tool": "postgres_query", "args": {"sql": "SELECT query_to_xml('DELETE FROM orders RETURNING *', true, true, '')"}, "expect": "blocked"},
+    {"id": "fn-nextval", "category": "Unsafe functions", "title": "nextval (sequence write)", "tool": "postgres_query", "args": {"sql": "SELECT nextval('orders_id_seq')"}, "expect": "blocked"},
+    {"id": "fn-current-setting", "category": "Unsafe functions", "title": "current_setting (server config leak)", "tool": "postgres_query", "args": {"sql": "SELECT current_setting('data_directory')"}, "expect": "blocked"},
+    {"id": "fn-terminate-backend", "category": "Unsafe functions", "title": "pg_terminate_backend", "tool": "postgres_query", "args": {"sql": "SELECT pg_terminate_backend(pid) FROM orders"}, "expect": "blocked"},
+
+    {"id": "cmd-copy-program", "category": "Server commands", "title": "COPY … TO PROGRAM", "tool": "postgres_query", "args": {"sql": "COPY (SELECT 1) TO PROGRAM 'id'"}, "expect": "blocked"},
+    {"id": "cmd-do-block", "category": "Server commands", "title": "DO block", "tool": "postgres_query", "args": {"sql": "DO $$ BEGIN DELETE FROM orders; END $$"}, "expect": "blocked"},
+    {"id": "cmd-explain-analyze", "category": "Server commands", "title": "EXPLAIN ANALYZE DELETE", "tool": "postgres_query", "args": {"sql": "EXPLAIN ANALYZE DELETE FROM orders"}, "expect": "blocked"},
+    {"id": "cmd-call", "category": "Server commands", "title": "CALL a procedure", "tool": "postgres_query", "args": {"sql": "CALL refresh_everything()"}, "expect": "blocked"},
+    {"id": "cmd-prepare", "category": "Server commands", "title": "PREPARE a statement", "tool": "postgres_query", "args": {"sql": "PREPARE p AS DELETE FROM orders"}, "expect": "blocked"},
+
+    {"id": "allow-internal-schema", "category": "Allow-lists", "title": "Table in a schema outside ALLOWED_SCHEMAS", "tool": "postgres_query", "args": {"sql": "SELECT * FROM internal.employees"}, "expect": "blocked"},
+    {"id": "allow-pg-catalog", "category": "Allow-lists", "title": "pg_catalog.pg_roles", "tool": "postgres_query", "args": {"sql": "SELECT rolname FROM pg_catalog.pg_roles"}, "expect": "blocked"},
+    {"id": "allow-unqualified-catalog", "category": "Allow-lists", "title": "Unqualified pg_authid", "tool": "postgres_query", "args": {"sql": "SELECT * FROM pg_authid"}, "expect": "blocked"},
+    {"id": "allow-quoted-catalog", "category": "Allow-lists", "title": "Quoted \"pg_shadow\"", "tool": "postgres_query", "args": {"sql": "SELECT * FROM \"pg_shadow\""}, "expect": "blocked"},
+    {"id": "allow-information-schema", "category": "Allow-lists", "title": "information_schema", "tool": "postgres_query", "args": {"sql": "SELECT table_name FROM information_schema.tables"}, "expect": "blocked"},
+    {"id": "allow-cross-database", "category": "Allow-lists", "title": "Cross-database reference", "tool": "postgres_query", "args": {"sql": "SELECT * FROM postgres.public.secrets"}, "expect": "blocked"},
+    {"id": "allow-describe-internal", "category": "Allow-lists", "title": "Describe a table in a forbidden schema", "tool": "postgres_describe_table", "args": {"table": "employees", "schema": "internal"}, "expect": "blocked"},
+    {"id": "allow-describe-qualified", "category": "Allow-lists", "title": "Describe internal.employees (qualified name)", "tool": "postgres_describe_table", "args": {"table": "internal.employees"}, "expect": "blocked"},
+    {"id": "allow-list-internal", "category": "Allow-lists", "title": "List tables in a forbidden schema", "tool": "postgres_list_tables", "args": {"schema": "internal"}, "expect": "blocked"},
+    {"id": "allow-tables-list", "category": "Allow-lists", "title": "Table outside ALLOWED_TABLES", "tool": "postgres_query", "args": {"sql": "SELECT email FROM customers"}, "config": {"ALLOWED_TABLES": "orders,order_items,products"}, "expect": "blocked"},
+
+    {"id": "limit-huge-result", "category": "Resource limits", "title": "One million rows", "tool": "postgres_query", "args": {"sql": "SELECT g FROM generate_series(1, 1000000) AS g"}, "expect": "capped"},
+    {"id": "limit-cartesian", "category": "Resource limits", "title": "Cartesian product (5×10¹⁰ rows)", "tool": "postgres_query", "args": {"sql": "SELECT count(*) FROM order_items a, order_items b, order_items c"}, "expect": "timeout"},
+    {"id": "limit-infinite-recursion", "category": "Resource limits", "title": "Infinite recursive CTE", "tool": "postgres_query", "args": {"sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM r) SELECT count(*) FROM r"}, "expect": "timeout"},
+    {"id": "limit-max-rows-param", "category": "Resource limits", "title": "max_rows above the server cap", "tool": "postgres_query", "args": {"sql": "SELECT * FROM orders", "max_rows": 100000}, "expect": "invalid"},
+    {"id": "limit-oversized-sql", "category": "Resource limits", "title": "25,000-character query", "tool": "postgres_query", "args": {"sql": "@@REPEAT:SELECT 1 + :2500"}, "expect": "invalid"},
+    {"id": "input-empty-sql", "category": "Resource limits", "title": "Empty query", "tool": "postgres_query", "args": {"sql": "   "}, "expect": "blocked"}
+  ]
+}
