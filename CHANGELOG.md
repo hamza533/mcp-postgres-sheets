@@ -18,6 +18,7 @@ public API: breaking changes to them only happen in a major version.
 - Production profile: `deploy/azure/main.bicep` (Container Apps, Key Vault, managed identity, Log
   Analytics + Application Insights, Entra ID), validated in CI; disabled-by-default deploy workflow.
 - Optional Sentry error tracking (`SENTRY_DSN`, `[sentry]` extra) with scrubbing.
+- JSON server logs with request IDs (`LOG_FORMAT`, default JSON in HTTP mode).
 - Docs: full README, client setup guides (`docs/clients.md`), `render.yaml` self-host example.
 - Project website (`/site`): Next.js static export with shadcn/ui — home, quick start per client,
   configuration, security model, generated tools reference, remote mode, changelog; Playwright smoke tests;

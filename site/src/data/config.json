@@ -152,6 +152,12 @@
       "description": "Server log level (DEBUG, INFO, WARNING, ERROR). Logs never contain secrets or row data."
     },
     {
+      "name": "LOG_FORMAT",
+      "default": "auto",
+      "section": "Audit log and observability",
+      "description": "Server log format: auto (JSON lines in http mode, text in stdio mode), json or text."
+    },
+    {
       "name": "SENTRY_DSN",
       "default": "",
       "section": "Audit log and observability",

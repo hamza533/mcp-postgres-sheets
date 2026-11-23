@@ -42,3 +42,22 @@ def test_scrub_removes_messages_and_requests() -> None:
     assert out is not None
     assert "request" not in out and "user" not in out
     assert out["exception"]["values"][0]["value"] == "ValueError"
+
+
+def test_json_log_lines_carry_the_request_id() -> None:
+    import json
+    import logging
+
+    from mcp_postgres_sheets.logs import JsonFormatter
+    from mcp_postgres_sheets.tools._runtime import request_id_var
+
+    token = request_id_var.set("req-123")
+    try:
+        record = logging.LogRecord(
+            "mcp_postgres_sheets.db", logging.WARNING, __file__, 1, "pool %s", ("busy",), None
+        )
+        line = json.loads(JsonFormatter().format(record))
+    finally:
+        request_id_var.reset(token)
+    assert line["request_id"] == "req-123"
+    assert line["level"] == "warning" and line["message"] == "pool busy" and line["type"] == "log"
