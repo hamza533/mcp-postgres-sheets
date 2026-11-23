@@ -8,5 +8,9 @@ public API: breaking changes to them only happen in a major version.
 ## [Unreleased]
 
 ### Added
+- Postgres tools: `postgres_list_tables`, `postgres_describe_table`, `postgres_query` with layered
+  safety (read-only role, READ ONLY transaction, statement timeout, row cap via server-side
+  cursor, sqlglot single-SELECT check, function deny-list, schema/table allow-lists).
+- Safety suite: 56 attack and misuse cases (`eval/safety_cases.json`), run in CI.
 - Repository foundation: uv project, Makefile, CI, Docker Compose with a seeded synthetic
   e-commerce Postgres database and a read-only role (`deploy/sql/001_readonly_role.sql`).

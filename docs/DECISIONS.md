@@ -18,3 +18,13 @@ Short entries: chose X over Y because Z. Newest last.
 - **`scripts/uvd.sh` (uv inside Docker) plus `make … DOCKER=1`** — contributors without Python/uv can still run every target; the virtualenv lives in a Docker volume so Linux wheels never touch the working tree.
 - **Extra environment variables beyond SPEC §9**: `HTTP_HOST`, `PUBLIC_URL`, `HTTP_ALLOWED_HOSTS`, `OAUTH_JWKS_URL`, `SHEETS_BACKEND`, `SHEETS_MEMORY_FILE`, `LOG_LEVEL` — each is needed to run in a container, behind a proxy, or without a Google account; all have safe defaults.
 - **`TRANSPORT=http` refuses to start without OAuth settings** — an unauthenticated HTTP endpoint to a database is too easy to expose by accident; the spec only describes HTTP mode with OAuth.
+
+## M1
+- **Server-side cursor (`DECLARE … CURSOR` + `FETCH max_rows+1`) over `LIMIT` rewriting or fetching everything** — the row cap holds without rewriting the user's SQL, a million-row result never crosses the wire, and `DECLARE` only accepts a query, which adds another protocol-level layer (it also refuses multiple commands).
+- **Execute the original SQL text, not sqlglot's regenerated SQL** — regeneration can subtly change semantics (dialect transpilation); parser differentials are covered by the cursor protocol, the READ ONLY transaction and the role.
+- **Function deny-list (`pg_*`, `lo_*`, `dblink*`, `*_to_xml*`, `set_config`, `current_setting`, sequence functions…) over an allow-list** — an allow-list of "safe" functions would reject most real analytics SQL (date_trunc, to_char, window functions); the deny-list targets the functions that sleep, read files, reach other servers, run nested SQL or change settings.
+- **Reject unqualified `pg_*` table names** — Postgres resolves them to `pg_catalog` before any allowed schema, so they would otherwise bypass the schema allow-list.
+- **`SET LOCAL search_path` to the allowed schemas in every transaction** — unqualified names resolve only inside the allow-list.
+- **Postgres error primary message is returned to the AI (with SQLSTATE), never the raw exception** — the AI needs `column "x" does not exist` to correct its query; connection errors become a generic "database not reachable" message.
+- **Safety suite as data (`eval/safety_cases.json`) run through a real MCP client session** — the same cases drive CI (`tests/test_safety_suite.py`) and `make eval`, and they test what the AI actually sees, not internal functions.
+- **Structured output (Pydantic result models) for every tool** — clients get an `outputSchema` and typed `structuredContent`, plus the JSON text for older clients.
