@@ -21,6 +21,7 @@ from mcp.server.auth.provider import AccessToken
 from mcp.shared.memory import create_connected_server_and_client_session
 from mcp.types import CallToolResult, TextContent
 
+from mcp_postgres_sheets.audit import MemoryAudit
 from mcp_postgres_sheets.config import Settings
 from mcp_postgres_sheets.server import build_server
 from mcp_postgres_sheets.tools._runtime import ServerState
@@ -56,10 +57,16 @@ class CaseResult:
 
 
 def _expand(value: Any) -> Any:
-    # "@@REPEAT:<text>:<n>" builds oversized inputs without bloating the JSON file.
+    """Build oversized inputs without bloating the JSON file.
+
+    "@@REPEAT:<text>:<n>" → text repeated n times; "@@GRID:<rows>x<cols>" → a grid of rows by cols.
+    """
     if isinstance(value, str) and value.startswith("@@REPEAT:"):
         text, times = value.removeprefix("@@REPEAT:").rsplit(":", 1)
         return text * int(times)
+    if isinstance(value, str) and value.startswith("@@GRID:"):
+        rows, cols = (int(n) for n in value.removeprefix("@@GRID:").split("x"))
+        return [[f"r{r}c{c}" for c in range(cols)] for r in range(rows)]
     return value
 
 
@@ -116,12 +123,15 @@ class SafetyRunner:
     def __init__(self, base_env: Mapping[str, str]) -> None:
         self.base_env = dict(base_env)
         self._states: list[ServerState] = []
+        self.audit = MemoryAudit()
 
     @asynccontextmanager
     async def _session(self, case: SafetyCase) -> AsyncIterator[Any]:
         settings = settings_for(self.base_env, case.config)
         mcp, state = build_server(settings)
         self._states.append(state)
+        self.audit = MemoryAudit()
+        state.audit = self.audit
         if case.scopes is not None:
             state.auth_enabled = True
             token = AccessToken(
@@ -141,13 +151,16 @@ class SafetyRunner:
         started = time.perf_counter()
         async with self._session(case) as client:
             listed = {t.name for t in (await client.list_tools()).tools}
-            if case.tool not in listed:
-                result = await client.call_tool(case.tool, case.args)
-                actual = "not_listed" if result.isError else "allowed"
-                detail = "tool is not registered"
-            else:
-                result = await client.call_tool(case.tool, case.args)
-                actual, detail = classify(result)
+            result = await client.call_tool(case.tool, case.args)
+            actual, detail = classify(result)
+            entries = self.audit.entries
+            if len(entries) != 1:
+                return CaseResult(case, "unaudited", f"{len(entries)} audit lines", 0.0)
+            outcome = entries[0]["outcome"]
+            if outcome != "ok":
+                actual = outcome  # the server's own classification
+            if case.tool not in listed and actual != "not_listed":
+                actual = "listed-mismatch"
         return CaseResult(case, actual, detail, (time.perf_counter() - started) * 1000)
 
     async def aclose(self) -> None:

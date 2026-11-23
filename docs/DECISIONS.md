@@ -35,3 +35,12 @@ Short entries: chose X over Y because Z. Newest last.
 - **Audit to stderr in stdio mode, stdout in HTTP mode, or `AUDIT_LOG_PATH`** — stdout is the protocol channel in stdio; in containers stdout is what the platform (Application Insights) collects.
 - **A failing audit sink logs an error but does not fail the tool call** — losing a log line is better than an outage caused by a full disk; the error is visible in the server log.
 - **MCP Inspector pinned to 2.14.0** — the newest release at least two weeks old.
+
+## M3
+- **Durable idempotency via Sheets developer metadata over a server-side store** — the server owns no database tables (SPEC §4a) and must stay stateless. The hashed key is attached as row-level developer metadata to the rows an append wrote; a retry, even on another replica, finds it with one `developerMetadata.search` call. A process-local LRU cache is the fast path. Known gaps: the append and the marker are two API calls (a crash in between can allow one duplicate), and Google caps developer metadata per spreadsheet, so very high-volume append workloads should use a database instead.
+- **`sheets_update_range` treats the key as a short-circuit only** — overwriting the same cells with the same values is already idempotent.
+- **`valueInputOption=RAW` for every write** — prevents formula injection (`=IMPORTXML(...)`, `=HYPERLINK(...)`) from AI-generated values; the text is stored, never evaluated.
+- **In-memory Sheets backend (`SHEETS_BACKEND=memory`) bundled with a synthetic demo spreadsheet** — lets anyone try the Sheets tools in under 5 minutes without a Google Cloud project, and makes the tests/eval deterministic. It is clearly a demo backend; production uses `google`.
+- **Tools are only registered when their backend is configured** — `tools/list` shows exactly what works; an AI never picks a tool that can only fail.
+- **Google client calls run in worker threads with a fresh `AuthorizedHttp` per attempt** — `google-api-python-client` is synchronous and httplib2 is not thread-safe. Static discovery documents mean no network call at start-up.
+- **Retries: exponential backoff with jitter (0.5 s · 2ⁿ, ±50 %, max 30 s), honouring `Retry-After`, on 429/5xx/network errors only** — 4xx other than 429 are caller errors and never retried.

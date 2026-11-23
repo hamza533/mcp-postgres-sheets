@@ -26,6 +26,7 @@ async def runner() -> AsyncIterator[SafetyRunner]:
             "DATABASE_URL": os.environ.get("TEST_DATABASE_URL", ""),
             "QUERY_TIMEOUT_MS": "1500",
             "SHEETS_BACKEND": "memory",
+            "ALLOWED_SHEET_IDS": "demo-sales-pipeline",
         }
     )
     yield r

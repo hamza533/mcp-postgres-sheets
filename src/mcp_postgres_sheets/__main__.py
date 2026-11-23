@@ -55,7 +55,11 @@ def main(argv: list[str] | None = None) -> None:
 
     from mcp_postgres_sheets.server import build_server
 
-    mcp, _ = build_server(settings)
+    try:
+        mcp, _ = build_server(settings)
+    except ValueError as exc:  # e.g. an unreadable service-account key; message has no secrets
+        print(f"mcp-postgres-sheets: invalid configuration — {exc}", file=sys.stderr)
+        sys.exit(2)
     if settings.transport is Transport.STDIO:
         mcp.run("stdio")
     else:  # pragma: no cover - exercised by the remote-mode tests

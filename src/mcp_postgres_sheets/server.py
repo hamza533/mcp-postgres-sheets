@@ -13,8 +13,10 @@ from mcp_postgres_sheets import __version__
 from mcp_postgres_sheets.audit import AuditLogger
 from mcp_postgres_sheets.config import Settings
 from mcp_postgres_sheets.db import Database
+from mcp_postgres_sheets.sheets import build_sheets_backend
 from mcp_postgres_sheets.tools._runtime import GuardedFastMCP, ServerState
 from mcp_postgres_sheets.tools.postgres import register_postgres_tools
+from mcp_postgres_sheets.tools.sheets import register_sheets_tools
 
 log = logging.getLogger(__name__)
 
@@ -37,7 +39,12 @@ def _instructions(settings: Settings) -> str:
 
 def build_state(settings: Settings) -> ServerState:
     db = Database(settings) if settings.database_url is not None else None
-    return ServerState.from_settings(settings, db=db, audit=AuditLogger.from_settings(settings))
+    return ServerState.from_settings(
+        settings,
+        db=db,
+        sheets=build_sheets_backend(settings),
+        audit=AuditLogger.from_settings(settings),
+    )
 
 
 def build_server(
@@ -52,6 +59,8 @@ def build_server(
         finally:
             if state.db is not None:
                 await state.db.close()
+            if state.sheets is not None:
+                await state.sheets.aclose()
             if isinstance(state.audit, AuditLogger):
                 state.audit.close()
 
@@ -65,5 +74,11 @@ def build_server(
     )
     mcp._mcp_server.version = __version__
 
-    register_postgres_tools(mcp, state)
+    # Only register what is configured: tools/list shows exactly what the AI can use.
+    if state.db is not None:
+        register_postgres_tools(mcp, state)
+    if state.sheets is not None:
+        register_sheets_tools(mcp, state)
+    if state.db is None and state.sheets is None:
+        log.warning("neither DATABASE_URL nor Google Sheets is configured: no tools are available")
     return mcp, state

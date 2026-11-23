@@ -1,0 +1,453 @@
+{
+ "spreadsheets": {
+  "demo-sales-pipeline": {
+   "title": "Sales pipeline (demo)",
+   "tabs": {
+    "Leads": [
+     [
+      "Lead ID",
+      "Name",
+      "Company",
+      "Email",
+      "Stage",
+      "Value (USD)",
+      "Owner",
+      "Region",
+      "Created"
+     ],
+     [
+      "L-1001",
+      "Kenji Chen",
+      "Sparrow Foods",
+      "kenji.chen@sparrowfoods.example.com",
+      "Qualified",
+      5700,
+      "Dana",
+      "Europe",
+      "2026-10-02"
+     ],
+     [
+      "L-1002",
+      "Zara Patel",
+      "Northwind Traders",
+      "zara.patel@northwindtraders.example.com",
+      "New",
+      23400,
+      "Dana",
+      "North America",
+      "2026-06-18"
+     ],
+     [
+      "L-1003",
+      "Priya Smith",
+      "Quill Publishing",
+      "priya.smith@quillpublishing.example.com",
+      "New",
+      13400,
+      "Dana",
+      "APAC",
+      "2026-10-13"
+     ],
+     [
+      "L-1004",
+      "Ava Patel",
+      "Northwind Traders",
+      "ava.patel@northwindtraders.example.com",
+      "Qualified",
+      8800,
+      "Mei",
+      "Europe",
+      "2026-07-18"
+     ],
+     [
+      "L-1005",
+      "Liam Rossi",
+      "Lumen Analytics",
+      "liam.rossi@lumenanalytics.example.com",
+      "Qualified",
+      36900,
+      "Luis",
+      "North America",
+      "2026-10-19"
+     ],
+     [
+      "L-1006",
+      "Hana Patel",
+      "Redwood Clinics",
+      "hana.patel@redwoodclinics.example.com",
+      "New",
+      38400,
+      "Dana",
+      "APAC",
+      "2026-06-20"
+     ],
+     [
+      "L-1007",
+      "Emma Kowalski",
+      "Orchid Hotels",
+      "emma.kowalski@orchidhotels.example.com",
+      "Qualified",
+      18000,
+      "Sam",
+      "APAC",
+      "2026-09-12"
+     ],
+     [
+      "L-1008",
+      "Mia Patel",
+      "Copperleaf Studio",
+      "mia.patel@copperleafstudio.example.com",
+      "Proposal",
+      14400,
+      "Dana",
+      "APAC",
+      "2026-08-17"
+     ],
+     [
+      "L-1009",
+      "Mateo Okafor",
+      "Granite Works",
+      "mateo.okafor@graniteworks.example.com",
+      "Contacted",
+      33100,
+      "Dana",
+      "North America",
+      "2026-10-14"
+     ],
+     [
+      "L-1010",
+      "Noah Okafor",
+      "Copperleaf Studio",
+      "noah.okafor@copperleafstudio.example.com",
+      "Won",
+      23500,
+      "Dana",
+      "APAC",
+      "2026-06-25"
+     ],
+     [
+      "L-1011",
+      "Zara Rossi",
+      "Redwood Clinics",
+      "zara.rossi@redwoodclinics.example.com",
+      "Contacted",
+      19900,
+      "Sam",
+      "APAC",
+      "2026-09-03"
+     ],
+     [
+      "L-1012",
+      "Liam Dubois",
+      "Tidewater Energy",
+      "liam.dubois@tidewaterenergy.example.com",
+      "Proposal",
+      5300,
+      "Dana",
+      "APAC",
+      "2026-11-10"
+     ],
+     [
+      "L-1013",
+      "Hana Rossi",
+      "Orchid Hotels",
+      "hana.rossi@orchidhotels.example.com",
+      "Won",
+      16500,
+      "Sam",
+      "APAC",
+      "2026-08-01"
+     ],
+     [
+      "L-1014",
+      "Mateo Okafor",
+      "Copperleaf Studio",
+      "mateo.okafor@copperleafstudio.example.com",
+      "Qualified",
+      27200,
+      "Dana",
+      "North America",
+      "2026-08-05"
+     ],
+     [
+      "L-1015",
+      "Felix Patel",
+      "Sparrow Foods",
+      "felix.patel@sparrowfoods.example.com",
+      "Contacted",
+      27400,
+      "Dana",
+      "North America",
+      "2026-09-13"
+     ],
+     [
+      "L-1016",
+      "Zara Dubois",
+      "Copperleaf Studio",
+      "zara.dubois@copperleafstudio.example.com",
+      "Won",
+      30100,
+      "Mei",
+      "APAC",
+      "2026-09-12"
+     ],
+     [
+      "L-1017",
+      "Hana Silva",
+      "Harbor & Pine",
+      "hana.silva@harbor-pine.example.com",
+      "New",
+      11000,
+      "Luis",
+      "North America",
+      "2026-11-08"
+     ],
+     [
+      "L-1018",
+      "Ava Kowalski",
+      "Quill Publishing",
+      "ava.kowalski@quillpublishing.example.com",
+      "New",
+      16400,
+      "Dana",
+      "North America",
+      "2026-09-18"
+     ],
+     [
+      "L-1019",
+      "Kenji Rossi",
+      "Quill Publishing",
+      "kenji.rossi@quillpublishing.example.com",
+      "Contacted",
+      8400,
+      "Dana",
+      "Europe",
+      "2026-11-26"
+     ],
+     [
+      "L-1020",
+      "Zara Silva",
+      "Sparrow Foods",
+      "zara.silva@sparrowfoods.example.com",
+      "Contacted",
+      7300,
+      "Sam",
+      "APAC",
+      "2026-09-02"
+     ],
+     [
+      "L-1021",
+      "Emma Garcia",
+      "Harbor & Pine",
+      "emma.garcia@harbor-pine.example.com",
+      "Contacted",
+      7600,
+      "Mei",
+      "APAC",
+      "2026-06-04"
+     ],
+     [
+      "L-1022",
+      "Ava Rossi",
+      "Copperleaf Studio",
+      "ava.rossi@copperleafstudio.example.com",
+      "Qualified",
+      20600,
+      "Dana",
+      "North America",
+      "2026-07-20"
+     ],
+     [
+      "L-1023",
+      "Priya Chen",
+      "Orchid Hotels",
+      "priya.chen@orchidhotels.example.com",
+      "Contacted",
+      19700,
+      "Mei",
+      "Europe",
+      "2026-06-04"
+     ],
+     [
+      "L-1024",
+      "Mateo Kowalski",
+      "Tidewater Energy",
+      "mateo.kowalski@tidewaterenergy.example.com",
+      "Contacted",
+      6300,
+      "Luis",
+      "North America",
+      "2026-11-11"
+     ],
+     [
+      "L-1025",
+      "Felix Dubois",
+      "Tidewater Energy",
+      "felix.dubois@tidewaterenergy.example.com",
+      "Won",
+      10200,
+      "Dana",
+      "North America",
+      "2026-10-12"
+     ],
+     [
+      "L-1026",
+      "Noah Haddad",
+      "Northwind Traders",
+      "noah.haddad@northwindtraders.example.com",
+      "Proposal",
+      17200,
+      "Dana",
+      "APAC",
+      "2026-08-17"
+     ],
+     [
+      "L-1027",
+      "Kenji Chen",
+      "Redwood Clinics",
+      "kenji.chen@redwoodclinics.example.com",
+      "Proposal",
+      29200,
+      "Mei",
+      "APAC",
+      "2026-07-20"
+     ],
+     [
+      "L-1028",
+      "Emma Patel",
+      "Sparrow Foods",
+      "emma.patel@sparrowfoods.example.com",
+      "Proposal",
+      13600,
+      "Luis",
+      "APAC",
+      "2026-09-12"
+     ],
+     [
+      "L-1029",
+      "Felix Smith",
+      "Northwind Traders",
+      "felix.smith@northwindtraders.example.com",
+      "Proposal",
+      26100,
+      "Mei",
+      "North America",
+      "2026-11-20"
+     ],
+     [
+      "L-1030",
+      "Kenji Kowalski",
+      "Granite Works",
+      "kenji.kowalski@graniteworks.example.com",
+      "Lost",
+      20600,
+      "Dana",
+      "North America",
+      "2026-06-08"
+     ]
+    ],
+    "Targets": [
+     [
+      "Region",
+      "Month",
+      "Target (USD)",
+      "Closed (USD)"
+     ],
+     [
+      "North America",
+      "2026-08",
+      140000,
+      96277
+     ],
+     [
+      "Europe",
+      "2026-08",
+      106000,
+      94112
+     ],
+     [
+      "APAC",
+      "2026-08",
+      195000,
+      190550
+     ],
+     [
+      "North America",
+      "2026-09",
+      80000,
+      70850
+     ],
+     [
+      "Europe",
+      "2026-09",
+      163000,
+      128901
+     ],
+     [
+      "APAC",
+      "2026-09",
+      162000,
+      98713
+     ],
+     [
+      "North America",
+      "2026-10",
+      164000,
+      103964
+     ],
+     [
+      "Europe",
+      "2026-10",
+      129000,
+      141591
+     ],
+     [
+      "APAC",
+      "2026-10",
+      176000,
+      121356
+     ],
+     [
+      "North America",
+      "2026-11",
+      193000,
+      130268
+     ],
+     [
+      "Europe",
+      "2026-11",
+      181000,
+      180111
+     ],
+     [
+      "APAC",
+      "2026-11",
+      91000,
+      101062
+     ]
+    ],
+    "Notes": [
+     [
+      "Date",
+      "Note"
+     ]
+    ]
+   }
+  },
+  "demo-hr-private": {
+   "title": "HR - private (never in the allow-list)",
+   "tabs": {
+    "Salaries": [
+     [
+      "Name",
+      "Salary"
+     ],
+     [
+      "Synthetic Person A",
+      98000
+     ]
+    ]
+   }
+  }
+ }
+}
