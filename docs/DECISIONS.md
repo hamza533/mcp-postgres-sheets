@@ -28,3 +28,10 @@ Short entries: chose X over Y because Z. Newest last.
 - **Postgres error primary message is returned to the AI (with SQLSTATE), never the raw exception** — the AI needs `column "x" does not exist` to correct its query; connection errors become a generic "database not reachable" message.
 - **Safety suite as data (`eval/safety_cases.json`) run through a real MCP client session** — the same cases drive CI (`tests/test_safety_suite.py`) and `make eval`, and they test what the AI actually sees, not internal functions.
 - **Structured output (Pydantic result models) for every tool** — clients get an `outputSchema` and typed `structuredContent`, plus the JSON text for older clients.
+
+## M2
+- **Audit, scope checks and rate limiting in one `FastMCP.call_tool` override (`GuardedFastMCP`) over per-tool decorators** — FastMCP validates arguments before a tool function runs, so a decorator would miss invalid-argument and unknown-tool calls; the override sees every call and writes exactly one audit line for each.
+- **Redact by default with a SHA-256 fingerprint + length, keeping identifier arguments (schema, table, sheet_id, range…)** — the log stays useful (which table, which sheet, how often the same query repeats) without storing query text or row values that may contain personal data.
+- **Audit to stderr in stdio mode, stdout in HTTP mode, or `AUDIT_LOG_PATH`** — stdout is the protocol channel in stdio; in containers stdout is what the platform (Application Insights) collects.
+- **A failing audit sink logs an error but does not fail the tool call** — losing a log line is better than an outage caused by a full disk; the error is visible in the server log.
+- **MCP Inspector pinned to 2.14.0** — the newest release at least two weeks old.

@@ -7,7 +7,6 @@ real annotation objects.
 import time
 from typing import Annotated, Any
 
-from mcp.server.fastmcp import FastMCP
 from mcp.types import ToolAnnotations
 from pydantic import BaseModel, Field
 
@@ -19,7 +18,7 @@ from mcp_postgres_sheets.errors import (
     UnavailableError,
 )
 from mcp_postgres_sheets.sql_guard import MAX_SQL_LENGTH, check_sql
-from mcp_postgres_sheets.tools._runtime import ServerState, instrument
+from mcp_postgres_sheets.tools._runtime import GuardedFastMCP, ServerState
 
 SCOPE_DB_READ = "db:read"
 
@@ -162,11 +161,10 @@ def _db(state: ServerState) -> Database:
     return state.db
 
 
-def register_postgres_tools(mcp: FastMCP[Any], state: ServerState) -> None:
+def register_postgres_tools(mcp: GuardedFastMCP, state: ServerState) -> None:
     s = state.settings
     schemas = ", ".join(s.allowed_schemas)
 
-    @instrument(state, "postgres_list_tables", SCOPE_DB_READ)
     async def postgres_list_tables(
         schema: Annotated[
             str | None,
@@ -186,7 +184,6 @@ def register_postgres_tools(mcp: FastMCP[Any], state: ServerState) -> None:
         ]
         return ListTablesResult(tables=tables, row_count=len(tables))
 
-    @instrument(state, "postgres_describe_table", SCOPE_DB_READ)
     async def postgres_describe_table(
         table: Annotated[
             str,
@@ -252,7 +249,6 @@ def register_postgres_tools(mcp: FastMCP[Any], state: ServerState) -> None:
             row_count=len(columns),
         )
 
-    @instrument(state, "postgres_query", SCOPE_DB_READ)
     async def postgres_query(
         sql: Annotated[
             str,
@@ -288,9 +284,10 @@ def register_postgres_tools(mcp: FastMCP[Any], state: ServerState) -> None:
             duration_ms=round((time.perf_counter() - started) * 1000, 1),
         )
 
-    mcp.add_tool(
+    mcp.add_guarded_tool(
         postgres_list_tables,
         name="postgres_list_tables",
+        scope=SCOPE_DB_READ,
         title="List Postgres tables",
         description=(
             f"List the tables and views the AI may query in the allowed schemas ({schemas}), with "
@@ -298,11 +295,11 @@ def register_postgres_tools(mcp: FastMCP[Any], state: ServerState) -> None:
             "then postgres_describe_table for column details."
         ),
         annotations=READ_ONLY_ANNOTATIONS,
-        structured_output=True,
     )
-    mcp.add_tool(
+    mcp.add_guarded_tool(
         postgres_describe_table,
         name="postgres_describe_table",
+        scope=SCOPE_DB_READ,
         title="Describe a Postgres table",
         description=(
             "Describe one table or view: columns with types, nullability, defaults and comments, the "
@@ -310,11 +307,11 @@ def register_postgres_tools(mcp: FastMCP[Any], state: ServerState) -> None:
             "to write correct JOINs). Call before writing a query against a table you haven't seen."
         ),
         annotations=READ_ONLY_ANNOTATIONS,
-        structured_output=True,
     )
-    mcp.add_tool(
+    mcp.add_guarded_tool(
         postgres_query,
         name="postgres_query",
+        scope=SCOPE_DB_READ,
         title="Run a read-only SQL query",
         description=(
             "Run ONE read-only PostgreSQL SELECT and return the rows as JSON objects. "
@@ -326,5 +323,4 @@ def register_postgres_tools(mcp: FastMCP[Any], state: ServerState) -> None:
             "rather than fetching raw rows. Use postgres_describe_table first to get exact column names."
         ),
         annotations=READ_ONLY_ANNOTATIONS,
-        structured_output=True,
     )

@@ -10,9 +10,10 @@ from typing import Any
 from mcp.server.fastmcp import FastMCP
 
 from mcp_postgres_sheets import __version__
+from mcp_postgres_sheets.audit import AuditLogger
 from mcp_postgres_sheets.config import Settings
 from mcp_postgres_sheets.db import Database
-from mcp_postgres_sheets.tools._runtime import ServerState
+from mcp_postgres_sheets.tools._runtime import GuardedFastMCP, ServerState
 from mcp_postgres_sheets.tools.postgres import register_postgres_tools
 
 log = logging.getLogger(__name__)
@@ -36,12 +37,12 @@ def _instructions(settings: Settings) -> str:
 
 def build_state(settings: Settings) -> ServerState:
     db = Database(settings) if settings.database_url is not None else None
-    return ServerState.from_settings(settings, db=db)
+    return ServerState.from_settings(settings, db=db, audit=AuditLogger.from_settings(settings))
 
 
 def build_server(
     settings: Settings, state: ServerState | None = None
-) -> tuple[FastMCP[Any], ServerState]:
+) -> tuple[GuardedFastMCP, ServerState]:
     state = state or build_state(settings)
 
     @asynccontextmanager
@@ -51,13 +52,16 @@ def build_server(
         finally:
             if state.db is not None:
                 await state.db.close()
+            if isinstance(state.audit, AuditLogger):
+                state.audit.close()
 
-    mcp: FastMCP[Any] = FastMCP(
+    mcp = GuardedFastMCP(
+        state,
         name=SERVER_NAME,
         instructions=_instructions(settings),
         website_url="https://github.com/hamza533/mcp-postgres-sheets",
         lifespan=lifespan,
-        log_level=settings.log_level.upper(),  # type: ignore[arg-type]
+        log_level=settings.log_level.upper(),
     )
     mcp._mcp_server.version = __version__
 

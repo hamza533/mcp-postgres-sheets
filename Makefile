@@ -69,7 +69,7 @@ eval-latency: db  ## latency benchmark only
 	$(UV) run python -m eval.run --only latency
 
 inspector:        ## open the MCP Inspector against the local stdio server (needs Node)
-	npx -y @modelcontextprotocol/inspector@0.17.2 uv run mcp-postgres-sheets
+	npx -y @modelcontextprotocol/inspector@2.14.0 uv run mcp-postgres-sheets
 
 tools-json:       ## regenerate site/src/data/tools.json from tools/list
 	$(UV) run python -m scripts.export_tools site/src/data/tools.json
