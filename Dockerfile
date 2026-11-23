@@ -15,7 +15,7 @@ COPY src ./src
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-editable
 
-FROM python:3.12.12-slim-bookworm AS runtime
+FROM python:3.12.16-slim-bookworm AS runtime
 LABEL org.opencontainers.image.title="mcp-postgres-sheets" \
       org.opencontainers.image.description="MCP server for PostgreSQL and Google Sheets: read-only by default, audited." \
       org.opencontainers.image.source="https://github.com/hamza533/mcp-postgres-sheets" \
