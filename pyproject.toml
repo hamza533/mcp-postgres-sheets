@@ -1,0 +1,90 @@
+[project]
+name = "mcp-postgres-sheets"
+version = "0.1.0"
+description = "MCP server that lets AI assistants safely query PostgreSQL and read/write Google Sheets: read-only by default, scoped permissions, full audit log."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "hamza533" }]
+requires-python = ">=3.12"
+keywords = ["mcp", "model-context-protocol", "postgres", "google-sheets", "ai", "llm", "claude"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Database",
+  "Topic :: Security",
+]
+dependencies = [
+  "mcp>=1.20,<2",
+  "psycopg[binary]>=3.2,<4",
+  "psycopg-pool>=3.2,<4",
+  "sqlglot>=26,<30",
+  "google-api-python-client>=2.150,<3",
+  "google-auth>=2.35,<3",
+  "pydantic>=2.9,<3",
+  "pydantic-settings>=2.6,<3",
+  "pyjwt[crypto]>=2.9,<3",
+]
+
+[project.optional-dependencies]
+sentry = ["sentry-sdk>=2.18,<3"]
+
+[project.scripts]
+mcp-postgres-sheets = "mcp_postgres_sheets.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/hamza533/mcp-postgres-sheets"
+Repository = "https://github.com/hamza533/mcp-postgres-sheets"
+Changelog = "https://github.com/hamza533/mcp-postgres-sheets/blob/main/CHANGELOG.md"
+Issues = "https://github.com/hamza533/mcp-postgres-sheets/issues"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3",
+  "ruff>=0.8",
+  "mypy>=1.13",
+]
+
+[build-system]
+requires = ["uv_build>=0.9,<0.10"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["site"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "RUF", "ASYNC"]
+ignore = ["S101"]  # asserts are fine in tests
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106", "S108", "S311"]
+"eval/**" = ["S311", "S608"]
+"sample_data/**" = ["S311"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src", "tests"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["googleapiclient.*", "google.oauth2.*", "google.auth.*", "sentry_sdk.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*", "eval.*"]
+disallow_untyped_defs = false
+disallow_untyped_calls = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+  "integration: needs a real Postgres (TEST_DATABASE_URL)",
+]

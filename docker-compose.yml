@@ -1,0 +1,30 @@
+# Local development stack.
+#   docker compose up -d db          Postgres 16 with the synthetic e-commerce data + read-only role
+#   docker compose --profile remote up   + the MCP server over Streamable HTTP + Keycloak (OAuth testing only)
+name: mcp-postgres-sheets
+
+services:
+  db:
+    image: postgres:16.6-alpine
+    environment:
+      POSTGRES_USER: shop_owner
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-shop_owner_dev_only}
+      POSTGRES_DB: shop
+      MCP_READONLY_USER: mcp_readonly
+      MCP_READONLY_PASSWORD: ${MCP_READONLY_PASSWORD:-mcp_readonly}
+    ports:
+      - "${DB_PORT:-5544}:5432"
+    volumes:
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+      - ./sample_data:/sample_data:ro
+      - ./deploy/sql:/deploy/sql:ro
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      # Healthy only after the init script finished (the read-only role is created last).
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U shop_owner -d shop && psql -h 127.0.0.1 -U shop_owner -d shop -tAc \"select 1 from pg_roles where rolname = 'mcp_readonly'\" | grep -q 1"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
+
+volumes:
+  db-data:

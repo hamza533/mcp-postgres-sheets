@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+*service-account*.json
+secrets/
+
+# Logs and caches
+*.log
+audit*.jsonl
+eval/.cache/
+
+# Node / website
+node_modules/
+site/.next/
+site/out/
+site/test-results/
+site/playwright-report/
+
+# AI tool folders (see CONVENTIONS 3a) — .mcp.json is committed
+.claude/
+.cursor/
+.codex/
+.gemini/
+.agent/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
