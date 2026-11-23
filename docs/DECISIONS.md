@@ -56,7 +56,7 @@ Short entries: chose X over Y because Z. Newest last.
 - **DNS-rebinding protection on (Host/Origin allow-list from `PUBLIC_URL` + `HTTP_ALLOWED_HOSTS`)** — cheap defence for servers that end up reachable on a developer laptop.
 - **No CORS headers** — clients are MCP hosts calling server-to-server (ChatGPT connectors, Claude) or local tools; no browser front end calls the API. CONVENTIONS' CORS allow-list rule is therefore N/A here.
 - **Keycloak 26 in `start-dev` with a committed realm export** — reproducible local IdP with test clients for each scope combination; `--hostname-backchannel-dynamic` lets the server fetch JWKS at `keycloak:8080` while tokens carry `iss=http://localhost:8180/realms/mcp`. Test-only, never for production.
-- **Runtime image `python:3.12.12-slim-bookworm`, non-root UID 10001, read-only root filesystem in compose** — small attack surface; no shell access needed at runtime.
+- **Runtime image `python:3.12.x-slim-bookworm` (patch tag pinned, bumped by Dependabot), non-root UID 10001, read-only root filesystem in compose** — small attack surface; no shell access needed at runtime.
 
 ## M5
 - **Gemini REST API via httpx in `eval/llm.py` over the `google-genai` SDK** — httpx is already installed (MCP SDK dependency); one ~150-line module owns the provider, so swapping to another LLM touches only that file. Tool schemas are passed as `parametersJsonSchema`, so MCP's JSON Schemas need no conversion.
