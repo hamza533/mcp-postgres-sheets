@@ -3,7 +3,7 @@
 ## Status
 **Current milestone:** M9 – Final check. All engineering work is done and verified locally; what remains
 needs the owner's accounts (GitHub, PyPI, Google Cloud, Gemini, Vercel) or a human at the keyboard
-(GIF/video, Stitch). Next step: **push the repo to GitHub and let CI run** (see "Next steps for the owner").
+(GIF/video, Stitch). The repo is on GitHub (hamza533/mcp-postgres-sheets) and CI is green on `main`.
 
 | # | Milestone | Status |
 |---|---|---|
@@ -16,10 +16,10 @@ needs the owner's accounts (GitHub, PyPI, Google Cloud, Gemini, Vercel) or a hum
 | M6 | Packaging + release pipeline | done — wheel/sdist, `uvx` install, server.json valid, Trivy 0 HIGH/CRITICAL; publishing needs GitHub + PyPI |
 | M7 | Project website | done — 8 static pages, generated reference, 18/18 Playwright; Stitch alignment pending |
 | M8 | Production profile + docs | done — Bicep builds/lints clean, README, client guides, render.yaml |
-| M9 | Final check | done locally — CI not yet run (repo not on GitHub) |
+| M9 | Final check | done — pushed to GitHub, CI green (all 5 jobs) |
 
 ## Next steps for the owner
-1. **GitHub:** create `hamza533/mcp-postgres-sheets` (public), `git remote add origin … && git push -u origin main`. CI runs: lint/type/test on real Postgres, safety suite, remote e2e with Keycloak, image build + Trivy, site (generated-reference check, lint, build, Playwright), Bicep.
+1. **GitHub:** done — https://github.com/hamza533/mcp-postgres-sheets, CI green. Review the 9 Dependabot PRs it opened on first push (mostly major bumps: MCP SDK 2.x, Python 3.15, Postgres 18, TypeScript 7, sqlglot 30); they were cut before the CI fix, so rebase them before judging their CI.
 2. **Stitch designs:** the Stitch project is private (404 when signed out). Sign in to stitch.google.com in the Claude browser pane, or export the 6 screens into `docs/ui/` (file names in docs/ui/README.md). **TODO:** align `/site` with the Stitch designs.
 3. **Gemini key:** free key from https://aistudio.google.com/apikey → `GEMINI_API_KEY=` in `.env` → `make eval` (≈20 min, throttled) → put the task-success number in README "Results" and docs/case-study.md.
 4. **Google service account:** create one, enable the Sheets API, import `sample_data/sheets/*.csv` into a new sheet (tabs `Leads`, `Targets`, `Notes`), share it with the service-account email, set `GOOGLE_SERVICE_ACCOUNT_JSON` + `ALLOWED_SHEET_IDS`, and try `sheets_read_range` once against real Google.
@@ -48,7 +48,7 @@ needs the owner's accounts (GitHub, PyPI, Google Cloud, Gemini, Vercel) or a hum
 - [x] Handoff: AGENTS.md, CLAUDE.md (`@AGENTS.md`), Makefile targets, this file; a fresh clone runs `make setup` + `make lint` + the full test suite with no tool-specific files (verified in a clean container).
 - [x] `docker compose up` works (db by default; `--profile remote` for the full stack).
 - [~] Evaluation script runs and its numbers are in the README — safety + latency yes; NL tasks need a Gemini key.
-- [ ] CI is green — not run yet (repo not on GitHub). Workflows pass actionlint.
+- [x] CI is green — first run on GitHub 2026-11-23 (after pinning setup-uv to v10.4.0 and a Prettier fix).
 - [ ] Demo GIF and 60–90 s video — owner.
 - [x] Live demo deployed, or the README explains why not — README explains (no always-on IdP at $0) and documents self-hosting (Azure, Render + Neon).
 - [x] Upwork case study drafted (docs/case-study.md) — fill in the task-success number after `make eval`.
@@ -78,3 +78,4 @@ needs the owner's accounts (GitHub, PyPI, Google Cloud, Gemini, Vercel) or a hum
 - 2026-11-23 – Claude Code – M7: /site (Next 16 static export, shadcn/ui), generated tools/config/results/changelog data with CI freshness check, Playwright, Vercel config; --env-file option.
 - 2026-11-23 – Claude Code – M8: Azure Bicep profile + CI validation + gated OIDC deploy workflow, README, docs/clients.md, render.yaml, Sentry, case-study draft.
 - 2026-11-23 – Claude Code – M9: JSON server logs with request IDs, fresh-clone check, acceptance checklists.
+- 2026-11-23 – Claude Code – pushed to GitHub; fixed setup-uv tag (no floating v10) and two Prettier misses; CI green.
