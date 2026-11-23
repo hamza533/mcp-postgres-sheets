@@ -1,0 +1,41 @@
+# Self-host remote mode on Render (Docker web service) — an example, not a hosted demo.
+# Pair it with a read-only role on Neon (or any Postgres) and an OIDC provider you already use.
+# Render → New → Blueprint → select this repo. Fill the `sync: false` values in the dashboard.
+#
+# Note: Render's free plan sleeps when idle; the first MCP call after a pause takes ~30–60 s while it
+# wakes up. Use a paid instance for anything other than trying it out.
+services:
+  - type: web
+    name: mcp-postgres-sheets
+    runtime: image
+    image:
+      url: ghcr.io/hamza533/mcp-postgres-sheets:0.1.0
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: TRANSPORT
+        value: http
+      - key: HTTP_HOST
+        value: 0.0.0.0
+      - key: HTTP_PORT
+        value: "8765"
+      - key: PORT
+        value: "8765"
+      - key: PUBLIC_URL
+        sync: false # https://<service>.onrender.com
+      - key: DATABASE_URL
+        sync: false # Neon: postgresql://mcp_readonly:…@ep-….neon.tech/shop?sslmode=require
+      - key: ALLOWED_SCHEMAS
+        value: public
+      - key: OAUTH_ISSUER
+        sync: false # e.g. https://<tenant>.auth0.com/  or  https://login.microsoftonline.com/<tenant>/v2.0
+      - key: OAUTH_AUDIENCE
+        sync: false
+      - key: SHEETS_BACKEND
+        value: memory # switch to `google` + GOOGLE_SERVICE_ACCOUNT_JSON (as a secret file) for real sheets
+      - key: ALLOWED_SHEET_IDS
+        value: demo-sales-pipeline
+      - key: READ_ONLY
+        value: "true"
+      - key: RATE_LIMIT_PER_MIN
+        value: "60"

@@ -1,0 +1,66 @@
+# Deploy the production profile (deploy/azure/main.bicep) to Azure Container Apps.
+#
+# DISABLED BY DEFAULT: it only runs when the repository variable AZURE_DEPLOY_ENABLED is "true".
+# Authentication is OpenID Connect (federated credential on an Entra app) — no secrets stored.
+# Required repository variables: AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID,
+# AZURE_RESOURCE_GROUP, AZURE_OAUTH_AUDIENCE. See README → Production deployment.
+name: Deploy to Azure
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Image version to deploy (e.g. 1.0.0)
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: deploy-azure
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: vars.AZURE_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    environment: production
+    steps:
+      - uses: actions/checkout@v7
+      - id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          v="${INPUT_VERSION:-${TAG#v}}"
+          [[ "$v" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "bad version: $v"; exit 1; }
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+      - uses: azure/login@v3
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: what-if
+        run: |
+          az deployment group what-if \
+            --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
+            --template-file deploy/azure/main.bicep \
+            --parameters image="ghcr.io/${{ github.repository_owner }}/mcp-postgres-sheets:${{ steps.version.outputs.version }}" \
+                         oauthAudience="${{ vars.AZURE_OAUTH_AUDIENCE }}"
+      - name: deploy
+        run: |
+          az deployment group create \
+            --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
+            --template-file deploy/azure/main.bicep \
+            --parameters image="ghcr.io/${{ github.repository_owner }}/mcp-postgres-sheets:${{ steps.version.outputs.version }}" \
+                         oauthAudience="${{ vars.AZURE_OAUTH_AUDIENCE }}" \
+            --query properties.outputs
+      - name: smoke test
+        run: |
+          url="$(az deployment group show -g "${{ vars.AZURE_RESOURCE_GROUP }}" -n main --query properties.outputs.mcpUrl.value -o tsv)"
+          base="${url%/mcp}"
+          curl -fsS "$base/health"
+          test "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url")" = "401"

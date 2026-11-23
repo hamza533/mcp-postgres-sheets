@@ -1,7 +1,7 @@
 # PROGRESS – handoff log
 
 ## Status
-**Current milestone:** M8 – Production profile + docs (next)
+**Current milestone:** M9 – Final check (next)
 
 | # | Milestone | Status |
 |---|---|---|
@@ -13,8 +13,8 @@
 | M5 | Evaluation | done — safety 70/70, latency max p95 < 50 ms; 20 NL tasks wait for `GEMINI_API_KEY` (user step) |
 | M6 | Packaging + release pipeline | done — wheel/sdist build, `uvx` install verified, server.json validates (schema 2025-12-11), Trivy 0 HIGH/CRITICAL, actionlint clean. Publishing needs the repo on GitHub + PyPI trusted publisher (user step) |
 | M7 | Project website | done — 8 static pages, generated tools/config reference, 18/18 Playwright; Stitch alignment pending (see blockers) |
-| M8 | Production profile + docs | next |
-| M9 | Final check | not started |
+| M8 | Production profile + docs | done — Bicep builds/lints clean (0.49.2), README per template, client guides, render.yaml, Sentry option |
+| M9 | Final check | next |
 
 ## Blockers / open questions
 - **Publishing (user step):** create the GitHub repo `hamza533/mcp-postgres-sheets` and push; add the PyPI pending trusted publisher + `pypi` environment (see RELEASING.md); set `PUBLISH_MCP_REGISTRY=true` when ready to be listed.
@@ -32,6 +32,7 @@
 - `docker compose --profile remote up -d --wait && make remote-smoke` → ALL PASSED (see docs/inspector.md).
 - `make eval-safety` → `eval/results.md` says 70/70 stopped; `make eval-latency` → p50/p95 table.
 - `make site-setup site-check site-test` → eslint/prettier/tsc clean, 18 Playwright tests pass.
+- `az bicep build --file deploy/azure/main.bicep && az bicep lint --file deploy/azure/main.bicep` → no output (clean).
 - `make build && uvx --from dist/*.whl mcp-postgres-sheets --version` → `mcp-postgres-sheets 0.1.0`.
 - `AUDIT_LOG_PATH=audit.jsonl uv run mcp-postgres-sheets` then call a tool from `make inspector` → one JSON line per call.
 
@@ -45,3 +46,4 @@
 - 2026-11-23 – Claude Code – M5: eval harness (safety, 20 Gemini tool-calling tasks with live reference answers, latency), results committed.
 - 2026-11-23 – Claude Code – M6: server.json (MCP Registry), release workflow (trusted publishing, GHCR multi-arch, Trivy, SBOM), CodeQL, Dependabot, RELEASING.md.
 - 2026-11-23 – Claude Code – M7: /site (Next 16 static export, shadcn/ui), generated tools/config/results/changelog data with CI freshness check, Playwright, Vercel config; --env-file option.
+- 2026-11-23 – Claude Code – M8: Azure Bicep profile + CI validation + gated OIDC deploy workflow, README, docs/clients.md, render.yaml, Sentry, case-study draft.

@@ -85,3 +85,13 @@ Short entries: chose X over Y because Z. Newest last.
 - **Security headers (CSP, HSTS, frame-ancestors none…) in `site/vercel.json`** — the static export has no server; `script-src 'unsafe-inline'` is required by Next's inline hydration data and is acceptable for a site with no user input or secrets.
 - **Built to `docs/ui/STITCH_PROMPT.md` with shadcn defaults** — the Stitch project is private and was not accessible during the build; aligning with its exports is a tracked follow-up (KICKOFF rule 6).
 - **`--env-file` CLI option** — lets the client config reference a 600-permission file instead of embedding `DATABASE_URL` and key paths, matching the site's "never put secrets in the client config" guidance.
+
+## M8
+- **Azure Container Apps (consumption) over AKS or App Service** — scale-out of a stateless HTTP container with no cluster to run; managed identity, Key Vault secret references and Log Analytics are built in.
+- **User-assigned managed identity + Key Vault references (RBAC: Key Vault Secrets User only)** — the identity exists before the app, so secrets resolve on the first revision; no secret ever appears in app settings, Bicep or the repo.
+- **Logs go to Log Analytics with a workspace-based Application Insights** — the server already writes structured JSON (audit lines) to stdout; Container Apps ships it, no SDK needed in the app.
+- **Optional VNet integration (`infrastructureSubnetId`)** — the realistic production path to a client's private Postgres; off by default so the template deploys anywhere.
+- **Deploy workflow gated by `AZURE_DEPLOY_ENABLED` and using OIDC (`azure/login`)** — validated but never deployed by us (SPEC §4a); no Azure credentials stored in GitHub.
+- **Bicep lint in CI fails on any warning (SARIF output checked)** — `bicep lint` alone only fails on errors.
+- **Optional Sentry via the `[sentry]` extra, scrubbing exception messages and request data** — error tracking without ever sending SQL text or cell values.
+- **`render.yaml` as a self-host example (Render + Neon) rather than a hosted demo** — a public endpoint needs an always-on IdP, which doesn't fit $0 (SPEC §8); the "live demo" is the PyPI package.

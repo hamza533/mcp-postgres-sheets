@@ -69,7 +69,10 @@ def main(argv: list[str] | None = None) -> None:
 
     logging.getLogger().setLevel(settings.log_level.upper())
 
+    from mcp_postgres_sheets.observability import init_sentry
     from mcp_postgres_sheets.server import build_server
+
+    init_sentry(settings)
 
     try:
         mcp, _ = build_server(settings)

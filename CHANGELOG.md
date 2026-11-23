@@ -15,6 +15,10 @@ public API: breaking changes to them only happen in a major version.
   `READ_ONLY=false`) `sheets_append_rows` and `sheets_update_range` with a required `idempotency_key`.
   Service-account auth, `ALLOWED_SHEET_IDS`, timeouts and retries with backoff on 429/5xx.
 - In-memory Sheets backend with a synthetic demo spreadsheet (`SHEETS_BACKEND=memory`).
+- Production profile: `deploy/azure/main.bicep` (Container Apps, Key Vault, managed identity, Log
+  Analytics + Application Insights, Entra ID), validated in CI; disabled-by-default deploy workflow.
+- Optional Sentry error tracking (`SENTRY_DSN`, `[sentry]` extra) with scrubbing.
+- Docs: full README, client setup guides (`docs/clients.md`), `render.yaml` self-host example.
 - Project website (`/site`): Next.js static export with shadcn/ui — home, quick start per client,
   configuration, security model, generated tools reference, remote mode, changelog; Playwright smoke tests;
   Vercel deploy config with security headers.

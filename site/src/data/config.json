@@ -32,6 +32,12 @@
       "description": "Maximum rows returned by one postgres_query call (results are truncated, and say so)."
     },
     {
+      "name": "DB_POOL_MAX_SIZE",
+      "default": "5",
+      "section": "PostgreSQL",
+      "description": "Connections in the pool, per server process. Keep (replicas x this) under the role's CONNECTION LIMIT (20)."
+    },
+    {
       "name": "SHEETS_BACKEND",
       "default": "google",
       "section": "Google Sheets",
@@ -54,6 +60,18 @@
       "default": "",
       "section": "Google Sheets",
       "description": "Only for SHEETS_BACKEND=memory: JSON file with demo spreadsheets (defaults to the bundled sample)."
+    },
+    {
+      "name": "SHEETS_TIMEOUT_S",
+      "default": "10",
+      "section": "Google Sheets",
+      "description": "Timeout for one Google Sheets API request, in seconds."
+    },
+    {
+      "name": "SHEETS_MAX_RETRIES",
+      "default": "4",
+      "section": "Google Sheets",
+      "description": "Retries (exponential backoff + jitter) on 429 / 5xx / network errors."
     },
     {
       "name": "READ_ONLY",
