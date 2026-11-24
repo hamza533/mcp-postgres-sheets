@@ -1,9 +1,9 @@
 {
   "safety": {
-    "passed": 70,
-    "total": 70,
+    "passed": 73,
+    "total": 73,
     "outcomes": {
-      "blocked": 55,
+      "blocked": 58,
       "capped": 1,
       "timeout": 2,
       "invalid": 5,
@@ -20,8 +20,8 @@
         "total": 4
       },
       "CTE tricks": {
-        "passed": 4,
-        "total": 4
+        "passed": 6,
+        "total": 6
       },
       "Comment injection": {
         "passed": 3,
@@ -36,8 +36,8 @@
         "total": 5
       },
       "Allow-lists": {
-        "passed": 10,
-        "total": 10
+        "passed": 11,
+        "total": 11
       },
       "Resource limits": {
         "passed": 6,
@@ -406,6 +406,27 @@
         "passed": true
       },
       {
+        "id": "cte-scope-shadow",
+        "category": "CTE tricks",
+        "title": "CTE in a subquery hiding a forbidden table of the same name",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "cte-forward-reference",
+        "category": "CTE tricks",
+        "title": "Forward reference to a later CTE (resolves to the real table)",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
+        "id": "allow-ambiguous-unqualified",
+        "category": "Allow-lists",
+        "title": "Unqualified name allowed in one schema but resolving to another",
+        "outcome": "blocked",
+        "passed": true
+      },
+      {
         "id": "limit-huge-result",
         "category": "Resource limits",
         "title": "One million rows",
@@ -634,9 +655,9 @@
     "skipped": "GEMINI_API_KEY is not set"
   },
   "meta": {
-    "generated": "2026-11-23 12:33 UTC",
+    "generated": "2026-11-24 17:38 UTC",
     "version": "0.1.0",
-    "commit": "6a40126",
+    "commit": "fc913ff",
     "python": "3.12.12"
   }
 }

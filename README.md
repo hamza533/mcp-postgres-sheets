@@ -46,7 +46,7 @@ From the committed evaluation ([`eval/results.md`](eval/results.md), reproduce w
 
 | Measure | Result |
 |---|---|
-| Safety suite: attack and misuse attempts stopped | **70 / 70** (DDL/DML, multi-statement, CTE tricks, comment injection, `pg_sleep` and other unsafe functions, catalog access, huge results, runaway queries, Sheets allow-list, hidden write tools, OAuth scopes) |
+| Safety suite: attack and misuse attempts stopped | **73 / 73** (DDL/DML, multi-statement, CTE tricks, comment injection, `pg_sleep` and other unsafe functions, catalog access, huge results, runaway queries, Sheets allow-list, hidden write tools, OAuth scopes) |
 | Natural-language tasks completed (Gemini Flash, tool calling) | *pending — needs a free `GEMINI_API_KEY`; 20 tasks are ready in [`eval/tasks.py`](eval/tasks.py)* |
 | Latency p50 / p95, slowest tool (`postgres_describe_table`) | 26 ms / 30 ms (in-process MCP session, sample DB) |
 | Latency p50 / p95, top-5-revenue join query | 12 ms / 15 ms |
@@ -133,7 +133,7 @@ Keep secrets out of client config files: pass `--env-file` pointing at a file on
 ## Evaluation
 
 ```bash
-make eval-safety      # 70 attack/misuse cases through a real MCP session (no API key)
+make eval-safety      # 73 attack/misuse cases through a real MCP session (no API key)
 make eval-latency     # p50/p95 per tool against the sample database
 make eval             # + 20 natural-language tasks run by Gemini Flash (needs GEMINI_API_KEY in .env)
 ```

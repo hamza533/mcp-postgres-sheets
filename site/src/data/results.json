@@ -1,7 +1,7 @@
 {
   "safety": {
-    "passed": 70,
-    "total": 70,
+    "passed": 73,
+    "total": 73,
     "byCategory": {
       "Writes and DDL": {
         "passed": 12,
@@ -12,8 +12,8 @@
         "total": 4
       },
       "CTE tricks": {
-        "passed": 4,
-        "total": 4
+        "passed": 6,
+        "total": 6
       },
       "Comment injection": {
         "passed": 3,
@@ -28,8 +28,8 @@
         "total": 5
       },
       "Allow-lists": {
-        "passed": 10,
-        "total": 10
+        "passed": 11,
+        "total": 11
       },
       "Resource limits": {
         "passed": 6,
@@ -541,6 +541,36 @@
         "passed": true,
         "tool": "postgres_query",
         "example": "SELECT email FROM customers",
+        "scopes": null
+      },
+      {
+        "id": "cte-scope-shadow",
+        "category": "CTE tricks",
+        "title": "CTE in a subquery hiding a forbidden table of the same name",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT c.email FROM (WITH customers AS (SELECT 1 AS id) SELECT * FROM customers) s, customers c",
+        "scopes": null
+      },
+      {
+        "id": "cte-forward-reference",
+        "category": "CTE tricks",
+        "title": "Forward reference to a later CTE (resolves to the real table)",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "WITH a AS (SELECT email FROM customers), customers AS (SELECT 1 AS id) SELECT * FROM a",
+        "scopes": null
+      },
+      {
+        "id": "allow-ambiguous-unqualified",
+        "category": "Allow-lists",
+        "title": "Unqualified name allowed in one schema but resolving to another",
+        "outcome": "blocked",
+        "passed": true,
+        "tool": "postgres_query",
+        "example": "SELECT * FROM orders",
         "scopes": null
       },
       {

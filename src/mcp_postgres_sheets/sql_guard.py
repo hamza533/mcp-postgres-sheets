@@ -105,10 +105,43 @@ def _function_name(node: exp.Func) -> str:
     return str(node.sql_name()).lower()  # type: ignore[no-untyped-call]
 
 
-def _cte_names(tree: exp.Expression) -> set[str]:
-    return {
-        _ident(cte.args["alias"].this) for cte in tree.find_all(exp.CTE) if cte.args.get("alias")
-    }
+def _cte_name(cte: exp.Expression) -> str:
+    alias = cte.args.get("alias")
+    return _ident(alias.this) if alias is not None else ""
+
+
+def _with_clause(node: exp.Expression) -> exp.With | None:
+    clause = node.args.get("with_", node.args.get("with"))
+    return clause if isinstance(clause, exp.With) else None
+
+
+def _refers_to_cte(table: exp.Table, name: str) -> bool:
+    """True if Postgres would resolve this unqualified name to a CTE rather than a real table.
+
+    Follows Postgres scoping: a CTE is visible in the query that owns its WITH clause (and that
+    query's subqueries); inside a non-recursive WITH, a CTE body sees only the CTEs *before* it.
+    Anything else with that name is a real table and must pass the allow-lists.
+    """
+    child: exp.Expression = table
+    node = table.parent
+    while node is not None:
+        if isinstance(node, exp.With):
+            ctes = list(node.expressions)
+            if not node.args.get("recursive"):
+                position = next((i for i, c in enumerate(ctes) if c is child), len(ctes))
+                ctes = ctes[:position]
+            if any(_cte_name(c) == name for c in ctes):
+                return True
+        else:
+            clause = _with_clause(node)
+            if (
+                clause is not None
+                and clause is not child
+                and any(_cte_name(c) == name for c in clause.expressions)
+            ):
+                return True
+        child, node = node, node.parent
+    return False
 
 
 def _check_functions(tree: exp.Expression) -> None:
@@ -119,7 +152,6 @@ def _check_functions(tree: exp.Expression) -> None:
 
 
 def _check_tables(tree: exp.Expression, allow: AllowList) -> tuple[str, ...]:
-    ctes = _cte_names(tree)
     seen: list[str] = []
     for table in tree.find_all(exp.Table):
         name = _ident(table.this) if isinstance(table.this, exp.Identifier) else ""
@@ -130,13 +162,21 @@ def _check_tables(tree: exp.Expression, allow: AllowList) -> tuple[str, ...]:
         if catalog:
             raise BlockedError("cross-database references are not allowed")
         if not schema:
-            if name in ctes:
+            if _refers_to_cte(table, name):
                 continue
             if name.startswith("pg_"):
                 # Unqualified pg_* names resolve to pg_catalog before any allowed schema.
                 raise BlockedError(f"system catalog {name} is not allowed")
             if allow.tables and not any(allow.table_allowed(s, name) for s in allow.schemas):
                 raise BlockedError(f"table {name} is not in ALLOWED_TABLES")
+            if allow.tables and not all(allow.table_allowed(s, name) for s in allow.schemas):
+                # Postgres picks the first schema on search_path that has the table, which
+                # may not be the one that is allowed: make the caller say which one.
+                allowed_in = [s for s in allow.schemas if allow.table_allowed(s, name)]
+                raise BlockedError(
+                    f"table {name} is ambiguous here; qualify it as "
+                    + " or ".join(f"{s}.{name}" for s in allowed_in)
+                )
             seen.append(name)
             continue
         if not allow.schema_allowed(schema):

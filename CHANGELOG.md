@@ -24,7 +24,7 @@ public API: breaking changes to them only happen in a major version.
   configuration, security model, generated tools reference, remote mode, changelog; Playwright smoke tests;
   Vercel deploy config with security headers.
 - `--env-file PATH` CLI option to keep secrets out of AI client config files.
-- Evaluation (`make eval`): safety suite (70/70 stopped), 20 natural-language tasks run by Gemini Flash
+- Evaluation (`make eval`): safety suite (73/73 stopped), 20 natural-language tasks run by Gemini Flash
   with tool calling (needs `GEMINI_API_KEY`), latency p50/p95 per tool → `eval/results.{md,json}`.
 - Remote mode (`TRANSPORT=http`): stateless Streamable HTTP, OAuth 2.1 bearer-token validation via
   JWKS (any OIDC provider), per-tool scopes `db:read` / `sheets:read` / `sheets:write`, RFC 9728
@@ -37,6 +37,22 @@ public API: breaking changes to them only happen in a major version.
 - Audit log: one JSON line per tool call (including rejected, invalid and unknown-tool calls) with
   request ID, caller, tool, redacted arguments, duration, row count and outcome.
 - stdio transport: `mcp-postgres-sheets` / `python -m mcp_postgres_sheets` CLI.
-- Safety suite: 70 attack and misuse cases (`eval/safety_cases.json`), run in CI.
+- Safety suite: 73 attack and misuse cases (`eval/safety_cases.json`), run in CI.
 - Repository foundation: uv project, Makefile, CI, Docker Compose with a seeded synthetic
   e-commerce Postgres database and a read-only role (`deploy/sql/001_readonly_role.sql`).
+
+### Security
+- SQL check: a CTE now only hides a table name inside its own scope (Postgres rules, incl.
+  non-recursive forward references), and an unqualified table that is allowed in only some of
+  `ALLOWED_SCHEMAS` must be schema-qualified. Both previously let a query read a table outside
+  `ALLOWED_TABLES`.
+- Google Sheets appends are no longer retried automatically after a timeout or 5xx (the rows may
+  already be written); concurrent calls with the same `idempotency_key` write once; a failure to
+  store the idempotency marker no longer reports a successful append as failed.
+- Remote mode: tokens with an unknown `kid` trigger at most one JWKS refetch per minute.
+- Release pipeline: actions pinned to commit SHAs, `mcp-publisher` checksum-verified, pushed
+  arm64 image scanned by digest.
+
+### Fixed
+- `sheets_read_range` requests at most `max_rows + 1` rows instead of downloading the whole range.
+- `postgres_describe_table` folds unquoted names to lower case like Postgres (`Orders` → `orders`).

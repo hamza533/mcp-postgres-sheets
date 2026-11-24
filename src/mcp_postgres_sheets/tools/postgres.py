@@ -140,12 +140,20 @@ ORDER BY con.conname
 """  # noqa: S608
 
 
+def _fold(name: str) -> str:
+    """Like Postgres: unquoted identifiers fold to lower case, "Quoted" ones keep their case."""
+    name = name.strip()
+    if len(name) >= 2 and name.startswith('"') and name.endswith('"'):
+        return name[1:-1].replace('""', '"')
+    return name.lower()
+
+
 def _split_table(table: str, schema: str | None, state: ServerState) -> tuple[str, str]:
     table = table.strip()
     if schema is None and "." in table:
         schema, table = table.split(".", 1)
-    schema = (schema or state.allow.default_schema).strip().strip('"')
-    table = table.strip('"')
+    schema = _fold(schema) if schema else state.allow.default_schema
+    table = _fold(table)
     if not state.allow.schema_allowed(schema):
         raise BlockedError(
             f"schema {schema} is not in ALLOWED_SCHEMAS ({', '.join(state.allow.schemas)})"

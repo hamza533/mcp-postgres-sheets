@@ -25,6 +25,7 @@ import re
 import socket
 import threading
 import time
+import weakref
 from collections import OrderedDict
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -438,6 +439,9 @@ class GoogleSheetsBackend:
             "sheets", "v4", http=self._http_factory(), cache_discovery=False, static_discovery=True
         )
         self._done = _RecentResults()
+        self._key_locks: weakref.WeakValueDictionary[str, asyncio.Lock] = (
+            weakref.WeakValueDictionary()
+        )
 
     @classmethod
     def from_settings(cls, settings: Settings) -> GoogleSheetsBackend:
@@ -464,18 +468,28 @@ class GoogleSheetsBackend:
             self._credentials, http=httplib2.Http(timeout=self._timeout)
         )
 
-    def _execute(self, request: Any, what: str) -> Any:
-        """Run one API request with retries. A fresh HTTP object per attempt (httplib2 is not thread-safe)."""
+    def _execute(self, request: Any, what: str, *, retry_unsure: bool = True) -> Any:
+        """Run one API request with retries. A fresh HTTP object per attempt (httplib2 is not thread-safe).
+
+        `retry_unsure=False` is for requests that are not idempotent (append): a timeout or a 5xx
+        may come *after* Google applied the change, so only a 429 (rejected, nothing done) is
+        retried.
+        """
         attempt = 0
         while True:
             try:
                 return request.execute(http=self._http_factory(), num_retries=0)
             except Exception as exc:
                 status = _http_status(exc)
-                transient = status in RETRY_STATUSES or (
-                    status is None
-                    and isinstance(exc, socket.timeout | TimeoutError | ConnectionError | OSError)
-                )
+                if retry_unsure:
+                    transient = status in RETRY_STATUSES or (
+                        status is None
+                        and isinstance(
+                            exc, socket.timeout | TimeoutError | ConnectionError | OSError
+                        )
+                    )
+                else:
+                    transient = status == 429
                 if transient and attempt < self._max_retries:
                     delay = _retry_after(exc) or min(30.0, 0.5 * 2**attempt) * random.uniform(
                         0.5, 1.5
@@ -591,7 +605,12 @@ class GoogleSheetsBackend:
         raise NotFoundError(f"Tab {tab!r} was not found. Use sheets_list_tabs to see the tabs.")
 
     async def _mark(self, sheet_id: str, tab: str, start_row: int, end_row: int, key: str) -> None:
-        gid = await self._tab_gid(sheet_id, tab)
+        """Store the durable idempotency marker. Never raises: the rows are already written."""
+        try:
+            gid = await self._tab_gid(sheet_id, tab)
+        except SafeToolError:
+            log.warning("could not store idempotency marker for sheet write (tab lookup failed)")
+            return
         body = {
             "requests": [
                 {
@@ -625,6 +644,16 @@ class GoogleSheetsBackend:
         self, sheet_id: str, tab: str, rows: Grid, idempotency_key: str
     ) -> WriteResult:
         key = hash_key(idempotency_key, "append", sheet_id)
+        # One in-flight append per key in this process: a retry that arrives while the first
+        # call is still running waits for it and then finds its result in the cache.
+        lock = self._key_locks.get(key)
+        if lock is None:
+            lock = asyncio.Lock()
+            self._key_locks[key] = lock
+        async with lock:
+            return await self._append_once(sheet_id, tab, rows, key)
+
+    async def _append_once(self, sheet_id: str, tab: str, rows: Grid, key: str) -> WriteResult:
         if (hit := self._done.get(key)) is not None:
             return hit
         if (marker := await self._find_marker(sheet_id, key)) is not None:
@@ -641,7 +670,13 @@ class GoogleSheetsBackend:
                 body={"values": rows},
             )
         )
-        data = await self._run(lambda: self._execute(req, "append"))
+        try:
+            data = await self._run(lambda: self._execute(req, "append", retry_unsure=False))
+        except (TimeoutError_, UnavailableError) as exc:
+            raise type(exc)(
+                f"{exc.message} Google did not confirm the append, so the rows may or may not have "
+                "been written. Read the end of the tab with sheets_read_range before retrying."
+            ) from None
         updates = data.get("updates", {})
         updated_range = updates.get("updatedRange", "")
         result = WriteResult(
@@ -649,11 +684,15 @@ class GoogleSheetsBackend:
             updated_rows=int(updates.get("updatedRows", len(rows))),
             updated_cells=int(updates.get("updatedCells", 0)),
         )
-        written = parse_a1(updated_range) if updated_range else None
+        self._done.put(key, result)  # before the marker: a retry to this process is now safe
+        try:
+            written = parse_a1(updated_range) if updated_range else None
+        except InvalidInputError:
+            written = None
         if written is not None and written.start_row is not None:
             end = written.end_row if written.end_row is not None else written.start_row
-            await self._mark(sheet_id, tab, written.start_row, end, key)
-        self._done.put(key, result)
+            # Google reports the tab's real title; the caller's spelling may differ in case.
+            await self._mark(sheet_id, written.tab or tab, written.start_row, end, key)
         return result
 
     async def update_range(
