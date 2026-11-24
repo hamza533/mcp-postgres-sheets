@@ -22,7 +22,9 @@ from mcp_postgres_sheets.sheets import (
     SheetsBackend,
     WriteResult,
     col_to_index,
+    index_to_col,
     parse_a1,
+    quote_tab,
 )
 from mcp_postgres_sheets.tools._runtime import GuardedFastMCP, ServerState
 
@@ -124,6 +126,24 @@ def _check_values(values: list[list[Cell]]) -> None:
         for cell in row:
             if isinstance(cell, str) and len(cell) > MAX_CELL_CHARS:
                 raise InvalidInputError(f"A cell is longer than {MAX_CELL_CHARS} characters.")
+
+
+def _bounded_range(rng: A1Range, text: str, limit: int) -> str:
+    """Ask the API for at most `limit + 1` rows (the extra row tells us the result was truncated),
+    instead of downloading a whole tab and cutting it down afterwards."""
+    start = rng.start_row or 0
+    last = start + limit
+    if rng.end_row is not None and rng.end_row <= last:
+        return text.strip()
+    if rng.start_col is None and rng.end_col is None:
+        cells = f"{start + 1}:{last + 1}"  # whole rows, every column
+    elif rng.end_col is not None:
+        cells = (
+            f"{index_to_col(rng.start_col or 0)}{start + 1}:{index_to_col(rng.end_col)}{last + 1}"
+        )
+    else:
+        return text.strip()  # unusual shape (e.g. A1:10): leave it to the API
+    return f"{quote_tab(rng.tab)}!{cells}" if rng.tab else cells
 
 
 def _column_index(header: list[Any], column: str) -> tuple[int, str]:
@@ -235,9 +255,9 @@ def register_sheets_tools(mcp: GuardedFastMCP, state: ServerState) -> None:
         max_rows: MaxRows = None,
     ) -> ReadRangeResult:
         sid = check_sheet(sheet_id)
-        parse_a1(range)  # validate early with a clear message
         limit = max_rows or s.max_rows
-        resolved, values = await backend().read_range(sid, range.strip())
+        bounded = _bounded_range(parse_a1(range), range, limit)  # parse_a1 validates early
+        resolved, values = await backend().read_range(sid, bounded)
         truncated = len(values) > limit
         rows = [[to_jsonable(c) for c in row] for row in values[:limit]]
         return ReadRangeResult(

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 from collections.abc import AsyncIterator
 from typing import Any
@@ -16,6 +17,7 @@ from mcp_postgres_sheets.errors import (
     InvalidInputError,
     NotFoundError,
     RateLimitedError,
+    UnavailableError,
 )
 from mcp_postgres_sheets.server import build_server
 from mcp_postgres_sheets.sheets import (
@@ -149,6 +151,22 @@ async def test_list_tabs_and_read(client: ClientSession) -> None:
         client, "sheets_read_range", sheet_id="demo-sales-pipeline", range="Leads", max_rows=5
     )
     assert capped["row_count"] == 5 and capped["truncated"] is True
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("Leads", "Leads!1:6"),  # whole tab → only limit + 1 rows are requested
+        ("'Q3 plan'!A:C", "'Q3 plan'!A1:C6"),
+        ("Leads!B10:D", "Leads!B10:D15"),
+        ("Leads!A1:C3", "Leads!A1:C3"),  # already smaller than the limit: unchanged
+        ("A2:B", "A2:B7"),
+    ],
+)
+def test_read_range_requests_only_what_it_returns(text: str, expected: str) -> None:
+    from mcp_postgres_sheets.tools.sheets import _bounded_range
+
+    assert _bounded_range(parse_a1(text), text, 5) == expected
 
 
 @pytest.mark.anyio
@@ -327,6 +345,75 @@ async def test_google_append_finds_durable_marker_from_another_replica() -> None
     backend, _ = _google([({"status": "200"}, json.dumps(marker))])
     result = await backend.append_rows("sheet", "Leads", [["x", 1]], "key-123456")
     assert result.duplicate is True and result.updated_rows == 1
+
+
+APPENDED = json.dumps(
+    {"updates": {"updatedRange": "Leads!A31:B31", "updatedRows": 1, "updatedCells": 2}}
+)
+TABS = json.dumps({"sheets": [{"properties": {"sheetId": 7, "title": "Leads"}}]})
+NO_MARKER = ({"status": "200"}, json.dumps({}))
+MARKER_CREATED = ({"status": "200"}, json.dumps({"replies": [{}]}))
+
+
+def _remaining(backend: GoogleSheetsBackend) -> int:
+    return len(backend._http_factory()._iterable)
+
+
+@pytest.mark.anyio
+async def test_google_append_is_not_retried_after_an_ambiguous_failure() -> None:
+    # A 503 (or a timeout) may arrive after Google wrote the rows: retrying could append twice.
+    backend, sleeps = _google([NO_MARKER, ({"status": "503"}, "{}")])
+    with pytest.raises(UnavailableError, match="may or may not have been written"):
+        await backend.append_rows("sheet", "Leads", [["x", 1]], "key-123456")
+    assert sleeps == []
+
+
+@pytest.mark.anyio
+async def test_google_append_still_retries_429() -> None:
+    backend, sleeps = _google(
+        [
+            NO_MARKER,
+            ({"status": "429"}, "{}"),
+            ({"status": "200"}, APPENDED),
+            ({"status": "200"}, TABS),
+            MARKER_CREATED,
+        ]
+    )
+    result = await backend.append_rows("sheet", "Leads", [["x", 1]], "key-123456")
+    assert result.updated_rows == 1 and len(sleeps) == 1
+
+
+@pytest.mark.anyio
+async def test_google_append_succeeds_even_if_the_marker_cannot_be_stored() -> None:
+    backend, _ = _google(
+        [NO_MARKER, ({"status": "200"}, APPENDED), ({"status": "404"}, "{}")]  # tab lookup fails
+    )
+    result = await backend.append_rows("sheet", "Leads", [["x", 1]], "key-123456")
+    assert not result.duplicate
+    again = await backend.append_rows("sheet", "Leads", [["x", 1]], "key-123456")
+    assert again.duplicate  # cached before the marker step, so a retry never writes again
+
+
+@pytest.mark.anyio
+async def test_google_append_marks_the_real_tab_title() -> None:
+    # The caller wrote "leads"; Google resolved it to "Leads". The marker must still be stored.
+    backend, _ = _google(
+        [NO_MARKER, ({"status": "200"}, APPENDED), ({"status": "200"}, TABS), MARKER_CREATED]
+    )
+    await backend.append_rows("sheet", "leads", [["x", 1]], "key-123456")
+    assert _remaining(backend) == 0  # createDeveloperMetadata was sent
+
+
+@pytest.mark.anyio
+async def test_google_concurrent_appends_with_one_key_write_once() -> None:
+    backend, _ = _google(
+        [NO_MARKER, ({"status": "200"}, APPENDED), ({"status": "200"}, TABS), MARKER_CREATED]
+    )
+    first, second = await asyncio.gather(
+        backend.append_rows("sheet", "Leads", [["x", 1]], "key-123456"),
+        backend.append_rows("sheet", "Leads", [["x", 1]], "key-123456"),
+    )
+    assert sorted([first.duplicate, second.duplicate]) == [False, True]
 
 
 @pytest.mark.anyio
