@@ -34,11 +34,12 @@ def token(scopes: str = "db:read", **overrides: Any) -> str:
     }  # fmt: skip
     claims.update(overrides)
     key = claims.pop("_key", KEY)
+    kid = claims.pop("_kid", "k1")
     return jwt.encode(
         {k: v for k, v in claims.items() if v is not None},
         key,
         algorithm="RS256",
-        headers={"kid": "k1"},
+        headers={"kid": kid},
     )
 
 
@@ -91,6 +92,30 @@ def test_rate_limiter_sliding_window() -> None:
 async def test_verifier_rejects(bad: str) -> None:
     verifier = JWTTokenVerifier(issuer=ISS, audience=AUD, key_resolver=lambda _: KEY.public_key())
     assert await verifier.verify_token(bad) is None
+
+
+class FakeJwks:
+    """Stands in for PyJWKClient; records whether each call forced a refetch."""
+
+    def __init__(self) -> None:
+        jwk = jwt.algorithms.RSAAlgorithm.to_jwk(KEY.public_key(), as_dict=True)
+        self.keys = [jwt.PyJWK({**jwk, "kid": "k1", "use": "sig"})]
+        self.refreshes: list[bool] = []
+
+    def get_signing_keys(self, refresh: bool = False) -> list[jwt.PyJWK]:
+        self.refreshes.append(refresh)
+        return self.keys
+
+
+@pytest.mark.anyio
+async def test_unknown_kids_refetch_the_jwks_at_most_once_per_interval() -> None:
+    verifier = JWTTokenVerifier(issuer=ISS, audience=AUD, jwks_url="http://idp.invalid/jwks")
+    fake = FakeJwks()
+    verifier._jwks_client = fake  # type: ignore[assignment]
+    assert await verifier.verify_token(token()) is not None
+    for i in range(20):  # forged tokens with random kids
+        assert await verifier.verify_token(token(_kid=f"forged-{i}", _key=OTHER_KEY)) is None
+    assert fake.refreshes.count(True) == 1  # one forced refetch, not twenty
 
 
 @pytest.mark.anyio

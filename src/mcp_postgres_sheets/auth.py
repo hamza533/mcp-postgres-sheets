@@ -37,6 +37,7 @@ ALLOWED_ALGORITHMS = [
     "ES512",
 ]
 LEEWAY_S = 30
+JWKS_REFRESH_INTERVAL_S = 60.0  # at most one forced key refetch per minute (unknown kid)
 
 
 def extract_scopes(claims: dict[str, Any]) -> list[str]:
@@ -79,6 +80,7 @@ class JWTTokenVerifier:
         self._jwks_client: PyJWKClient | None = None
         self._key_resolver = key_resolver  # tests inject a static key set here
         self._lock = asyncio.Lock()
+        self._last_refresh = float("-inf")
 
     async def _resolve_key(self, token: str) -> Any:
         if self._key_resolver is not None:
@@ -87,10 +89,21 @@ class JWTTokenVerifier:
             async with self._lock:
                 if self._jwks_client is None:
                     url = self._jwks_url or await discover_jwks_url(self.issuer)
-                    # Keys are cached for an hour; an unknown `kid` triggers one refetch (key rotation).
+                    # The key set is cached for an hour (PyJWKClient's JWK-set cache).
                     self._jwks_client = PyJWKClient(url, cache_keys=True, lifespan=3600, timeout=5)
         client = self._jwks_client
-        return (await asyncio.to_thread(client.get_signing_key_from_jwt, token)).key
+        kid = jwt.get_unverified_header(token).get("kid")
+        keys = await asyncio.to_thread(client.get_signing_keys)
+        match = next((k for k in keys if k.key_id == kid), None)
+        if match is None and time.monotonic() - self._last_refresh >= JWKS_REFRESH_INTERVAL_S:
+            # An unknown `kid` may mean the IdP rotated its keys: refetch, but at most once per
+            # interval, so forged tokens with random kids can't make us hammer the IdP.
+            self._last_refresh = time.monotonic()
+            keys = await asyncio.to_thread(client.get_signing_keys, True)
+            match = next((k for k in keys if k.key_id == kid), None)
+        if match is None:
+            raise jwt.PyJWKClientError("no signing key matches the token's kid")
+        return match.key
 
     async def verify_token(self, token: str) -> AccessToken | None:
         try:
