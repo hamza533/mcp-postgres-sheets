@@ -3,7 +3,7 @@
 import { ChevronDownIcon, EyeOffIcon, SearchIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
+import { Pill } from "@/components/pill";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
@@ -70,19 +70,8 @@ export function ToolsReference({
             <CardHeader>
               <div className="flex flex-wrap items-center gap-2">
                 <CardTitle className="font-mono text-base">{tool.name}</CardTitle>
-                <Badge
-                  className={cn(
-                    tool.kind === "read"
-                      ? "bg-brand-soft text-brand border-brand/30"
-                      : "bg-warn-soft text-warn border-warn/30",
-                  )}
-                  variant="outline"
-                >
-                  {tool.kind}
-                </Badge>
-                <Badge variant="secondary" className="font-mono">
-                  {tool.scope}
-                </Badge>
+                <Pill tone={tool.kind === "read" ? "read" : "write"}>{tool.kind.toUpperCase()}</Pill>
+                <Pill tone="info">{tool.scope}</Pill>
               </div>
               <CardDescription className="leading-6">{tool.description}</CardDescription>
               {tool.hiddenWhenReadOnly ? (

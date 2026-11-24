@@ -1,34 +1,39 @@
-import Link from "next/link";
-
 import { site } from "@/lib/site";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t">
-      <div className="text-muted-foreground mx-auto flex max-w-7xl flex-col gap-4 px-4 py-10 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
+    <footer className="bg-sidebar border-t">
+      <div className="text-muted-foreground flex flex-col gap-4 px-4 py-6 text-[13px] sm:flex-row sm:items-center sm:justify-between lg:px-6">
         <p>
-          {site.name} is open source under the{" "}
+          Released under the{" "}
           <a
-            className="hover:text-foreground underline underline-offset-4"
+            className="text-foreground hover:text-brand font-medium"
             href={`${site.github}/blob/main/LICENSE`}
           >
-            MIT license
+            MIT License
           </a>
           . Not affiliated with any AI vendor.
         </p>
-        <nav className="flex gap-5" aria-label="Footer">
+        <nav className="flex flex-wrap items-center gap-5" aria-label="Footer">
           <a className="hover:text-foreground" href={site.github} target="_blank" rel="noreferrer">
-            GitHub
+            GitHub Repository
           </a>
-          <a className="hover:text-foreground" href={site.pypi} target="_blank" rel="noreferrer">
-            PyPI
+          <a
+            className="bg-background hover:text-foreground rounded-sm border px-1.5 py-0.5 font-mono text-[11px]"
+            href={site.pypi}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {site.package}
           </a>
-          <Link className="hover:text-foreground" href="/docs/security/">
-            Security
-          </Link>
-          <Link className="hover:text-foreground" href="/changelog/">
-            Changelog
-          </Link>
+          <a
+            className="hover:text-foreground"
+            href={`${site.github}/issues`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Issues &amp; Discussion
+          </a>
         </nav>
       </div>
     </footer>

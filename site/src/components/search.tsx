@@ -43,11 +43,13 @@ export function Search() {
         variant="outline"
         onClick={() => setOpen(true)}
         data-testid="search-button"
-        className="text-muted-foreground h-9 w-full justify-start gap-2 px-3 font-normal sm:w-56"
+        className="text-muted-foreground bg-muted/70 hover:bg-muted h-8 w-full justify-start gap-2 rounded-sm border-transparent px-2.5 text-[13px] font-normal shadow-none sm:w-60"
       >
-        <SearchIcon className="size-4" />
+        <SearchIcon className="size-3.5" />
         <span className="flex-1 text-left">Search docs…</span>
-        <kbd className="bg-muted hidden rounded border px-1.5 text-[10px] font-medium sm:inline">Ctrl K</kbd>
+        <kbd className="bg-background hidden rounded-sm border px-1.5 font-mono text-[10px] font-medium sm:inline">
+          Ctrl K
+        </kbd>
       </Button>
       <CommandDialog
         open={open}

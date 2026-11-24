@@ -43,6 +43,6 @@ or any static host (GitHub Pages, Azure Static Web Apps, S3 + CloudFront) — up
 
 ## Design
 
-Built to the brief in `docs/ui/STITCH_PROMPT.md` with shadcn/ui defaults (slate neutrals, one emerald
-accent, red only for "blocked"). Aligning pixel details with the Stitch exports in `docs/ui/` is tracked in
-`docs/PROGRESS.md`.
+Follows the Stitch design system in `docs/ui/DESIGN.md` (Inter + JetBrains Mono, slate neutrals, emerald for
+read/secure, amber for writes, red for blocked, always-dark code blocks). `docs/ui/README.md` maps each
+design rule to the component that implements it.

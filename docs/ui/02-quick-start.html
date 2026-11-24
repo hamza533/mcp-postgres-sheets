@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"inverse-surface":"#213145","surface-dim":"#cbdbf5","primary-fixed":"#85f8c4","secondary-fixed":"#dae2fd","outline-variant":"#bccac0","inverse-primary":"#68dba9","on-error":"#ffffff","on-secondary":"#ffffff","primary-container":"#00855d","tertiary":"#825100","error":"#ba1a1a","surface-container-high":"#dce9ff","background":"#f8f9ff","surface-container-lowest":"#ffffff","surface-container-highest":"#d3e4fe","on-primary-fixed-variant":"#005137","tertiary-fixed-dim":"#ffb95f","on-secondary-fixed-variant":"#3f465c","tertiary-container":"#a36700","on-secondary-fixed":"#131b2e","outline":"#6d7a72","on-surface-variant":"#3d4a42","on-secondary-container":"#5c647a","surface-container":"#e5eeff","on-background":"#0b1c30","tertiary-fixed":"#ffddb8","surface":"#f8f9ff","on-primary-fixed":"#002114","on-error-container":"#93000a","primary-fixed-dim":"#68dba9","error-container":"#ffdad6","primary":"#006948","surface-container-low":"#eff4ff","surface-tint":"#006c4a","on-primary-container":"#f5fff7","secondary":"#565e74","on-tertiary-fixed":"#2a1700","inverse-on-surface":"#eaf1ff","on-tertiary-container":"#fffbff","secondary-fixed-dim":"#bec6e0","on-surface":"#0b1c30","on-primary":"#ffffff","on-tertiary-fixed-variant":"#653e00","on-tertiary":"#ffffff","secondary-container":"#dae2fd","surface-variant":"#d3e4fe","surface-bright":"#f8f9ff"},borderRadius:{DEFAULT:"0.125rem",lg:"0.25rem",xl:"0.5rem",full:"0.75rem"},spacing:{"gutter-mobile":"1rem","margin-mobile":"1rem","space-xs":"0.25rem","space-xl":"2.5rem","space-md":"1rem",margin:"2rem","space-sm":"0.5rem","space-lg":"1.5rem",gutter:"1.5rem"},fontFamily:{"headline-sm":["Inter"],"code-md":["JetBrains Mono"],"headline-lg-mobile":["Inter"],"label-md":["JetBrains Mono"],"headline-xl":["Inter"],"body-lg":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"code-sm":["JetBrains Mono"],"headline-lg":["Inter"],"label-sm":["JetBrains Mono"],"headline-md":["Inter"],"headline-xl-mobile":["Inter"]},fontSize:{"headline-sm":["16px",{lineHeight:"24px",letterSpacing:"-0.01em",fontWeight:"600"}],"code-md":["14px",{lineHeight:"22px",fontWeight:"400"}],"headline-lg-mobile":["24px",{lineHeight:"32px",letterSpacing:"-0.015em",fontWeight:"600"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.02em",fontWeight:"500"}],"headline-xl":["36px",{lineHeight:"44px",letterSpacing:"-0.025em",fontWeight:"700"}],"body-lg":["16px",{lineHeight:"26px",fontWeight:"400"}],"body-sm":["13px",{lineHeight:"20px",fontWeight:"400"}],"body-md":["15px",{lineHeight:"24px",fontWeight:"400"}],"code-sm":["12.5px",{lineHeight:"18px",fontWeight:"400"}],"headline-lg":["28px",{lineHeight:"36px",letterSpacing:"-0.02em",fontWeight:"600"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.03em",fontWeight:"500"}],"headline-md":["20px",{lineHeight:"28px",letterSpacing:"-0.015em",fontWeight:"600"}],"headline-xl-mobile":["28px",{lineHeight:"36px",letterSpacing:"-0.02em",fontWeight:"700"}]}}}};</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/85 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-14 w-full px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><img alt="PG Sheets MCP Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrA-a1oYpO4-QKGdPZDJVrg0Rc6STefqtQWGmziuNM7flBeTGjKi8irQ5goensj15mBij0KqwsWq9dbkEWluFvABC6HpqNEhBEEQEKFhDDXnrw_LXlrtJyG-_ZMlC6AYOiwS9qi9OxDxtWVIezUf8kGeY_2L2mHjBlGhRXcvdIEAHnavFbKRm0_ZWTkzv3hjFTMquufYGPforK46Iy6d9sv9r5w5p5ld02a8x98mkjI"/><span class="font-headline-sm text-headline-sm text-on-surface">PG Sheets MCP</span><span class="px-space-xs py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm">v1.0.0</span></div><nav class="hidden md:flex items-center gap-space-xs" data-active-classes="bg-secondary-container text-on-secondary-fixed font-semibold rounded-lg"><a class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="overview" href="#">Docs</a><a class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="tools-reference" href="#">Tools</a><a class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="security-model" href="#">Security</a><a class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="changelog" href="#">Changelog</a></nav></div><div class="flex items-center gap-space-sm"><button class="flex items-center justify-between w-48 lg:w-64 px-space-sm py-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[16px]">search</span><span class="font-body-sm text-body-sm">Search docs...</span></span><kbd class="px-1.5 py-0.5 rounded bg-surface-container-lowest font-code-sm text-code-sm text-on-surface-variant shadow-[0_1px_2px_rgba(0,0,0,0.05)]">⌘K</kbd></button><a class="hidden sm:flex items-center gap-space-xs px-space-sm py-1.5 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container hover:text-on-surface shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-colors font-body-sm text-body-sm" href="#"><span class="material-symbols-outlined text-[16px] text-tertiary">star</span><span class="font-medium">Star</span><span class="px-1.5 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-on-surface-variant">1.4k</span></a><button aria-label="Toggle Theme" class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">light_mode</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><div class="flex w-full"><aside class="fixed left-0 top-14 bottom-0 w-64 bg-surface-container-low z-40 overflow-y-auto px-space-md py-space-lg flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.02)]"><nav class="flex flex-col gap-space-md" data-active-classes="bg-primary-container text-on-primary-container font-medium rounded-lg"><div class="flex flex-col gap-space-xs"><span class="px-space-xs font-label-sm text-label-sm uppercase tracking-wider text-secondary">Getting Started</span><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="overview" href="#">Overview</a><a aria-current="page" class="flex items-center px-space-sm py-1.5 transition-colors bg-primary-container text-on-primary-container font-medium rounded-lg" data-path="quick-start" href="#">Quick Start</a></div><div class="flex flex-col gap-space-xs"><span class="px-space-xs font-label-sm text-label-sm uppercase tracking-wider text-secondary">Architecture</span><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="security-model" href="#">Security Model</a><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="layered-sql-safety" href="#">Layered SQL Safety</a></div><div class="flex flex-col gap-space-xs"><span class="px-space-xs font-label-sm text-label-sm uppercase tracking-wider text-secondary">Reference</span><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="tools-reference" href="#">Tools Reference</a><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="configuration" href="#">Configuration</a></div><div class="flex flex-col gap-space-xs"><span class="px-space-xs font-label-sm text-label-sm uppercase tracking-wider text-secondary">Deployment</span><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="remote-mode-and-oauth" href="#">Remote Mode &amp; OAuth</a></div><div class="flex flex-col gap-space-xs"><span class="px-space-xs font-label-sm text-label-sm uppercase tracking-wider text-secondary">Project</span><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="changelog" href="#">Changelog</a><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="releases" href="#">Releases</a></div></nav><div class="pt-space-md mt-space-md bg-surface-container rounded-xl p-space-sm"><div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>Protocol Runtime</span><span class="text-primary font-medium">Healthy</span></div></div></aside><div class="pl-64 w-full flex flex-col min-h-screen"><main class="w-full flex-1 pt-14 px-gutter pb-space-xl bg-surface"><div class="flex flex-col w-full">
+<div class="relative w-full max-w-7xl mx-auto flex gap-space-xl">
+<!-- Central Documentation Canvas (Max Width 832px) -->
+<div class="flex-1 max-w-[832px] min-w-0 pb-space-xl">
+<!-- Breadcrumbs -->
+<nav aria-label="Breadcrumbs" class="flex items-center gap-space-xs font-label-md text-label-md text-secondary mb-space-sm">
+<a class="hover:text-primary transition-colors" href="#">Docs</a>
+<span class="material-symbols-outlined text-[13px] text-outline">chevron_right</span>
+<span class="text-secondary">Getting Started</span>
+<span class="material-symbols-outlined text-[13px] text-outline">chevron_right</span>
+<span class="text-primary font-medium">Quick Start</span>
+</nav>
+<!-- Page Header -->
+<div class="relative mb-space-xl">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm mb-space-sm">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+<span>5-Minute Setup</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-background tracking-tight">Quick Start Guide</h1>
+<p class="font-body-lg text-body-lg text-secondary mt-space-xs max-w-2xl leading-relaxed">
+          Set up PG Sheets MCP and connect it to your favorite AI assistant with hardened read isolation in under five minutes.
+        </p>
+</div>
+<!-- Quick Metrics Ribbon -->
+<div class="grid grid-cols-3 gap-space-md mb-space-xl p-space-md bg-surface-container-low rounded-xl shadow-sm">
+<div class="flex flex-col gap-0.5">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Protocol Compatibility</span>
+<span class="font-code-md text-code-md font-medium text-on-surface">MCP Spec v2024.11</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Default Security Tier</span>
+<span class="inline-flex items-center gap-1 font-code-md text-code-md font-medium text-primary">
+<span class="material-symbols-outlined text-[16px]">verified_user</span> Read-Only Enforced
+          </span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Total Runtime Tools</span>
+<span class="font-code-md text-code-md font-medium text-on-surface">8 Tools Registered</span>
+</div>
+</div>
+<!-- STEP 1 -->
+<section class="scroll-mt-20 mb-space-xl" id="step-1">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<span class="flex items-center justify-center w-7 h-7 rounded-lg bg-surface-container-high text-on-surface font-headline-sm text-headline-sm">1</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Create a read-only database role</h2>
+</div>
+<p class="font-body-md text-body-md text-secondary mb-space-md leading-relaxed">
+          Best practice dictates creating an isolated PostgreSQL user with strict read-only permissions, query cancellation timeouts, and schema visibility fences. This guarantees the AI agent cannot alter table state even if instructed maliciously.
+        </p>
+<!-- Code Block Component -->
+<div class="rounded-xl overflow-hidden shadow-sm bg-inverse-surface text-inverse-on-surface">
+<div class="flex items-center justify-between px-space-md py-2.5 bg-surface-container-lowest/10 backdrop-blur-sm">
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-surface-dim">
+<span class="material-symbols-outlined text-[16px] text-primary-fixed">terminal</span>
+<span>postgresql-init.sql</span>
+</div>
+<button class="flex items-center gap-1 px-space-xs py-1 rounded bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 transition-colors font-code-sm text-code-sm text-inverse-on-surface" data-code="-- Create read-only role and grant SELECT
+CREATE ROLE mcp_readonly WITH LOGIN PASSWORD 'your_secure_password';
+GRANT CONNECT ON DATABASE production TO mcp_readonly;
+GRANT USAGE ON SCHEMA public TO mcp_readonly;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO mcp_readonly;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO mcp_readonly;" onclick="navigator.clipboard.writeText(this.dataset.code); this.querySelector('.label').textContent = 'Copied!'; setTimeout(() =&gt; this.querySelector('.label').textContent = 'Copy', 2000)">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span class="label">Copy</span>
+</button>
+</div>
+<pre class="p-space-md font-code-sm text-code-sm overflow-x-auto text-surface-dim leading-relaxed"><code class="language-sql"><span class="text-outline-variant">-- Create read-only role and grant SELECT</span>
+<span class="text-primary-fixed font-semibold">CREATE ROLE</span> mcp_readonly <span class="text-primary-fixed font-semibold">WITH LOGIN PASSWORD</span> <span class="text-tertiary-fixed">'your_secure_password'</span>;
+<span class="text-primary-fixed font-semibold">GRANT CONNECT ON DATABASE</span> production <span class="text-primary-fixed font-semibold">TO</span> mcp_readonly;
+<span class="text-primary-fixed font-semibold">GRANT USAGE ON SCHEMA</span> public <span class="text-primary-fixed font-semibold">TO</span> mcp_readonly;
+<span class="text-primary-fixed font-semibold">GRANT SELECT ON ALL TABLES IN SCHEMA</span> public <span class="text-primary-fixed font-semibold">TO</span> mcp_readonly;
+<span class="text-primary-fixed font-semibold">ALTER DEFAULT PRIVILEGES IN SCHEMA</span> public <span class="text-primary-fixed font-semibold">GRANT SELECT ON TABLES TO</span> mcp_readonly;</code></pre>
+</div>
+</section>
+<!-- STEP 2 -->
+<section class="scroll-mt-20 mb-space-xl" id="step-2">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<span class="flex items-center justify-center w-7 h-7 rounded-lg bg-surface-container-high text-on-surface font-headline-sm text-headline-sm">2</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Share Google Sheet with the service account</h2>
+</div>
+<p class="font-body-md text-body-md text-secondary mb-space-md leading-relaxed">
+          Download your Google Cloud IAM service account JSON credentials and grant <code class="px-1.5 py-0.5 rounded bg-surface-container font-code-sm text-code-sm text-on-surface">Viewer</code> access to your specific spreadsheet IDs directly through the native Google Drive sharing modal.
+        </p>
+<!-- Informational Alert Box -->
+<div class="flex items-start gap-space-md p-space-md rounded-xl bg-surface-container-low mb-space-md shadow-sm">
+<span class="material-symbols-outlined text-[20px] text-primary shrink-0 mt-0.5">info</span>
+<div class="flex flex-col gap-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface">Security Principle of Least Privilege</span>
+<p class="font-body-sm text-body-sm text-secondary">
+              Never give <strong class="text-on-surface font-medium">Editor</strong> permissions to the service account unless you explicitly intend to activate mutation tools and set strict target sheet constraints via <code class="px-1 py-0.5 bg-surface-container font-code-sm text-code-sm">ALLOWED_SHEET_IDS</code>.
+            </p>
+</div>
+</div>
+<!-- Code Block Component -->
+<div class="rounded-xl overflow-hidden shadow-sm bg-inverse-surface text-inverse-on-surface">
+<div class="flex items-center justify-between px-space-md py-2.5 bg-surface-container-lowest/10 backdrop-blur-sm">
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-surface-dim">
+<span class="material-symbols-outlined text-[16px] text-primary-fixed">code</span>
+<span>terminal.sh</span>
+</div>
+<button class="flex items-center gap-1 px-space-xs py-1 rounded bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 transition-colors font-code-sm text-code-sm text-inverse-on-surface" data-code='export GOOGLE_SERVICE_ACCOUNT_JSON="$(cat ./credentials/gcp-sa.json)"
+export ALLOWED_SHEET_IDS="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms"' onclick="navigator.clipboard.writeText(this.dataset.code); this.querySelector('.label').textContent = 'Copied!'; setTimeout(() =&gt; this.querySelector('.label').textContent = 'Copy', 2000)">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span class="label">Copy</span>
+</button>
+</div>
+<pre class="p-space-md font-code-sm text-code-sm overflow-x-auto text-surface-dim leading-relaxed"><code class="language-bash"><span class="text-primary-fixed font-semibold">export</span> GOOGLE_SERVICE_ACCOUNT_JSON=<span class="text-tertiary-fixed">"$(cat ./credentials/gcp-sa.json)"</span>
+<span class="text-primary-fixed font-semibold">export</span> ALLOWED_SHEET_IDS=<span class="text-tertiary-fixed">"1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms"</span></code></pre>
+</div>
+</section>
+<!-- STEP 3 -->
+<section class="scroll-mt-20 mb-space-xl" id="step-3">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<span class="flex items-center justify-center w-7 h-7 rounded-lg bg-surface-container-high text-on-surface font-headline-sm text-headline-sm">3</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Add the server to your AI client</h2>
+</div>
+<p class="font-body-md text-body-md text-secondary mb-space-md leading-relaxed">
+          Model Context Protocol integrates directly into desktop clients, IDE extensions, and cloud agent endpoints. Select your environment below for the targeted configuration snippet:
+        </p>
+<!-- Client Tabs -->
+<div class="flex items-center gap-1.5 p-1 rounded-xl bg-surface-container mb-space-md" id="clientTabs" role="tablist">
+<button aria-selected="true" class="client-tab active-tab px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm text-body-sm font-medium shadow-sm transition-all" data-tab="claude-desktop" role="tab" type="button">
+            Claude Desktop
+          </button>
+<button aria-selected="false" class="client-tab px-space-md py-1.5 rounded-lg text-secondary hover:text-on-surface transition-colors font-body-sm text-body-sm font-medium" data-tab="claude-code" role="tab" type="button">
+            Claude Code
+          </button>
+<button aria-selected="false" class="client-tab px-space-md py-1.5 rounded-lg text-secondary hover:text-on-surface transition-colors font-body-sm text-body-sm font-medium" data-tab="cursor" role="tab" type="button">
+            Cursor
+          </button>
+<button aria-selected="false" class="client-tab px-space-md py-1.5 rounded-lg text-secondary hover:text-on-surface transition-colors font-body-sm text-body-sm font-medium" data-tab="chatgpt" role="tab" type="button">
+            ChatGPT (Remote)
+          </button>
+</div>
+<!-- Tab Content: Claude Desktop (Active) -->
+<div class="tab-pane flex flex-col gap-space-sm" id="tab-claude-desktop">
+<div class="rounded-xl overflow-hidden shadow-sm bg-inverse-surface text-inverse-on-surface">
+<div class="flex items-center justify-between px-space-md py-2.5 bg-surface-container-lowest/10 backdrop-blur-sm">
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-surface-dim">
+<span class="material-symbols-outlined text-[16px] text-primary-fixed">data_object</span>
+<span>claude_desktop_config.json</span>
+</div>
+<button class="flex items-center gap-1 px-space-xs py-1 rounded bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 transition-colors font-code-sm text-code-sm text-inverse-on-surface" data-code='{
+  "mcpServers": {
+    "pg-sheets": {
+      "command": "uvx",
+      "args": ["mcp-postgres-sheets"],
+      "env": {
+        "DATABASE_URL": "postgresql://mcp_readonly:password@db.internal:5432/production?sslmode=require",
+        "ALLOWED_SCHEMAS": "public,analytics",
+        "GOOGLE_SERVICE_ACCOUNT_JSON": "/path/to/sa-key.json",
+        "READ_ONLY": "true"
+      }
+    }
+  }
+}' onclick="navigator.clipboard.writeText(this.dataset.code); this.querySelector('.label').textContent = 'Copied!'; setTimeout(() =&gt; this.querySelector('.label').textContent = 'Copy', 2000)">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span class="label">Copy</span>
+</button>
+</div>
+<pre class="p-space-md font-code-sm text-code-sm overflow-x-auto text-surface-dim leading-relaxed"><code class="language-json">{
+  <span class="text-primary-fixed">"mcpServers"</span>: {
+    <span class="text-primary-fixed">"pg-sheets"</span>: {
+      <span class="text-inverse-primary">"command"</span>: <span class="text-tertiary-fixed">"uvx"</span>,
+      <span class="text-inverse-primary">"args"</span>: [<span class="text-tertiary-fixed">"mcp-postgres-sheets"</span>],
+      <span class="text-inverse-primary">"env"</span>: {
+        <span class="text-secondary-fixed">"DATABASE_URL"</span>: <span class="text-tertiary-fixed">"postgresql://mcp_readonly:password@db.internal:5432/production?sslmode=require"</span>,
+        <span class="text-secondary-fixed">"ALLOWED_SCHEMAS"</span>: <span class="text-tertiary-fixed">"public,analytics"</span>,
+        <span class="text-secondary-fixed">"GOOGLE_SERVICE_ACCOUNT_JSON"</span>: <span class="text-tertiary-fixed">"/path/to/sa-key.json"</span>,
+        <span class="text-secondary-fixed">"READ_ONLY"</span>: <span class="text-tertiary-fixed">"true"</span>
+      }
+    }
+  }
+}</code></pre>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">
+            Locate this file at <code class="px-1 py-0.5 rounded bg-surface-container font-code-sm text-code-sm">~/Library/Application Support/Claude/claude_desktop_config.json</code> on macOS or <code class="px-1 py-0.5 rounded bg-surface-container font-code-sm text-code-sm">%APPDATA%\Claude\claude_desktop_config.json</code> on Windows.
+          </p>
+</div>
+<!-- Tab Content: Claude Code (Hidden) -->
+<div class="tab-pane hidden flex-col gap-space-sm" id="tab-claude-code">
+<div class="p-space-md rounded-xl bg-surface-container-low">
+<span class="font-headline-sm text-headline-sm text-on-surface block mb-space-xs">Claude Code CLI Registration</span>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">Execute the direct tool registration command via terminal within your workspace repository:</p>
+<div class="rounded-xl overflow-hidden shadow-sm bg-inverse-surface p-space-md font-code-sm text-code-sm text-surface-dim">
+<code>claude mcp add pg-sheets uvx mcp-postgres-sheets --env READ_ONLY=true</code>
+</div>
+</div>
+</div>
+<!-- Tab Content: Cursor (Hidden) -->
+<div class="tab-pane hidden flex-col gap-space-sm" id="tab-cursor">
+<div class="p-space-md rounded-xl bg-surface-container-low">
+<span class="font-headline-sm text-headline-sm text-on-surface block mb-space-xs">Cursor MCP Integration</span>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">Navigate to <strong class="text-on-surface">Cursor Settings &gt; Features &gt; MCP</strong> and add a new custom command with Type: <code class="font-code-sm text-code-sm">command</code> and Path: <code class="font-code-sm text-code-sm">uvx mcp-postgres-sheets</code>.</p>
+</div>
+</div>
+<!-- Tab Content: ChatGPT (Hidden) -->
+<div class="tab-pane hidden flex-col gap-space-sm" id="tab-chatgpt">
+<div class="p-space-md rounded-xl bg-surface-container-low">
+<span class="font-headline-sm text-headline-sm text-on-surface block mb-space-xs">Remote SSE / HTTP Transport</span>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">For cloud agents and GPT Custom Actions, run in server daemon mode exposing the Model Context Protocol Server-Sent Events endpoint:</p>
+<div class="rounded-xl overflow-hidden shadow-sm bg-inverse-surface p-space-md font-code-sm text-code-sm text-surface-dim">
+<code>uvx mcp-postgres-sheets --transport sse --port 8080 --bearer-token secret_token</code>
+</div>
+</div>
+</div>
+</section>
+<!-- STEP 4 -->
+<section class="scroll-mt-20 mb-space-xl" id="step-4">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<span class="flex items-center justify-center w-7 h-7 rounded-lg bg-surface-container-high text-on-surface font-headline-sm text-headline-sm">4</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Try it</h2>
+</div>
+<p class="font-body-md text-body-md text-secondary mb-space-md leading-relaxed">
+          Restart your client app and issue natural-language prompts. Your model will automatically negotiate protocol schema queries against the PostgreSQL catalog and Sheets ranges:
+        </p>
+<!-- Prompt Cards Grid -->
+<div class="flex flex-col gap-space-sm mb-space-lg">
+<div class="flex items-center justify-between p-space-md rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors group cursor-pointer" onclick="navigator.clipboard.writeText('List all tables in the analytics schema and their row counts.'); const span = this.querySelector('.copy-txt'); span.textContent = 'Copied!'; setTimeout(() =&gt; span.textContent = 'Click to copy', 2000)">
+<div class="flex items-center gap-space-md">
+<span class="material-symbols-outlined text-[20px] text-primary">chat_bubble</span>
+<span class="font-body-md text-body-md font-medium text-on-surface">"List all tables in the analytics schema and their row counts."</span>
+</div>
+<span class="copy-txt font-label-sm text-label-sm text-secondary group-hover:text-primary transition-colors">Click to copy</span>
+</div>
+<div class="flex items-center justify-between p-space-md rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors group cursor-pointer" onclick="navigator.clipboard.writeText('Summarize customer churn by month from the churn_metrics table.'); const span = this.querySelector('.copy-txt'); span.textContent = 'Copied!'; setTimeout(() =&gt; span.textContent = 'Click to copy', 2000)">
+<div class="flex items-center gap-space-md">
+<span class="material-symbols-outlined text-[20px] text-primary">chat_bubble</span>
+<span class="font-body-md text-body-md font-medium text-on-surface">"Summarize customer churn by month from the churn_metrics table."</span>
+</div>
+<span class="copy-txt font-label-sm text-label-sm text-secondary group-hover:text-primary transition-colors">Click to copy</span>
+</div>
+<div class="flex items-center justify-between p-space-md rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors group cursor-pointer" onclick="navigator.clipboard.writeText('Read cells A1:F50 from the \'Q3 Revenue\' tab in Google Sheets.'); const span = this.querySelector('.copy-txt'); span.textContent = 'Copied!'; setTimeout(() =&gt; span.textContent = 'Click to copy', 2000)">
+<div class="flex items-center gap-space-md">
+<span class="material-symbols-outlined text-[20px] text-primary">chat_bubble</span>
+<span class="font-body-md text-body-md font-medium text-on-surface">"Read cells A1:F50 from the 'Q3 Revenue' tab in Google Sheets."</span>
+</div>
+<span class="copy-txt font-label-sm text-label-sm text-secondary group-hover:text-primary transition-colors">Click to copy</span>
+</div>
+</div>
+<!-- AI Tool Invocation Preview -->
+<div class="p-space-md rounded-xl bg-surface-container-low mb-space-lg">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm uppercase tracking-wider text-secondary">
+<span class="material-symbols-outlined text-[14px]">tune</span>
+<span>Model Context Tool Invocation Trace</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary">Status: Execution Verified</span>
+</div>
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-lowest shadow-sm font-code-sm text-code-sm text-on-surface">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">terminal</span>
+<span class="font-semibold">pg_sheets.execute_query</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm">READ</span>
+</div>
+<div class="flex items-center gap-space-md text-secondary">
+<span>duration: 38ms</span>
+<span>rows: 24</span>
+</div>
+</div>
+</div>
+<!-- Success Alert Box -->
+<div class="flex items-start gap-space-md p-space-lg rounded-xl bg-primary-container text-on-primary-container shadow-sm">
+<span class="material-symbols-outlined text-[24px] text-primary-fixed shrink-0">check_circle</span>
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-sm text-headline-sm text-on-primary-container font-semibold">
+              You're connected — ask a question about your data.
+            </h3>
+<p class="font-body-sm text-body-sm text-on-primary-container/90 leading-relaxed">
+              Your client will now show 8 tools ready for execution. Test with any read query, schema exploration prompt, or linked worksheet range aggregation.
+            </p>
+</div>
+</div>
+</section>
+<!-- Bottom Next Steps Navigation -->
+<div class="flex items-center justify-between pt-space-lg">
+<a class="flex flex-col gap-1 p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors max-w-xs" href="#">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Previous</span>
+<span class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Overview Architecture
+          </span>
+</a>
+<a class="flex flex-col items-end gap-1 p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors max-w-xs" href="#">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Next Step</span>
+<span class="font-headline-sm text-headline-sm text-primary flex items-center gap-1">
+            Layered SQL Safety
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</span>
+</a>
+</div>
+</div>
+<!-- Right Sticky TOC Column (Desktop >= 1280px) -->
+<aside class="hidden xl:block w-64 shrink-0">
+<div class="sticky top-20 flex flex-col gap-space-md pl-space-md">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm uppercase tracking-wider text-secondary">
+<span class="material-symbols-outlined text-[14px]">menu_book</span>
+<span>On this page</span>
+</div>
+<nav class="flex flex-col gap-space-xs font-body-sm text-body-sm" id="tocNav">
+<a class="toc-link py-1 text-on-surface-variant hover:text-primary transition-colors" href="#step-1">1. Create a read-only role</a>
+<a class="toc-link py-1 text-on-surface-variant hover:text-primary transition-colors" href="#step-2">2. Share Google Sheet</a>
+<a class="toc-link py-1 text-on-surface-variant hover:text-primary transition-colors" href="#step-3">3. Add server to AI client</a>
+<a class="toc-link py-1 text-on-surface-variant hover:text-primary transition-colors" href="#step-4">4. Try it out</a>
+</nav>
+<div class="p-space-md rounded-xl bg-surface-container-low mt-space-md">
+<div class="flex items-center gap-space-xs text-primary mb-1">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span class="font-label-sm text-label-sm font-semibold">Zero-Write Guarantee</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">
+            All DDL and DML operations are dropped automatically at the parser layer.
+          </p>
+</div>
+</div>
+</aside>
+</div>
+</div>
+<script>
+  // Tab Switcher Interaction
+  document.querySelectorAll('#clientTabs .client-tab').forEach(button => {
+    button.addEventListener('click', () => {
+      const target = button.getAttribute('data-tab');
+      
+      // Update Buttons
+      document.querySelectorAll('#clientTabs .client-tab').forEach(btn => {
+        btn.classList.remove('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm');
+        btn.classList.add('text-secondary');
+        btn.setAttribute('aria-selected', 'false');
+      });
+      button.classList.add('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm');
+      button.classList.remove('text-secondary');
+      button.setAttribute('aria-selected', 'true');
+
+      // Update Panes
+      document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.add('hidden');
+        pane.classList.remove('flex');
+      });
+      const activePane = document.getElementById(`tab-${target}`);
+      if (activePane) {
+        activePane.classList.remove('hidden');
+        activePane.classList.add('flex');
+      }
+    });
+  });
+
+  // Table of Contents Scroll Highlight
+  window.addEventListener('scroll', () => {
+    const sections = ['step-1', 'step-2', 'step-3', 'step-4'];
+    let current = '';
+    const scrollPos = window.scrollY + 100;
+
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.offsetTop <= scrollPos) {
+        current = id;
+      }
+    });
+
+    document.querySelectorAll('#tocNav .toc-link').forEach(link => {
+      if (link.getAttribute('href') === `#${current}`) {
+        link.classList.add('text-primary', 'font-medium');
+        link.classList.remove('text-on-surface-variant');
+      } else {
+        link.classList.remove('text-primary', 'font-medium');
+        link.classList.add('text-on-surface-variant');
+      }
+    });
+  });
+</script></main><footer class="w-full bg-surface-container-low py-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.02)]"><div class="w-full px-gutter flex flex-col sm:flex-row items-center justify-between gap-space-md font-body-sm text-body-sm text-on-surface-variant"><div>Released under <span class="font-medium text-on-surface">MIT License</span>.</div><div class="flex flex-wrap items-center gap-space-md"><a class="hover:text-on-surface transition-colors" href="#">GitHub Repository</a><a class="hover:text-on-surface transition-colors font-code-sm text-code-sm bg-surface-container px-space-xs py-0.5 rounded" href="#">mcp-postgres-sheets</a><a class="hover:text-on-surface transition-colors" href="#">Community Discussion</a></div></div></footer></div></div></body></html>

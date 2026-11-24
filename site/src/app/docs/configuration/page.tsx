@@ -1,10 +1,10 @@
-import { KeyRoundIcon, LaptopIcon, ShieldAlertIcon } from "lucide-react";
+import { KeyRoundIcon, LaptopIcon } from "lucide-react";
 import type { Metadata } from "next";
 
 import { CodeBlock } from "@/components/code-block";
 import { DocsShell } from "@/components/docs-shell";
 import { EnvTable } from "@/components/env-table";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Callout } from "@/components/callout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { envVars } from "@/lib/data";
 
@@ -62,14 +62,14 @@ export default function Configuration() {
           </CardContent>
         </Card>
       </div>
-      <Alert className="mt-6">
-        <ShieldAlertIcon />
-        <AlertTitle>Never put secrets in the client config file — use environment variables.</AlertTitle>
-        <AlertDescription>
-          Pass <code>--env-file</code> pointing at a file only you can read (or inject variables from a secret
-          store in production). Client config files are often synced, shared or pasted into issues.
-        </AlertDescription>
-      </Alert>
+      <Callout
+        variant="security"
+        className="mt-6"
+        title="Never put secrets in the client config file — use environment variables."
+      >
+        Pass <code>--env-file</code> pointing at a file only you can read (or inject variables from a secret
+        store in production). Client config files are often synced, shared or pasted into issues.
+      </Callout>
 
       <h2 id="environment-variables">Environment variables</h2>
       <EnvTable variables={envVars} />

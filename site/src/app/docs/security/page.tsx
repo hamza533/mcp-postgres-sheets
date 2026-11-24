@@ -1,10 +1,9 @@
-import { EyeOffIcon } from "lucide-react";
 import type { Metadata } from "next";
 
 import { CodeBlock } from "@/components/code-block";
 import { DocsShell } from "@/components/docs-shell";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
+import { Callout } from "@/components/callout";
+import { Pill } from "@/components/pill";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { results } from "@/lib/data";
 
@@ -133,7 +132,7 @@ export default function Security() {
                     {c.tool === "postgres_query" ? c.example : `${c.tool} ${c.example}`}
                   </TableCell>
                   <TableCell>
-                    <Badge variant="destructive">{RESULT_LABEL[c.outcome] ?? "Blocked"}</Badge>
+                    <Pill tone="blocked">{RESULT_LABEL[c.outcome] ?? "Blocked"}</Pill>
                   </TableCell>
                 </TableRow>
               );
@@ -159,9 +158,7 @@ export default function Security() {
                   .filter((c) => c.category === category)
                   .map((c) => (
                     <li key={c.id} className="flex items-baseline gap-2">
-                      <Badge variant="destructive" className="shrink-0 text-[10px]">
-                        {c.outcome.replace("_", " ")}
-                      </Badge>
+                      <Pill tone="blocked">{c.outcome.replace("_", " ")}</Pill>
                       <span>{c.title}</span>
                     </li>
                   ))}
@@ -179,14 +176,10 @@ export default function Security() {
         token&apos;s subject.
       </p>
       <CodeBlock lang="json" title="audit.jsonl" code={AUDIT_LINE} />
-      <Alert className="border-warn/40 bg-warn-soft">
-        <EyeOffIcon className="text-warn!" />
-        <AlertTitle>Write tools are invisible to the AI when READ_ONLY=true.</AlertTitle>
-        <AlertDescription>
-          They are not registered at all, so they never appear in <code>tools/list</code> — the model
-          can&apos;t be talked into calling a tool it can&apos;t see.
-        </AlertDescription>
-      </Alert>
+      <Callout variant="warning" title="Write tools are invisible to the AI when READ_ONLY=true.">
+        They are not registered at all, so they never appear in <code>tools/list</code> — the model can&apos;t
+        be talked into calling a tool it can&apos;t see.
+      </Callout>
 
       <h2 id="what-it-does-not-do">What it does not do</h2>
       <ul>

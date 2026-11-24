@@ -2,7 +2,7 @@ import { ExternalLinkIcon } from "lucide-react";
 import type { Metadata } from "next";
 
 import { DocsShell } from "@/components/docs-shell";
-import { Badge } from "@/components/ui/badge";
+import { Pill } from "@/components/pill";
 import { loadChangelog } from "@/lib/changelog";
 import { site } from "@/lib/site";
 
@@ -45,11 +45,7 @@ export default function Changelog() {
                 {r.version === "Unreleased" ? "Unreleased" : `v${r.version}`}
               </h2>
               {r.date ? <span className="text-muted-foreground text-sm">{r.date}</span> : null}
-              {r.breaking ? (
-                <Badge variant="outline" className="bg-warn-soft text-warn border-warn/30">
-                  Breaking changes
-                </Badge>
-              ) : null}
+              {r.breaking ? <Pill tone="write">Breaking changes</Pill> : null}
             </div>
             {r.version !== "Unreleased" ? (
               <div className="mt-1 flex gap-4 text-sm">

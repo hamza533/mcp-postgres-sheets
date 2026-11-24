@@ -1,9 +1,8 @@
-import { TriangleAlertIcon } from "lucide-react";
 import type { Metadata } from "next";
 
 import { CodeBlock } from "@/components/code-block";
 import { DocsShell } from "@/components/docs-shell";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Callout } from "@/components/callout";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export const metadata: Metadata = { title: "Remote mode & OAuth" };
@@ -122,14 +121,10 @@ export default function Remote() {
       </p>
 
       <h2 id="try-it-locally-with-keycloak">Try it locally (Keycloak)</h2>
-      <Alert className="border-warn/40 bg-warn-soft">
-        <TriangleAlertIcon className="text-warn!" />
-        <AlertTitle>The Keycloak profile is for local testing only.</AlertTitle>
-        <AlertDescription>
-          It runs Keycloak in dev mode with committed test secrets. Use your own identity provider in
-          production.
-        </AlertDescription>
-      </Alert>
+      <Callout variant="warning" title="The Keycloak profile is for local testing only.">
+        It runs Keycloak in dev mode with committed test secrets. Use your own identity provider in
+        production.
+      </Callout>
       <CodeBlock lang="bash" title="terminal" code={KEYCLOAK} />
       <p>
         Test clients: <code>mcp-reader</code> (db:read, sheets:read), <code>mcp-writer</code> (+
