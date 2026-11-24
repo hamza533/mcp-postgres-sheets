@@ -9,7 +9,7 @@ export type Lang = (typeof LANGS)[number];
 let highlighter: Promise<Highlighter> | null = null;
 
 function getHighlighter(): Promise<Highlighter> {
-  highlighter ??= createHighlighter({ themes: ["github-light", "github-dark"], langs: [...LANGS] });
+  highlighter ??= createHighlighter({ themes: ["github-light", "vitesse-dark"], langs: [...LANGS] });
   return highlighter;
 }
 
@@ -17,7 +17,7 @@ export async function highlight(code: string, lang: Lang): Promise<string> {
   const h = await getHighlighter();
   return h.codeToHtml(code, {
     lang,
-    themes: { light: "github-light", dark: "github-dark" },
+    themes: { light: "github-light", dark: "vitesse-dark" },
     defaultColor: false,
   });
 }

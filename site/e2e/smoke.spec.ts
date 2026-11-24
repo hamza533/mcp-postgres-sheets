@@ -120,3 +120,15 @@ test("Ctrl+K opens the search palette", async ({ page }) => {
   await page.keyboard.press("Control+k");
   await expect(page.getByPlaceholder("Search pages, tools, settings…")).toBeVisible();
 });
+
+test("quick-start prompts copy on click and the next-step link works", async ({ page }) => {
+  await page.goto("/docs/quick-start/");
+  const prompt = page.getByTestId("prompt-list").getByRole("button").first();
+  await prompt.click();
+  await expect(prompt).toContainText("Copied");
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain(
+    "What tables are in the database",
+  );
+  await page.getByTestId("next-page").click();
+  await expect(page.getByRole("heading", { level: 1, name: "Security model" })).toBeVisible();
+});

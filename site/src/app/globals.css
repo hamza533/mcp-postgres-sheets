@@ -4,7 +4,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Design system: neutral slate grays, one emerald accent; red only for "blocked"; amber for write/breaking. */
+/* Design system "Technical Precision" (docs/ui/DESIGN.md, from the Stitch project): slate neutrals,
+   hairline borders over shadows, emerald = read/secure, amber = write, red = blocked, sky = info.
+   Inter for prose, JetBrains Mono for code and labels. Code blocks are dark in both themes. */
 
 @theme inline {
   --font-heading: var(--font-sans);
@@ -42,7 +44,14 @@
   --color-warn: var(--warn);
   --color-warn-soft: var(--warn-soft);
   --color-danger-soft: var(--danger-soft);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-brand-strong: var(--brand-strong);
   --color-code: var(--code);
+  --color-code-header: var(--code-header);
+  --color-code-border: var(--code-border);
+  --color-code-foreground: var(--code-foreground);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -51,42 +60,51 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  /* 4px controls (radius-sm/md), 8px cards and code blocks (radius-lg) */
+  --radius: 0.5rem;
   /* slate */
-  --background: oklch(0.996 0.001 247.8);
-  --foreground: oklch(0.208 0.042 265.755);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.208 0.042 265.755);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.208 0.042 265.755);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.446 0.043 257.281);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.596 0.145 163.225);
-  /* emerald accent */
-  --brand: oklch(0.508 0.118 165.612);
-  --brand-foreground: oklch(0.985 0 0);
-  --brand-soft: oklch(0.979 0.021 166.113);
-  --warn: oklch(0.555 0.163 48.998);
-  --warn-soft: oklch(0.987 0.022 95.277);
-  --danger-soft: oklch(0.971 0.013 17.38);
-  --code: oklch(0.984 0.003 247.858);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-primary: oklch(0.508 0.118 165.612);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.596 0.145 163.225);
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #006948;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --destructive: #dc2626;
+  --border: #e2e8f0;
+  --input: #cbd5e1;
+  --ring: #10b981;
+  /* semantic accents */
+  --brand: #059669;
+  --brand-strong: #006948;
+  --brand-foreground: #ffffff;
+  --brand-soft: #ecfdf5;
+  --warn: #b45309;
+  --warn-soft: #fffbeb;
+  --danger: #dc2626;
+  --danger-soft: #fef2f2;
+  --info: #0284c7;
+  --info-soft: #f0f9ff;
+  /* code blocks: slate/midnight in both themes */
+  --code: #0f172a;
+  --code-header: #1e293b;
+  --code-border: #334155;
+  --code-foreground: #e2e8f0;
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #334155;
+  --sidebar-primary: #006948;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #10b981;
 }
 
 .dark {
@@ -96,8 +114,8 @@
   --card-foreground: oklch(0.968 0.007 247.896);
   --popover: oklch(0.208 0.042 265.755);
   --popover-foreground: oklch(0.968 0.007 247.896);
-  --primary: oklch(0.968 0.007 247.896);
-  --primary-foreground: oklch(0.208 0.042 265.755);
+  --primary: oklch(0.696 0.17 162.48);
+  --primary-foreground: oklch(0.155 0.03 265.755);
   --secondary: oklch(0.279 0.041 260.031);
   --secondary-foreground: oklch(0.968 0.007 247.896);
   --muted: oklch(0.279 0.041 260.031);
@@ -109,12 +127,19 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.696 0.17 162.48);
   --brand: oklch(0.765 0.177 163.223);
+  --brand-strong: oklch(0.596 0.145 163.225);
   --brand-foreground: oklch(0.208 0.042 265.755);
   --brand-soft: oklch(0.262 0.051 172.552);
   --warn: oklch(0.828 0.189 84.429);
   --warn-soft: oklch(0.279 0.077 45.635);
+  --danger: oklch(0.704 0.191 22.216);
   --danger-soft: oklch(0.258 0.092 26.042);
-  --code: oklch(0.185 0.035 265.755);
+  --info: oklch(0.746 0.16 232.661);
+  --info-soft: oklch(0.293 0.066 243.157);
+  --code: oklch(0.13 0.028 261.692);
+  --code-header: oklch(0.208 0.042 265.755);
+  --code-border: oklch(1 0 0 / 12%);
+  --code-foreground: #e2e8f0;
   --sidebar: oklch(0.185 0.035 265.755);
   --sidebar-foreground: oklch(0.968 0.007 247.896);
   --sidebar-primary: oklch(0.765 0.177 163.223);
@@ -136,7 +161,7 @@
   body {
     @apply bg-background text-foreground;
     font-size: 15px;
-    line-height: 1.65;
+    line-height: 24px;
   }
   code,
   kbd,
@@ -145,39 +170,41 @@
   }
 }
 
-/* Shiki dual-theme output: colours come from CSS variables so the theme toggle needs no JS. */
+/* Small uppercase monospace labels (section headers, table heads, eyebrows). */
+@utility label-mono {
+  @apply font-mono text-[11px] leading-[14px] font-medium tracking-[0.05em] uppercase;
+}
+
+/* Shiki output: code blocks are dark in both themes, so always use the dark token colours. */
 .shiki,
 .shiki span {
-  color: var(--shiki-light);
+  color: var(--shiki-dark);
   background-color: transparent !important;
 }
-.dark .shiki,
-.dark .shiki span {
-  color: var(--shiki-dark);
-}
 .shiki {
-  @apply m-0 overflow-x-auto p-4 text-[13px] leading-relaxed;
+  @apply m-0 overflow-x-auto px-4 py-3.5 text-[13px] leading-[22px];
 }
 
 /* Prose inside docs pages */
 .docs-prose h2 {
-  @apply mt-12 mb-4 scroll-mt-24 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0;
+  @apply mt-12 mb-3 scroll-mt-20 text-[22px] leading-[30px] font-semibold tracking-[-0.015em] first:mt-0;
 }
-.docs-prose h3 {
-  @apply mt-8 mb-3 scroll-mt-24 text-lg font-semibold tracking-tight;
+.docs-prose h3:not(:where(.not-prose, .not-prose *)) {
+  @apply mt-8 mb-3 scroll-mt-20 text-base font-semibold tracking-[-0.01em];
 }
-.docs-prose p {
-  @apply my-4 leading-7;
+/* Components inside docs pages opt out with `not-prose` (callouts, banners, prompt lists…). */
+.docs-prose p:not(:where(.not-prose, .not-prose *)) {
+  @apply text-foreground/80 my-4;
 }
-.docs-prose ul {
+.docs-prose ul:not(:where(.not-prose, .not-prose *)) {
   @apply my-4 ml-6 list-disc space-y-2;
 }
-.docs-prose ol {
+.docs-prose ol:not(:where(.not-prose, .not-prose *)) {
   @apply my-4 ml-6 list-decimal space-y-2;
 }
-.docs-prose a:not([data-slot]) {
+.docs-prose a:not([data-slot]):not(:where(.not-prose, .not-prose *)) {
   @apply text-brand font-medium underline underline-offset-4;
 }
 .docs-prose :not(pre) > code {
-  @apply bg-muted rounded px-1.5 py-0.5 text-[0.85em];
+  @apply bg-muted rounded-sm border px-1.5 py-px text-[0.875em];
 }
