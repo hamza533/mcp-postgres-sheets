@@ -75,6 +75,13 @@ async def test_describe_table_has_keys_and_comments(client: ClientSession) -> No
     assert data["referenced_by"][0]["references_table"] == "public.order_items"
 
 
+async def test_describe_table_folds_unquoted_names_like_postgres(client: ClientSession) -> None:
+    data = await call(client, "postgres_describe_table", table="Public.Orders")
+    assert (data["schema_name"], data["name"]) == ("public", "orders")
+    quoted = await client.call_tool("postgres_describe_table", {"table": '"Orders"'})
+    assert quoted.isError and "not found" in quoted.content[0].text  # type: ignore[union-attr]
+
+
 async def test_describe_missing_table(client: ClientSession) -> None:
     result = await client.call_tool("postgres_describe_table", {"table": "nope"})
     assert result.isError
