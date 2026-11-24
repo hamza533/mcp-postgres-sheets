@@ -53,6 +53,10 @@ public API: breaking changes to them only happen in a major version.
 - Release pipeline: actions pinned to commit SHAs, `mcp-publisher` checksum-verified, pushed
   arm64 image scanned by digest.
 
+### Changed
+- Website restyled to the Stitch design system (`docs/ui/DESIGN.md`): Inter + JetBrains Mono, grouped docs
+  sidebar, numbered "On this page", always-dark code blocks, callouts and READ / WRITE / BLOCKED pills.
+
 ### Fixed
 - `sheets_read_range` requests at most `max_rows + 1` rows instead of downloading the whole range.
 - `postgres_describe_table` folds unquoted names to lower case like Postgres (`Orders` → `orders`).

@@ -14,13 +14,13 @@ needs the owner's accounts (GitHub, PyPI, Google Cloud, Gemini, Vercel) or a hum
 | M4 | Remote mode + OAuth | done — `make remote-smoke` 13/13 against real Keycloak |
 | M5 | Evaluation | done — safety 73/73, latency max p95 < 50 ms; the 20 NL tasks need `GEMINI_API_KEY` |
 | M6 | Packaging + release pipeline | done — wheel/sdist, `uvx` install, server.json valid, Trivy 0 HIGH/CRITICAL; publishing needs GitHub + PyPI |
-| M7 | Project website | done — 8 static pages, generated reference, 18/18 Playwright; Stitch alignment pending |
+| M7 | Project website | done — 8 static pages, generated reference, 19/19 Playwright; Stitch design system applied (Quick Start screen matched; other 5 screens not exported yet) |
 | M8 | Production profile + docs | done — Bicep builds/lints clean, README, client guides, render.yaml |
 | M9 | Final check | done — pushed to GitHub, CI green (all 5 jobs) |
 
 ## Next steps for the owner
 1. **GitHub:** done — https://github.com/hamza533/mcp-postgres-sheets, CI green. Review the 9 Dependabot PRs it opened on first push (mostly major bumps: MCP SDK 2.x, Python 3.15, Postgres 18, TypeScript 7, sqlglot 30); they were cut before the CI fix, so rebase them before judging their CI.
-2. **Stitch designs:** the Stitch project is private (404 when signed out). Sign in to stitch.google.com in the Claude browser pane, or export the 6 screens into `docs/ui/` (file names in docs/ui/README.md). **TODO:** align `/site` with the Stitch designs.
+2. **Stitch designs:** the design system (`docs/ui/DESIGN.md`) and the Quick Start screen are exported and applied to `/site`. Optional: export the other five screens (select each → Export → .zip) into `docs/ui/` for pixel-level checks.
 3. **Gemini key:** free key from https://aistudio.google.com/apikey → `GEMINI_API_KEY=` in `.env` → `make eval` (≈20 min, throttled) → put the task-success number in README "Results" and docs/case-study.md.
 4. **Google service account:** create one, enable the Sheets API, import `sample_data/sheets/*.csv` into a new sheet (tabs `Leads`, `Targets`, `Notes`), share it with the service-account email, set `GOOGLE_SERVICE_ACCOUNT_JSON` + `ALLOWED_SHEET_IDS`, and try `sheets_read_range` once against real Google.
 5. **PyPI + release:** add the pending trusted publisher and the `pypi` environment (RELEASING.md), then tag `v0.1.0` (or bump to `1.0.0` first). Set `PUBLISH_MCP_REGISTRY=true` when ready to be listed; submit to one or two directories.
@@ -36,7 +36,7 @@ needs the owner's accounts (GitHub, PyPI, Google Cloud, Gemini, Vercel) or a hum
 - [ ] Published to PyPI and listed in the MCP Registry — pipeline ready (release.yml, server.json); needs owner accounts.
 - [x] Tested with the MCP Inspector, steps documented (docs/inspector.md).
 - [x] Production readiness per §4a: idempotent write tools · per-caller rate limit · `/health` + `/ready` · trusted publishing configured · Playwright smoke test · Bicep validates in CI · README "Production deployment" with Entra ID setup, network notes and a monthly cost estimate.
-- [~] Website builds as a static export ✓, tools reference generated from `tools/list` and CI fails if stale ✓; matches `docs/ui/` — pending the Stitch exports; deployed on Vercel — owner step.
+- [~] Website builds as a static export ✓, tools reference generated from `tools/list` and CI fails if stale ✓; matches `docs/ui/` ✓ (design system + Quick Start screen; other screens follow DESIGN.md); deployed on Vercel — owner step.
 - [x] `shadcn` in `.mcp.json`; `neon` not added (self-host example not tested on Neon).
 - [~] CONVENTIONS §8 — see below.
 - [x] AGENTS.md "Gotchas" lists the read-only role, hidden write tools, Keycloak test-only, safety suite at 100 %.
@@ -54,14 +54,14 @@ needs the owner's accounts (GitHub, PyPI, Google Cloud, Gemini, Vercel) or a hum
 - [x] Upwork case study drafted (docs/case-study.md) — fill in the task-success number after `make eval`.
 
 ## Blockers / open questions
-- Stitch project not accessible without the owner's Google sign-in (see step 2).
+- None blocking. The other five Stitch screens are not exported (optional, see step 2).
 - Everything else above is an owner step, not a blocker for further engineering.
 
 ## How to verify
 - `make setup && make check` (or `make check DOCKER=1` without uv) → ruff, mypy, generated-reference check, 254 pytest tests (unit, integration on real Postgres, safety suite 73 cases, MCP protocol, stdio subprocess, HTTP + OAuth).
 - `make eval-safety` → `eval/results.md` says 73/73 stopped; `make eval-latency` → p50/p95 table.
 - `docker compose --profile remote up -d --wait && make remote-smoke` → ALL PASSED (13 checks).
-- `make site-setup site-check site-test` → eslint/prettier/tsc clean, 18 Playwright tests pass.
+- `make site-setup site-check site-test` → eslint/prettier/tsc clean, 19 Playwright tests pass.
 - `make build && uvx --from dist/*.whl mcp-postgres-sheets --version` → `mcp-postgres-sheets 0.1.0`.
 - `az bicep build --file deploy/azure/main.bicep && az bicep lint --file deploy/azure/main.bicep` → clean.
 - `AUDIT_LOG_PATH=audit.jsonl uv run mcp-postgres-sheets` + `make inspector` → one JSON line per call.
@@ -79,3 +79,4 @@ needs the owner's accounts (GitHub, PyPI, Google Cloud, Gemini, Vercel) or a hum
 - 2026-11-23 – Claude Code – M8: Azure Bicep profile + CI validation + gated OIDC deploy workflow, README, docs/clients.md, render.yaml, Sentry, case-study draft.
 - 2026-11-23 – Claude Code – M9: JSON server logs with request IDs, fresh-clone check, acceptance checklists.
 - 2026-11-23 – Claude Code – pushed to GitHub; fixed setup-uv tag (no floating v10) and two Prettier misses; CI green.
+- 2026-11-25 – Claude Code – site aligned with the Stitch design system (Inter/JetBrains Mono, grouped docs shell, dark code blocks, callouts, pills); Quick Start matches the exported screen.
