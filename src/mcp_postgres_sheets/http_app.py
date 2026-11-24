@@ -192,12 +192,9 @@ def build_http_app(mcp: GuardedFastMCP, state: ServerState) -> Starlette:
 
 def run_http(mcp: GuardedFastMCP, settings: Settings) -> None:
     app = build_http_app(mcp, mcp.state)
-    log.info(
-        "remote mode: listening on %s:%s, issuer %s",
-        settings.http_host,
-        settings.http_port,
-        settings.oauth_issuer,
-    )
+    # The issuer is public (served in /.well-known/oauth-protected-resource), so it isn't
+    # repeated here; keep auth-related settings out of logs entirely.
+    log.info("remote mode: listening on %s:%s", settings.http_host, settings.http_port)
     uvicorn.run(
         app,
         host=settings.http_host,
