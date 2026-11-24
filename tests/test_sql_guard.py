@@ -86,6 +86,41 @@ def test_table_allow_list() -> None:
         check_sql("SELECT * FROM public.customers", allow)
 
 
+def test_cte_only_hides_tables_in_its_own_scope() -> None:
+    allow = AllowList(schemas=("public",), tables=("orders",))
+    # A CTE defined inside a subquery is not visible outside it: the outer name is a real table.
+    with pytest.raises(BlockedError, match="employees"):
+        check_sql(
+            "SELECT * FROM (WITH employees AS (SELECT 1) SELECT * FROM employees) s, employees",
+            allow,
+        )
+    # Without RECURSIVE a CTE body only sees the CTEs before it; a forward reference is a table.
+    with pytest.raises(BlockedError, match="customers"):
+        check_sql(
+            "WITH a AS (SELECT * FROM customers), customers AS (SELECT 1) SELECT * FROM a", allow
+        )
+    # Still allowed: normal, chained and recursive CTEs, and a CTE used inside a subquery.
+    check_sql("WITH a AS (SELECT * FROM orders), b AS (SELECT * FROM a) SELECT * FROM b", allow)
+    check_sql(
+        "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM r WHERE n < 3) SELECT * FROM r",
+        allow,
+    )
+    check_sql("WITH a AS (SELECT * FROM orders) SELECT * FROM (SELECT * FROM a) s", allow)
+    check_sql("WITH a AS (SELECT * FROM orders) SELECT * FROM a UNION SELECT * FROM a", allow)
+
+
+def test_unqualified_table_must_be_unambiguous() -> None:
+    allow = AllowList(
+        schemas=("public", "internal"), tables=("public.customers", "internal.orders")
+    )
+    # Postgres would resolve `orders` to public.orders (first on search_path), which is not allowed.
+    with pytest.raises(BlockedError, match=r"internal.orders"):
+        check_sql("SELECT * FROM orders", allow)
+    check_sql("SELECT * FROM internal.orders", allow)
+    # A bare entry allows the name in every schema, so the unqualified form stays fine.
+    check_sql("SELECT * FROM orders", AllowList(schemas=("public", "internal"), tables=("orders",)))
+
+
 def test_quoted_identifiers_keep_case() -> None:
     allow = AllowList(schemas=("public",))
     with pytest.raises(BlockedError, match="Public"):
