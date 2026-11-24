@@ -12,7 +12,7 @@ needs the owner's accounts (GitHub, PyPI, Google Cloud, Gemini, Vercel) or a hum
 | M2 | Audit log + stdio transport | done — verified with the SDK stdio client and the MCP Inspector (stdio + HTTP); a manual run in Claude Desktop/Cursor is part of recording the GIF |
 | M3 | Google Sheets tools | done — memory backend + mocked Google HTTP; a live Google check needs a service account |
 | M4 | Remote mode + OAuth | done — `make remote-smoke` 13/13 against real Keycloak |
-| M5 | Evaluation | done — safety 70/70, latency max p95 < 50 ms; the 20 NL tasks need `GEMINI_API_KEY` |
+| M5 | Evaluation | done — safety 73/73, latency max p95 < 50 ms; the 20 NL tasks need `GEMINI_API_KEY` |
 | M6 | Packaging + release pipeline | done — wheel/sdist, `uvx` install, server.json valid, Trivy 0 HIGH/CRITICAL; publishing needs GitHub + PyPI |
 | M7 | Project website | done — 8 static pages, generated reference, 18/18 Playwright; Stitch alignment pending |
 | M8 | Production profile + docs | done — Bicep builds/lints clean, README, client guides, render.yaml |
@@ -31,7 +31,7 @@ needs the owner's accounts (GitHub, PyPI, Google Cloud, Gemini, Vercel) or a hum
 - [~] `uvx mcp-postgres-sheets` (stdio) works in Claude Desktop and Cursor using the README config — `uvx` install from the built wheel verified, stdio verified with the SDK client and MCP Inspector; the GUI run + screenshots/GIF are owner steps.
 - [x] Remote mode: `docker compose --profile remote up` starts the server + Keycloak; no token → 401; a token without `sheets:write` can't append (`make remote-smoke`, also a CI job).
 - [x] With `READ_ONLY=true`, write tools don't appear in `tools/list` (tests + stdio e2e + safety cases).
-- [x] Safety suite passes 100 % (70/70) — runs in CI on every push.
+- [x] Safety suite passes 100 % (73/73) — runs in CI on every push.
 - [x] Every tool call produces one audit line (incl. rejected, invalid and unknown-tool calls).
 - [ ] Published to PyPI and listed in the MCP Registry — pipeline ready (release.yml, server.json); needs owner accounts.
 - [x] Tested with the MCP Inspector, steps documented (docs/inspector.md).
@@ -58,8 +58,8 @@ needs the owner's accounts (GitHub, PyPI, Google Cloud, Gemini, Vercel) or a hum
 - Everything else above is an owner step, not a blocker for further engineering.
 
 ## How to verify
-- `make setup && make check` (or `make check DOCKER=1` without uv) → ruff, mypy, generated-reference check, 237 pytest tests (unit, integration on real Postgres, safety suite 70 cases, MCP protocol, stdio subprocess, HTTP + OAuth).
-- `make eval-safety` → `eval/results.md` says 70/70 stopped; `make eval-latency` → p50/p95 table.
+- `make setup && make check` (or `make check DOCKER=1` without uv) → ruff, mypy, generated-reference check, 254 pytest tests (unit, integration on real Postgres, safety suite 73 cases, MCP protocol, stdio subprocess, HTTP + OAuth).
+- `make eval-safety` → `eval/results.md` says 73/73 stopped; `make eval-latency` → p50/p95 table.
 - `docker compose --profile remote up -d --wait && make remote-smoke` → ALL PASSED (13 checks).
 - `make site-setup site-check site-test` → eslint/prettier/tsc clean, 18 Playwright tests pass.
 - `make build && uvx --from dist/*.whl mcp-postgres-sheets --version` → `mcp-postgres-sheets 0.1.0`.

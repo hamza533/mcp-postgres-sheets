@@ -21,7 +21,7 @@ Application Insights (Bicep) · GitHub Actions (CI, CodeQL, Trivy, trusted publi
 docs site. Reasons for each choice: `docs/DECISIONS.md`.
 
 ## Result
-- 8 tools; **70/70** attack and misuse attempts blocked in the CI safety suite.
+- 8 tools; **73/73** attack and misuse attempts blocked in the CI safety suite.
 - p95 latency under **50 ms** per tool call against the sample database.
 - Remote mode verified end to end with a real identity provider (13/13 checks).
 - Natural-language task success: *fill in from `eval/results.md` after `make eval` with a Gemini key.*
