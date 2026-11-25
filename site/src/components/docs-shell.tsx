@@ -9,7 +9,13 @@ import { docsNav, docsSections, sectionOf } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export type TocItem = { id: string; title: string; level?: 2 | 3 };
-export type Fact = { label: string; value: React.ReactNode };
+export type Fact = {
+  label: string;
+  value: React.ReactNode;
+  /** Card style only: a caption under the value and an icon in the corner. */
+  detail?: React.ReactNode;
+  icon?: React.ReactNode;
+};
 
 function samePath(pathname: string, href: string) {
   return pathname === href || pathname === href.replace(/\/$/, "");
@@ -58,7 +64,7 @@ export function DocsNavList({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-function DocsSidebar() {
+export function DocsSidebar() {
   return (
     <nav
       aria-label="Documentation"
@@ -194,7 +200,11 @@ export function DocsShell({
   title,
   description,
   eyebrow,
+  eyebrowNote,
+  titleBadge,
   facts,
+  factStyle = "strip",
+  headerExtra,
   toc = [],
   tocNote,
   children,
@@ -203,8 +213,15 @@ export function DocsShell({
   description?: string;
   /** Small green pill above the title, e.g. "5-minute setup". */
   eyebrow?: string;
-  /** Key facts shown in a strip under the description. */
+  /** Muted text next to the eyebrow pill. */
+  eyebrowNote?: React.ReactNode;
+  /** Small pill after the title, e.g. "System env". */
+  titleBadge?: string;
+  /** Key facts under the description: one strip (Quick Start) or separate cards (Security). */
   facts?: Fact[];
+  factStyle?: "strip" | "cards";
+  /** Anything else under the title block (link chips…). */
+  headerExtra?: React.ReactNode;
   toc?: TocItem[];
   /** A callout shown under "On this page" on wide screens. */
   tocNote?: React.ReactNode;
@@ -217,18 +234,47 @@ export function DocsShell({
         <div className="mx-auto max-w-[52rem]">
           <header className="mb-8">
             <Breadcrumb title={title} />
-            {eyebrow ? (
-              <span className="bg-brand-soft text-brand border-brand/30 mb-3 inline-flex h-5 items-center rounded-full border px-2 font-mono text-[11px] font-medium">
-                {eyebrow}
-              </span>
+            {eyebrow || eyebrowNote ? (
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                {eyebrow ? (
+                  <span className="bg-brand-soft text-brand border-brand/30 inline-flex h-5 items-center rounded-full border px-2 font-mono text-[11px] font-medium">
+                    {eyebrow}
+                  </span>
+                ) : null}
+                {eyebrowNote ? (
+                  <span className="text-muted-foreground flex items-center gap-1 font-mono text-[11px]">
+                    {eyebrowNote}
+                  </span>
+                ) : null}
+              </div>
             ) : null}
-            <h1 className="text-[28px] leading-9 font-bold tracking-[-0.02em] sm:text-4xl sm:leading-[44px] sm:tracking-[-0.025em]">
+            <h1 className="flex flex-wrap items-center gap-x-3 text-[28px] leading-9 font-bold tracking-[-0.02em] sm:text-4xl sm:leading-[44px] sm:tracking-[-0.025em]">
               {title}
+              {titleBadge ? (
+                <span className="bg-info-soft text-info rounded-full border px-2 py-0.5 font-mono text-[11px] leading-none font-medium tracking-normal">
+                  {titleBadge}
+                </span>
+              ) : null}
             </h1>
             {description ? (
               <p className="text-foreground/75 mt-2 text-base leading-[26px]">{description}</p>
             ) : null}
-            {facts?.length ? (
+            {facts?.length && factStyle === "cards" ? (
+              <dl className="mt-6 grid gap-3 sm:grid-cols-3" data-testid="page-facts">
+                {facts.map((f) => (
+                  <div key={f.label} className="bg-sidebar rounded-lg border p-4">
+                    <dt className="label-mono text-muted-foreground flex items-center justify-between">
+                      {f.label}
+                      {f.icon ? <span className="text-brand">{f.icon}</span> : null}
+                    </dt>
+                    <dd className="mt-2 text-xl font-semibold tracking-tight">{f.value}</dd>
+                    {f.detail ? (
+                      <dd className="text-muted-foreground mt-1 text-xs leading-5">{f.detail}</dd>
+                    ) : null}
+                  </div>
+                ))}
+              </dl>
+            ) : facts?.length ? (
               <dl
                 className="bg-sidebar mt-6 grid gap-4 rounded-lg border p-4 sm:grid-cols-3"
                 data-testid="page-facts"
@@ -241,6 +287,7 @@ export function DocsShell({
                 ))}
               </dl>
             ) : null}
+            {headerExtra}
           </header>
           <div className="docs-prose">{children}</div>
           <PrevNext />
