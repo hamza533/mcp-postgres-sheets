@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"inverse-surface":"#213145","surface-dim":"#cbdbf5","primary-fixed":"#85f8c4","secondary-fixed":"#dae2fd","outline-variant":"#bccac0","inverse-primary":"#68dba9","on-error":"#ffffff","on-secondary":"#ffffff","primary-container":"#00855d","tertiary":"#825100","error":"#ba1a1a","surface-container-high":"#dce9ff","background":"#f8f9ff","surface-container-lowest":"#ffffff","surface-container-highest":"#d3e4fe","on-primary-fixed-variant":"#005137","tertiary-fixed-dim":"#ffb95f","on-secondary-fixed-variant":"#3f465c","tertiary-container":"#a36700","on-secondary-fixed":"#131b2e","outline":"#6d7a72","on-surface-variant":"#3d4a42","on-secondary-container":"#5c647a","surface-container":"#e5eeff","on-background":"#0b1c30","tertiary-fixed":"#ffddb8","surface":"#f8f9ff","on-primary-fixed":"#002114","on-error-container":"#93000a","primary-fixed-dim":"#68dba9","error-container":"#ffdad6","primary":"#006948","surface-container-low":"#eff4ff","surface-tint":"#006c4a","on-primary-container":"#f5fff7","secondary":"#565e74","on-tertiary-fixed":"#2a1700","inverse-on-surface":"#eaf1ff","on-tertiary-container":"#fffbff","secondary-fixed-dim":"#bec6e0","on-surface":"#0b1c30","on-primary":"#ffffff","on-tertiary-fixed-variant":"#653e00","on-tertiary":"#ffffff","secondary-container":"#dae2fd","surface-variant":"#d3e4fe","surface-bright":"#f8f9ff"},borderRadius:{DEFAULT:"0.125rem",lg:"0.25rem",xl:"0.5rem",full:"0.75rem"},spacing:{"gutter-mobile":"1rem","margin-mobile":"1rem","space-xs":"0.25rem","space-xl":"2.5rem","space-md":"1rem",margin:"2rem","space-sm":"0.5rem","space-lg":"1.5rem",gutter:"1.5rem"},fontFamily:{"headline-sm":["Inter"],"code-md":["JetBrains Mono"],"headline-lg-mobile":["Inter"],"label-md":["JetBrains Mono"],"headline-xl":["Inter"],"body-lg":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"code-sm":["JetBrains Mono"],"headline-lg":["Inter"],"label-sm":["JetBrains Mono"],"headline-md":["Inter"],"headline-xl-mobile":["Inter"]},fontSize:{"headline-sm":["16px",{lineHeight:"24px",letterSpacing:"-0.01em",fontWeight:"600"}],"code-md":["14px",{lineHeight:"22px",fontWeight:"400"}],"headline-lg-mobile":["24px",{lineHeight:"32px",letterSpacing:"-0.015em",fontWeight:"600"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.02em",fontWeight:"500"}],"headline-xl":["36px",{lineHeight:"44px",letterSpacing:"-0.025em",fontWeight:"700"}],"body-lg":["16px",{lineHeight:"26px",fontWeight:"400"}],"body-sm":["13px",{lineHeight:"20px",fontWeight:"400"}],"body-md":["15px",{lineHeight:"24px",fontWeight:"400"}],"code-sm":["12.5px",{lineHeight:"18px",fontWeight:"400"}],"headline-lg":["28px",{lineHeight:"36px",letterSpacing:"-0.02em",fontWeight:"600"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.03em",fontWeight:"500"}],"headline-md":["20px",{lineHeight:"28px",letterSpacing:"-0.015em",fontWeight:"600"}],"headline-xl-mobile":["28px",{lineHeight:"36px",letterSpacing:"-0.02em",fontWeight:"700"}]}}}};</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/85 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-14 w-full px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><img alt="PG Sheets MCP Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrA-a1oYpO4-QKGdPZDJVrg0Rc6STefqtQWGmziuNM7flBeTGjKi8irQ5goensj15mBij0KqwsWq9dbkEWluFvABC6HpqNEhBEEQEKFhDDXnrw_LXlrtJyG-_ZMlC6AYOiwS9qi9OxDxtWVIezUf8kGeY_2L2mHjBlGhRXcvdIEAHnavFbKRm0_ZWTkzv3hjFTMquufYGPforK46Iy6d9sv9r5w5p5ld02a8x98mkjI"/><span class="font-headline-sm text-headline-sm text-on-surface">PG Sheets MCP</span><span class="px-space-xs py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm">v1.0.0</span></div><nav class="hidden md:flex items-center gap-space-xs" data-active-classes="bg-secondary-container text-on-secondary-fixed font-semibold rounded-lg"><a class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="overview" href="#">Docs</a><a class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="tools-reference" href="#">Tools</a><a class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="security-model" href="#">Security</a><a class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="changelog" href="#">Changelog</a></nav></div><div class="flex items-center gap-space-sm"><button class="flex items-center justify-between w-48 lg:w-64 px-space-sm py-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[16px]">search</span><span class="font-body-sm text-body-sm">Search docs...</span></span><kbd class="px-1.5 py-0.5 rounded bg-surface-container-lowest font-code-sm text-code-sm text-on-surface-variant shadow-[0_1px_2px_rgba(0,0,0,0.05)]">⌘K</kbd></button><a class="hidden sm:flex items-center gap-space-xs px-space-sm py-1.5 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container hover:text-on-surface shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-colors font-body-sm text-body-sm" href="#"><span class="material-symbols-outlined text-[16px] text-tertiary">star</span><span class="font-medium">Star</span><span class="px-1.5 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-on-surface-variant">1.4k</span></a><button aria-label="Toggle Theme" class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">light_mode</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><div class="flex w-full"><aside class="fixed left-0 top-14 bottom-0 w-64 bg-surface-container-low z-40 overflow-y-auto px-space-md py-space-lg flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.02)]"><nav class="flex flex-col gap-space-md" data-active-classes="bg-primary-container text-on-primary-container font-medium rounded-lg"><div class="flex flex-col gap-space-xs"><span class="px-space-xs font-label-sm text-label-sm uppercase tracking-wider text-secondary">Getting Started</span><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="overview" href="#">Overview</a><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="quick-start" href="#">Quick Start</a></div><div class="flex flex-col gap-space-xs"><span class="px-space-xs font-label-sm text-label-sm uppercase tracking-wider text-secondary">Architecture</span><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="security-model" href="#">Security Model</a><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="layered-sql-safety" href="#">Layered SQL Safety</a></div><div class="flex flex-col gap-space-xs"><span class="px-space-xs font-label-sm text-label-sm uppercase tracking-wider text-secondary">Reference</span><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="tools-reference" href="#">Tools Reference</a><a aria-current="page" class="flex items-center px-space-sm py-1.5 transition-colors bg-primary-container text-on-primary-container font-medium rounded-lg" data-path="configuration" href="#">Configuration</a></div><div class="flex flex-col gap-space-xs"><span class="px-space-xs font-label-sm text-label-sm uppercase tracking-wider text-secondary">Deployment</span><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="remote-mode-and-oauth" href="#">Remote Mode &amp; OAuth</a></div><div class="flex flex-col gap-space-xs"><span class="px-space-xs font-label-sm text-label-sm uppercase tracking-wider text-secondary">Project</span><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="changelog" href="#">Changelog</a><a class="flex items-center px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="releases" href="#">Releases</a></div></nav><div class="pt-space-md mt-space-md bg-surface-container rounded-xl p-space-sm"><div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>Protocol Runtime</span><span class="text-primary font-medium">Healthy</span></div></div></aside><div class="pl-64 w-full flex flex-col min-h-screen"><main class="w-full flex-1 pt-14 px-gutter pb-space-xl bg-surface"><div class="flex flex-col w-full">
+<div class="max-w-7xl mx-auto w-full grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start pb-space-xl">
+<!-- Central Content Area -->
+<div class="xl:col-span-9 flex flex-col gap-space-xl min-w-0">
+<!-- Header & Breadcrumbs -->
+<section class="flex flex-col gap-space-sm">
+<nav aria-label="Breadcrumb" class="flex items-center gap-space-xs font-label-md text-label-md text-secondary">
+<span class="hover:text-on-surface transition-colors cursor-pointer">Docs</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="hover:text-on-surface transition-colors cursor-pointer">Reference</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-semibold">Configuration</span>
+</nav>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Server Configuration</h1>
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container-high text-secondary font-label-sm text-label-sm">System Env</span>
+</div>
+<p class="font-body-lg text-body-lg text-secondary max-w-3xl leading-relaxed">
+            All server behavior is configured via environment variables. Configure connection strings, safety boundaries, and transport modes for robust enterprise deployment.
+          </p>
+</div>
+</section>
+<!-- Section 1: Architecture Comparison Cards -->
+<section class="flex flex-col gap-space-md scroll-mt-20" id="architecture-modes">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">hub</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Execution Profiles</h2>
+</div>
+<span class="font-code-sm text-code-sm text-secondary">TRANSPORT selection</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Card 1: Local Mode (stdio) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between relative overflow-hidden transition-all duration-200 hover:shadow-md">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="px-space-sm py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm">Desktop Native</span>
+<span class="font-code-sm text-code-sm text-secondary">0 Open Ports</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Local Mode (stdio)</h3>
+<p class="font-body-sm text-body-sm text-secondary">
+                  For single-user local contexts including Claude Desktop, Cursor workspace integration, and local shell sessions.
+                </p>
+</div>
+<!-- Visual Representation / Sparkline Mini-Viz -->
+<div class="bg-surface-container-low rounded-lg p-space-sm flex items-center justify-between text-secondary">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">terminal</span>
+<span class="font-code-sm text-code-sm text-on-surface font-medium">TRANSPORT=stdio</span>
+</div>
+<!-- Inline SVG Process diagram -->
+<svg class="text-primary opacity-80" fill="none" height="24" viewbox="0 0 84 24" width="84">
+<path d="M4 12h20M24 12l-4-4m4 4l-4 4M40 12h20M60 12l-4-4m4 4l-4 4M76 12a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-secondary">
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary mt-0.5">check_circle</span>
+<span>Runs cleanly over standard input/output streams</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary mt-0.5">check_circle</span>
+<span>Inherits credentials directly from parent process environment</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary mt-0.5">check_circle</span>
+<span>Zero network surface area or ingress risk</span>
+</li>
+</ul>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary">Latency overhead</span>
+<span class="font-code-sm text-code-sm font-semibold text-primary">&lt; 0.2ms IPC</span>
+</div>
+</div>
+<!-- Card 2: Remote Mode (HTTP + SSE) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between relative overflow-hidden transition-all duration-200 hover:shadow-md">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">Enterprise Cluster</span>
+<span class="font-code-sm text-code-sm text-secondary">JWT Bearer OAuth</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Remote Mode (HTTP + SSE)</h3>
+<p class="font-body-sm text-body-sm text-secondary">
+                  For centralized enterprise gateways, shared microservice runtimes, and ChatGPT custom GPT remote actions.
+                </p>
+</div>
+<!-- Visual Mini-Viz -->
+<div class="bg-surface-container-low rounded-lg p-space-sm flex items-center justify-between text-secondary">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[18px] text-tertiary">cloud_sync</span>
+<span class="font-code-sm text-code-sm text-on-surface font-medium">TRANSPORT=http</span>
+</div>
+<!-- Inline SVG Process diagram -->
+<svg class="text-tertiary opacity-80" fill="none" height="24" viewbox="0 0 84 24" width="84">
+<path d="M4 12h14c6 0 6-6 12-6s6 6 12 6 6-6 12-6 6 6 12 6h14" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+<circle cx="42" cy="12" fill="currentColor" r="3"></circle>
+</svg>
+</div>
+<ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-secondary">
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary mt-0.5">verified_user</span>
+<span>Exposes hardened HTTPS + SSE streaming endpoints</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary mt-0.5">verified_user</span>
+<span>Validates Bearer tokens against OIDC issuer JWKS</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary mt-0.5">verified_user</span>
+<span>Supports edge rate limiting and audit logging streams</span>
+</li>
+</ul>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary">Default Listener</span>
+<span class="font-code-sm text-code-sm font-semibold text-on-surface">0.0.0.0:8080</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Security Best Practice Banner -->
+<section class="scroll-mt-20" id="security-guidelines">
+<div class="bg-tertiary-fixed/30 rounded-xl p-space-md shadow-sm flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container text-on-tertiary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">security</span>
+</div>
+<div class="flex flex-col gap-space-xs flex-1">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface">Security Requirement</span>
+<span class="px-space-xs py-0.5 rounded bg-tertiary-container/30 text-on-tertiary-fixed-variant font-label-sm text-label-sm uppercase tracking-wide">Strict</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              Never hardcode database passwords, connection strings, or service account JSON inside static client configuration files (such as <code class="font-code-sm text-code-sm bg-surface-container-high px-1.5 py-0.5 rounded text-on-surface">claude_desktop_config.json</code>). Use your OS keychain or inject environment variables dynamically via wrapper scripts or vault managers (e.g. AWS Secrets Manager, 1Password CLI, or HashiCorp Vault).
+            </p>
+</div>
+</div>
+</section>
+<!-- Section 3: Environment Variables Reference Table -->
+<section class="flex flex-col gap-space-md scroll-mt-20" id="variables-reference">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">table_chart</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Environment Variables</h2>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">
+              Parameters are parsed once during bootstrap initialization.
+            </p>
+</div>
+<!-- Quick Filters & Search Bar -->
+<div class="flex flex-wrap items-center gap-space-xs">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-[16px] text-secondary">filter_alt</span>
+<input class="pl-8 pr-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface placeholder:text-secondary font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary shadow-sm w-48 sm:w-60 transition-all" id="tableSearchInput" placeholder="Filter variables..." type="text"/>
+</div>
+<div class="flex items-center bg-surface-container p-0.5 rounded-lg text-secondary font-label-sm text-label-sm">
+<button class="filter-btn px-2.5 py-1 rounded bg-surface-container-lowest text-on-surface shadow-sm font-medium" data-filter="all" type="button">All (15)</button>
+<button class="filter-btn px-2.5 py-1 rounded text-secondary hover:text-on-surface transition-colors" data-filter="database" type="button">Database</button>
+<button class="filter-btn px-2.5 py-1 rounded text-secondary hover:text-on-surface transition-colors" data-filter="sheets" type="button">Sheets</button>
+<button class="filter-btn px-2.5 py-1 rounded text-secondary hover:text-on-surface transition-colors" data-filter="network" type="button">Transport</button>
+</div>
+</div>
+</div>
+<!-- Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse" id="envTable">
+<thead>
+<tr class="bg-surface-container-low text-secondary font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-space-sm px-space-md font-semibold" scope="col">Variable Name</th>
+<th class="py-space-sm px-space-md font-semibold" scope="col">Default</th>
+<th class="py-space-sm px-space-md font-semibold w-1/3" scope="col">Description</th>
+<th class="py-space-sm px-space-md font-semibold" scope="col">Example Value</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-sm text-body-sm" id="envTableBody">
+<!-- 1. DATABASE_URL -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="database">
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-md text-code-md text-on-surface font-semibold">DATABASE_URL</span>
+<span class="px-1.5 py-0.2 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm">Required</span>
+</div>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-secondary">None</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    PostgreSQL connection URI with credentials, port, and security flags.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]" title="postgresql://user:pass@127.0.0.1:5432/db?sslmode=require">postgresql://user:pass@127.0.0.1:5432/db?sslmode=require</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="postgresql://user:pass@127.0.0.1:5432/db?sslmode=require" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 2. ALLOWED_SCHEMAS -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="database">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">ALLOWED_SCHEMAS</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-on-surface">public</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    Comma-delimited list of accessible database schemas. All queries querying outside these namespaces are blocked at AST inspection.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">public,reporting,bi_data</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="public,reporting,bi_data" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 3. ALLOWED_TABLES -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="database">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">ALLOWED_TABLES</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-on-surface">*</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    Specific tables exposed to AI query tools; strictly denies schema discovery and execution for all others.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">orders,customers,inventory</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="orders,customers,inventory" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 4. QUERY_TIMEOUT_MS -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="database">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">QUERY_TIMEOUT_MS</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-on-surface">15000</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    Hard server-side cancellation timeout for SQL executions via <code class="font-code-sm text-code-sm bg-surface-container px-1 rounded">statement_timeout</code>.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">10000</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="10000" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 5. MAX_ROWS -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="database">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">MAX_ROWS</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-on-surface">1000</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    Maximum row limit returned in any single query call to preserve model context windows.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">500</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="500" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 6. GOOGLE_SERVICE_ACCOUNT_JSON -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="sheets">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">GOOGLE_SERVICE_ACCOUNT_JSON</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-secondary">None</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    Raw JSON credentials string or local filesystem path to GCP Service Account keyfile.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">/etc/secrets/sa-credentials.json</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="/etc/secrets/sa-credentials.json" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 7. ALLOWED_SHEET_IDS -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="sheets">
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-md text-code-md text-on-surface font-semibold">ALLOWED_SHEET_IDS</span>
+<span class="px-1.5 py-0.2 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">Sheets</span>
+</div>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-secondary">None</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    Comma-delimited list of Google Spreadsheet IDs permitted. Access to unlisted documents is strictly denied.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">1BxiMVs0XRA5...,1k8D...</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="1BxiMVs0XRA5...,1k8D..." type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 8. READ_ONLY -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="database">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">READ_ONLY</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-primary font-medium">true</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    When true, unregisters mutation tools, rejects DDL/DML, and enforces read-only session transactions.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">true</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="true" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 9. TRANSPORT -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="network">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">TRANSPORT</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-on-surface">stdio</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    MCP transport mechanism protocol. Supported values: <code class="font-code-sm text-code-sm bg-surface-container px-1 rounded">stdio</code> or <code class="font-code-sm text-code-sm bg-surface-container px-1 rounded">http</code>.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">http</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="http" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 10. HTTP_PORT -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="network">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">HTTP_PORT</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-on-surface">8080</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    TCP listener port binding when running in HTTP remote transport mode.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">8080</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="8080" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 11. OAUTH_ISSUER -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="network">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">OAUTH_ISSUER</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-secondary">None</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    OIDC identity provider base URL used for discovery and fetching public JWKS verification keys.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">https://auth.company.internal</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="https://auth.company.internal" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 12. OAUTH_AUDIENCE -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="network">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">OAUTH_AUDIENCE</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-secondary">None</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    Target audience claim (<code class="font-code-sm text-code-sm bg-surface-container px-1 rounded">aud</code>) checked during JWT validation.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">mcp-pg-sheets-prod</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="mcp-pg-sheets-prod" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 13. AUDIT_LOG_PATH -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="database">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">AUDIT_LOG_PATH</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-on-surface">stdout</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    Destination file descriptor or local file path for NDJSON structured security audit logs.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">/var/log/mcp/audit.log</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="/var/log/mcp/audit.log" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 14. REDACT_ARGS -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="database">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">REDACT_ARGS</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-primary font-medium">true</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    Masks SQL parameter literal values in query logs to prevent PII ingestion in logs.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">true</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="true" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- 15. RATE_LIMIT_PER_MIN -->
+<tr class="hover:bg-surface-container-low/50 transition-colors" data-category="network">
+<td class="py-3 px-space-md align-top">
+<span class="font-code-md text-code-md text-on-surface font-semibold">RATE_LIMIT_PER_MIN</span>
+</td>
+<td class="py-3 px-space-md align-top font-code-sm text-code-sm text-on-surface">60</td>
+<td class="py-3 px-space-md align-top text-on-surface-variant leading-relaxed">
+                    Token bucket rate limit per minute per authenticated principal to prevent quota exhaustion.
+                  </td>
+<td class="py-3 px-space-md align-top">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-2 py-1 rounded group">
+<span class="font-code-sm text-code-sm text-on-surface truncate max-w-[200px]">120</span>
+<button aria-label="Copy example" class="copy-trigger text-secondary hover:text-primary transition-colors shrink-0" data-clipboard="120" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Empty search state (hidden by default) -->
+<div class="hidden p-space-xl text-center flex-col items-center justify-center gap-space-xs" id="noResultsState">
+<span class="material-symbols-outlined text-secondary text-[32px]">search_off</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">No matching variables</span>
+<p class="font-body-sm text-body-sm text-secondary">Try searching for a different configuration property or reset filters.</p>
+</div>
+</div>
+</section>
+<!-- Section 4: Sample Configuration Snippet -->
+<section class="flex flex-col gap-space-sm scroll-mt-20" id="sample-env-file">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">terminal</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Production .env File Example</h2>
+</div>
+<button class="copy-trigger px-space-sm py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-secondary hover:text-on-surface transition-colors font-body-sm text-body-sm flex items-center gap-1" data-clipboard='# Recommended Production Baseline
+DATABASE_URL="postgresql://pg_mcp_app:secure_vault_pw@db.prod.internal:5432/analytics?sslmode=verify-full"
+ALLOWED_SCHEMAS="public,reporting"
+ALLOWED_TABLES="dim_users,fact_orders,monthly_kpis"
+READ_ONLY=true
+MAX_ROWS=500
+QUERY_TIMEOUT_MS=8000
+TRANSPORT="http"
+HTTP_PORT=8080
+OAUTH_ISSUER="https://auth.internal.corp"
+OAUTH_AUDIENCE="mcp-pg-sheets"
+REDACT_ARGS=true
+RATE_LIMIT_PER_MIN=120' type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span>Copy file</span>
+</button>
+</div>
+<div class="rounded-xl bg-inverse-surface text-inverse-on-surface p-space-md font-code-sm text-code-sm shadow-md overflow-x-auto">
+<pre class="leading-relaxed"><code><span class="text-secondary"># Recommended Production Baseline</span>
+<span class="text-primary-fixed">DATABASE_URL</span>=<span class="text-secondary-fixed">"postgresql://pg_mcp_app:secure_vault_pw@db.prod.internal:5432/analytics?sslmode=verify-full"</span>
+<span class="text-primary-fixed">ALLOWED_SCHEMAS</span>=<span class="text-secondary-fixed">"public,reporting"</span>
+<span class="text-primary-fixed">ALLOWED_TABLES</span>=<span class="text-secondary-fixed">"dim_users,fact_orders,monthly_kpis"</span>
+<span class="text-primary-fixed">READ_ONLY</span>=<span class="text-tertiary-fixed-dim">true</span>
+<span class="text-primary-fixed">MAX_ROWS</span>=<span class="text-tertiary-fixed-dim">500</span>
+<span class="text-primary-fixed">QUERY_TIMEOUT_MS</span>=<span class="text-tertiary-fixed-dim">8000</span>
+<span class="text-primary-fixed">TRANSPORT</span>=<span class="text-secondary-fixed">"http"</span>
+<span class="text-primary-fixed">HTTP_PORT</span>=<span class="text-tertiary-fixed-dim">8080</span>
+<span class="text-primary-fixed">OAUTH_ISSUER</span>=<span class="text-secondary-fixed">"https://auth.internal.corp"</span>
+<span class="text-primary-fixed">OAUTH_AUDIENCE</span>=<span class="text-secondary-fixed">"mcp-pg-sheets"</span>
+<span class="text-primary-fixed">REDACT_ARGS</span>=<span class="text-tertiary-fixed-dim">true</span>
+<span class="text-primary-fixed">RATE_LIMIT_PER_MIN</span>=<span class="text-tertiary-fixed-dim">120</span></code></pre>
+</div>
+</section>
+</div>
+<!-- Right Column: Sticky "On this page" TOC -->
+<aside class="hidden xl:flex xl:col-span-3 sticky top-20 flex-col gap-space-md pl-space-md">
+<div class="flex items-center gap-space-xs font-label-md text-label-md uppercase tracking-wider text-secondary">
+<span class="material-symbols-outlined text-[16px]">format_list_bulleted</span>
+<span>On this page</span>
+</div>
+<nav class="flex flex-col gap-space-xs font-body-sm text-body-sm text-secondary">
+<a class="toc-link hover:text-primary transition-colors py-1 pl-2 border-l-2 border-transparent" href="#architecture-modes">
+          Execution Profiles
+        </a>
+<a class="toc-link hover:text-primary transition-colors py-1 pl-2 border-l-2 border-transparent" href="#security-guidelines">
+          Security Requirements
+        </a>
+<a class="toc-link hover:text-primary transition-colors py-1 pl-2 border-l-2 border-primary text-on-surface font-medium" href="#variables-reference">
+          Environment Variables
+        </a>
+<a class="toc-link hover:text-primary transition-colors py-1 pl-2 border-l-2 border-transparent" href="#sample-env-file">
+          Production .env Baseline
+        </a>
+</nav>
+<!-- Contextual Quick Help Box -->
+<div class="bg-surface-container rounded-xl p-space-md flex flex-col gap-space-xs mt-space-md">
+<div class="flex items-center gap-space-xs text-on-surface font-headline-sm text-headline-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">help</span>
+<span>Need live validation?</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">
+          Run the diagnostic preflight check to verify your connection string and credentials without booting the full MCP server.
+        </p>
+<div class="mt-space-xs">
+<code class="font-code-sm text-code-sm bg-surface-container-lowest text-on-surface px-2 py-1 rounded block">npx pg-sheets --dry-run</code>
+</div>
+</div>
+</aside>
+</div>
+</div>
+<script>
+  // Filter & Search Logic for Environment Variables Table
+  (function () {
+    const searchInput = document.getElementById('tableSearchInput');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#envTableBody tr');
+    const noResults = document.getElementById('noResultsState');
+
+    let currentFilter = 'all';
+    let searchQuery = '';
+
+    function applyFilters() {
+      let visibleCount = 0;
+
+      tableRows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const category = row.getAttribute('data-category');
+
+        const matchesQuery = text.includes(searchQuery);
+        const matchesCategory = currentFilter === 'all' || category === currentFilter;
+
+        if (matchesQuery && matchesCategory) {
+          row.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+
+      if (visibleCount === 0) {
+        noResults.classList.remove('hidden');
+        noResults.classList.add('flex');
+      } else {
+        noResults.classList.add('hidden');
+        noResults.classList.remove('flex');
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value.toLowerCase().trim();
+        applyFilters();
+      });
+    }
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => {
+          b.classList.remove('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm', 'font-medium');
+          b.classList.add('text-secondary');
+        });
+        btn.classList.add('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm', 'font-medium');
+        btn.classList.remove('text-secondary');
+
+        currentFilter = btn.getAttribute('data-filter');
+        applyFilters();
+      });
+    });
+
+    // Copy to clipboard with visual feedback
+    const copyTriggers = document.querySelectorAll('.copy-trigger');
+    copyTriggers.forEach(button => {
+      button.addEventListener('click', async () => {
+        const content = button.getAttribute('data-clipboard');
+        if (!content) return;
+
+        try {
+          await navigator.clipboard.writeText(content);
+          const icon = button.querySelector('.material-symbols-outlined');
+          if (icon) {
+            const originalIcon = icon.textContent;
+            icon.textContent = 'check';
+            button.classList.add('text-primary');
+            setTimeout(() => {
+              icon.textContent = originalIcon;
+              button.classList.remove('text-primary');
+            }, 1800);
+          }
+        } catch (err) {
+          console.error('Clipboard copy failed:', err);
+        }
+      });
+    });
+  })();
+</script></main><footer class="w-full bg-surface-container-low py-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.02)]"><div class="w-full px-gutter flex flex-col sm:flex-row items-center justify-between gap-space-md font-body-sm text-body-sm text-on-surface-variant"><div>Released under <span class="font-medium text-on-surface">MIT License</span>.</div><div class="flex flex-wrap items-center gap-space-md"><a class="hover:text-on-surface transition-colors" href="#">GitHub Repository</a><a class="hover:text-on-surface transition-colors font-code-sm text-code-sm bg-surface-container px-space-xs py-0.5 rounded" href="#">mcp-postgres-sheets</a><a class="hover:text-on-surface transition-colors" href="#">Community Discussion</a></div></div></footer></div></div></body></html>

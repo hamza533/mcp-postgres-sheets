@@ -67,7 +67,7 @@ export function SiteHeader() {
         </Sheet>
         <Wordmark />
         <span
-          className="bg-muted text-muted-foreground hidden h-5 items-center rounded-full border px-2 font-mono text-[11px] font-medium sm:inline-flex"
+          className="bg-brand-soft text-brand border-brand/30 hidden h-5 items-center rounded-full border px-2 font-mono text-[11px] font-medium sm:inline-flex"
           data-testid="version-badge"
         >
           v{site.version}
@@ -80,7 +80,7 @@ export function SiteHeader() {
               className={cn(
                 "rounded-sm px-2.5 py-1.5 text-sm transition-colors",
                 isActive(pathname, item.href)
-                  ? "text-foreground font-medium"
+                  ? "bg-info-soft text-foreground font-medium"
                   : "text-muted-foreground hover:text-foreground",
               )}
             >

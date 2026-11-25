@@ -78,7 +78,6 @@ test("tools reference lists every tool from tools/list and filters", async ({ pa
   await page.getByRole("button", { name: "all" }).click();
   await page.getByTestId("tools-filter").fill("append");
   await expect(cards).toHaveCount(1);
-  await cards.first().getByText("Input schema").click();
   await expect(cards.first().getByRole("cell", { name: "idempotency_key", exact: true })).toBeVisible();
 });
 
