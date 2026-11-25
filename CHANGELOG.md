@@ -54,8 +54,9 @@ public API: breaking changes to them only happen in a major version.
   arm64 image scanned by digest.
 
 ### Changed
-- Website restyled to the Stitch design system (`docs/ui/DESIGN.md`): Inter + JetBrains Mono, grouped docs
-  sidebar, numbered "On this page", always-dark code blocks, callouts and READ / WRITE / BLOCKED pills.
+- Website rebuilt to the Stitch designs (`docs/ui/`): Inter + JetBrains Mono, grouped docs sidebar on every
+  page, numbered "On this page", always-dark code blocks, callouts, READ / WRITE / BLOCKED pills; layered
+  security diagram, filterable tool and settings references, and a release timeline.
 
 ### Fixed
 - `sheets_read_range` requests at most `max_rows + 1` rows instead of downloading the whole range.
